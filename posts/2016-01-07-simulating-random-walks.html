@@ -16,7 +16,7 @@
                 <a href="../">rolph recto</a>
             </div>
             <div id="navigation">
-                <a href="../">home</a>
+                <a href="../">blog</a>
                 <a href="../projects.html">projects</a>
                 <a href="../writing.html">writing</a>
                 <a href="../about.html">about</a>
@@ -78,6 +78,7 @@ P(X_{n+1} = s + 1 \mid X_n = s) = P(X_{n-1} = s - 1 \mid X_n = s) = 1/2.
 <p>where <em>lo</em> is a “low” boundary, which bounces the process to the right, <em>hi</em> is a “high” boundary, which bounces the process to the left, and <em>s</em> is any non-boundary state.</p>
 <h2 id="simulation-with-the-list-monad">Simulation with the List Monad</h2>
 <p>The List monad can simulate a random walk by transforming a list of possible states that a random walk can occupy into a new list of possible states and the requisite probability of being in that state by applying one-step transition probabilities<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>.</p>
+<pre><code>This is a block quote! Incredible.</code></pre>
 <p>To better understand how this works, I’ll employ an analogy. Think of the probability of a process being in a particular state as being a pile of sand. The higher the pile of sand, the higher the probability of the process being in that state (at a particular time). As the process runs, the pile of sand can be moved or spread around – maybe one big pile becomes two smaller piles in some other states – but, following Kolmogorov’s axioms, the total amount of sand that the process started with cannot change: all the piles of sand must add up to a height of 1.</p>
 <p>Take the simple random walk. At the beginning of the process, there is only one pile of sand of height 1, which is located at 0. At timestep 1, the pile at 0 gets split in half; the halves are moved to the left and right, so there is a pile at -1 of height 0.5 and a pile at 1 of height 0.5. The animation below visualizes how the “pile of sand” gets spread from 0 to neighboring states as time goes by.</p>
 <div class="figure">
