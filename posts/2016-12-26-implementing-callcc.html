@@ -281,7 +281,7 @@ eval expr
 <li id="fn1"><p>While I’ve got a decent idea of how to implement this feature now, the interpreter is still a bit of a mess. It turns out first-class continuations are a big feature that touches pretty much every part of an interpreter!<a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>You could also think of this expression-with-a-hole as a function from expressions to expressions: this fact will be important later.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>Notice that this language is eagerly evaluated.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>You might think, as I originally did, that the interpreter should clear the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 2, not 4. Explanation for why this answers our question is left as an exercise for the reader!<a href="#fnref4">↩</a></p></li>
+<li id="fn4"><p>You might think, as I originally did, that the interpreter should clear the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2. Explanation for why this answers our question is left as an exercise for the reader!<a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
 
