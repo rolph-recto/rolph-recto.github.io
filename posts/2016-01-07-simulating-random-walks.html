@@ -12,18 +12,19 @@
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
     <body>
+      <div id="header-bg">
         <div id="header">
             <div id="logo">
                 <a href="../">rolph recto</a>
             </div>
             <div id="navigation">
-                <a href="../">blog</a>
+                <a href="../">about</a>
+                <a href="../blog.html">blog</a>
                 <a href="../projects.html">projects</a>
-                <a href="../writing.html">writing</a>
-                <a href="../about.html">about</a>
                 <a href="../archive.html">archive</a>
             </div>
         </div>
+      </div>
 
         <div id="content">
             <h1>Simulating Random Walks with the List Monad</h1>
@@ -38,7 +39,6 @@ January  7, 2016
 </div>
 
 <p>The List monad is usually used to model nondeterministic computations: it allows you to describe taking a choice from a set of possibilities and then merge the outcomes from each possibility together. In this post I’ll show how to use the List monad to simulate a canonical nondeterministic computation: a random walk.</p>
-<!--more-->
 <h2 id="random-walks">Random Walks</h2>
 <p>Here’s a quick refresher on random walks before we discuss their implementation. Random walks are stochastic processes, which are collections of random variables indexed over time. For simplicity we’ll take a “random walk” to mean processes with the following properties<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
 <ul>
