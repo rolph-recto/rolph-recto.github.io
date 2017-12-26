@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>rolph recto - Embedding and Extending Go in Haskell</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+      <div id="header-bg">
+        <div id="header">
+            <div id="logo">
+                <a href="../">rolph recto</a>
+            </div>
+            <div id="navigation">
+                <a href="../">about</a>
+                <a href="../blog.html">blog</a>
+                <a href="../archive.html">archive</a>
+            </div>
+        </div>
+      </div>
+
+        <div id="content">
+            <h1>Embedding and Extending Go in Haskell</h1>
+
+            <div class="info">
+<p>
+December 18, 2017
+
+- <a href="../tags/compsci.html">compsci</a>, <a href="../tags/programming-languages.html">programming-languages</a>, <a href="../tags/golang.html">golang</a>, <a href="../tags/concurrency.html">concurrency</a>, <a href="../tags/haskell.html">haskell</a>
+
+</p>
+</div>
+
+<p>Here’s a fun question: what would Go look like embedded inside of Haskell?</p>
+<!--more-->
+<p>By “Go” here I don’t mean the full language itself but some kind of core calculus with the features that people really like about Go: namely, its synchronization primitives. This core calculus should at least have the ability to spawn new goroutines and the ability to pass data between goroutines using channels.</p>
+<p>By “embedding” a language in Haskell, I mean that I want to re-use Haskell’s constructs for most things and only write what is specific to the language. That means only writing code involving goroutines and channels. Everything else – variables, functions, control structures – are Haskell’s. The interpreter we’re going to write for this language – let’s call it “HaskGo” – will look like a virtual machine executing a small instruction set. This makes the interpreter quite simple, since there’s no AST to traverse: HaskGo programs are just lists of instructions.</p>
+<p>It’s not just for fun that I wanted to embed Go in Haskell. Embedding a language inside of Haskell is an easy way to model its actual implementation. There’s no lexer or parser to create, just the interpreter and the instruction set. Embedding a language in Haskell allows us to easily experiment with extending the language with new extensions. For example, determining what might <em>channel combinators</em> in Go look like, as we will see later on, is as easy as writing a few example programs and changing the interpreter – all within one language, Haskell.</p>
+<h2 id="writing-haskgo-with-free-monads">Writing HaskGo with Free Monads</h2>
+<p>The standard way of embedding a language in Haskell is through <em>free monads</em>. I’m not going to dwell too much on how free monads work since there are already a lot of good resources that provide an introduction. I’m particularly fond of Gabriel Gonzalez’s blog post on the topic, linked <a href="http://www.haskellforall.com/2012/06/you-could-have-invented-free-monads.html">here</a>. The short of it is that free monads are so named because from any functor, we can derive a monad for it, for free<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. Free monads are useful for creating embedded languages because they allow you to write monadic expressions that look like regular imperative code – just like how expressions in the <code>IO</code> monad look like imperative code – but actually denote a list of instructions for our language’s interpeter / virtual machine to execute.</p>
+<p>With that preamble, let’s get to the code. Here’s the datatype representing the instruction set of our language:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">GoExpr</span> <span class="fu">=</span>
+    <span class="dt">GoInt</span> <span class="dt">Int</span>
+  <span class="fu">|</span> <span class="dt">GoBool</span> <span class="dt">Bool</span>
+  <span class="fu">|</span> <span class="dt">GoString</span> <span class="dt">String</span>
+  <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Eq</span>)
+
+<span class="kw">type</span> <span class="dt">GoChan</span> <span class="fu">=</span> <span class="dt">Int</span>
+<span class="kw">type</span> <span class="dt">GoProgram</span> a <span class="fu">=</span> <span class="dt">Free</span> <span class="dt">GoCmd</span> a
+
+<span class="kw">data</span> <span class="dt">GoSelectBranch</span> <span class="fu">=</span>
+  <span class="dt">GoSelectBranch</span> {
+<span class="ot">    branchChan ::</span> <span class="dt">GoChan</span>, 
+<span class="ot">    branchProg ::</span> <span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+  }
+
+<span class="kw">data</span> <span class="dt">GoCmd</span> next <span class="fu">=</span> 
+    <span class="dt">GoRun</span> (<span class="dt">GoProgram</span> ()) next
+  <span class="fu">|</span> <span class="dt">GoMakeChan</span> (<span class="dt">GoChan</span> <span class="ot">-&gt;</span> next)
+  <span class="fu">|</span> <span class="dt">GoPutChan</span> <span class="dt">GoChan</span> <span class="dt">GoExpr</span> next
+  <span class="fu">|</span> <span class="dt">GoGetChan</span> <span class="dt">GoChan</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> next)
+  <span class="fu">|</span> <span class="dt">GoSelect</span> [<span class="dt">GoSelectBranch</span>] next
+  <span class="fu">|</span> <span class="dt">GoPrint</span> <span class="dt">String</span> next
+  <span class="kw">deriving</span> (<span class="dt">Functor</span>)</code></pre></div>
+<p>As promised, the instruction set is simple. <code>GoRun</code> denotes the instruction to spawn off a new goroutine. <code>GoMakeChan</code> denotes the creation of a new channel. <code>GoPutChan</code> and <code>GoGetChan</code> denote putting and and getting values from a channel respectively. <code>GoSelect</code> implements Go’s <code>select</code> control structure, which allows the user to wait on a list of channels instead of just one. If there is a branch waiting on a channel that is not blocked, <code>select</code> jumps to that branch; otherwise it blocks until one of the branches is unblocked. <code>GoPrint</code> denotes an instruction to print something on the screen. <code>GoProgram</code> is a type synonym for the free monad for our <code>GoCmd</code> instruction set. <code>GoChan</code>, the type of the channel value that the user has access to, is merely an <code>Int</code> identifier that the runtime uses, as we will see below.</p>
+<p>Some things to note. All of the constructors, with the exception of <code>GoDone</code>, have a <code>next</code> argument. This argument allows the free monad to build a list of instructions. The <code>GoDone</code> constructor doesn’t have a <code>next</code> argument since obviously there’s no next instruction to execute after halting. <code>GoMakeChan</code> and <code>GoGetChan</code> have <code>(GoChan -&gt; next)</code> and <code>(GoExpr -&gt; next)</code> arguments instead of just <code>next</code> because the next instruction for these expects a new variable bound to the value of the new channel or value extracted from the channel respectively. To test your understanding of how free monads work, as yourself why the goroutine argument in <code>GoRun</code> has type <code>GoProgram ()</code> instead of just <code>next</code>.</p>
+<p>The channels aren’t typed – or, rather, are unityped: they only pass <code>GoExpr</code>s between goroutines. The channels can only store one value at a time – this is not apparent in the datatype, but it will be reflected in the implementation of the interpreter. We can add channel types and channel buffers to the language quite easily, but we’re going to punt on those for now.</p>
+<p>Here’s some free monad boilerplate. These are the monadic functions we will use to build HaskGo programs. I will present these with no further comment – read Gabriel’s blog post linked above to understand how this works!</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">GoExprable</span> a <span class="kw">where</span>
+<span class="ot">  toGoExpr ::</span> a <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>
+  
+<span class="kw">instance</span> <span class="dt">GoExprable</span> <span class="dt">Int</span> <span class="kw">where</span>
+  toGoExpr <span class="fu">=</span> <span class="dt">GoInt</span>
+
+<span class="kw">instance</span> <span class="dt">GoExprable</span> <span class="dt">Bool</span> <span class="kw">where</span>
+  toGoExpr <span class="fu">=</span> <span class="dt">GoBool</span>
+
+<span class="kw">instance</span> <span class="dt">GoExprable</span> <span class="dt">GoExpr</span> <span class="kw">where</span>
+  toGoExpr <span class="fu">=</span> id
+
+liftFree x    <span class="fu">=</span> <span class="dt">Free</span> (fmap <span class="dt">Pure</span> x)
+
+defaultPort   <span class="fu">=</span> <span class="dv">0</span>
+selcase c p   <span class="fu">=</span> <span class="dt">GoSelectBranch</span> c p
+seldefault p  <span class="fu">=</span> <span class="dt">GoSelectBranch</span> defaultPort p
+
+go cmd        <span class="fu">=</span> liftFree (<span class="dt">GoRun</span> cmd ())
+newchan       <span class="fu">=</span> liftFree (<span class="dt">GoMakeChan</span> id)
+putchan c v   <span class="fu">=</span> liftFree (<span class="dt">GoPutChan</span> c (toGoExpr v) ())
+getchan c     <span class="fu">=</span> liftFree (<span class="dt">GoGetChan</span> c id)
+select bs     <span class="fu">=</span> liftFree (<span class="dt">GoSelect</span> bs ())
+goprint s     <span class="fu">=</span> liftFree (<span class="dt">GoPrint</span> s ())</code></pre></div>
+<p>An interesting thing to note is that <code>select</code> as implemented above is strictly more expressive than in Go, as the list of branches on which it waits is just a regular value. That means it can block on a list of branches given as an argument to a function, something that is impossible in Go.</p>
+<p>Here’s what a HaskGo program looks like, using the functions above. The following is an elegant solution to the classic producer-consumer problem:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">consume ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+consume chan <span class="fu">=</span> <span class="kw">do</span>
+  v <span class="ot">&lt;-</span> getchan chan
+  goprint <span class="fu">$</span> show v
+  consume chan
+
+<span class="ot">produce ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+produce range chan <span class="fu">=</span> <span class="kw">do</span>
+  forM_ range <span class="fu">$</span> \i <span class="ot">-&gt;</span> <span class="kw">do</span>
+    putchan chan i
+
+<span class="ot">bufmain ::</span> <span class="dt">GoProgram</span> ()
+bufmain <span class="fu">=</span> <span class="kw">do</span>
+  c <span class="ot">&lt;-</span> newchan
+  go <span class="fu">$</span> produce [<span class="dv">1</span><span class="fu">..</span><span class="dv">10</span>] c
+  go <span class="fu">$</span> consume c
+  goprint <span class="st">&quot;producer-consumer queue running!&quot;</span></code></pre></div>
+<p>While distinctly Haskell in syntax, if you squint a little it does indeed have Go-like synchronization primitives: you can create a channel and bind a variable to it (i.e. channels are first-class); you can spawn off goroutines just with the <code>go</code> command; and you can get and put values into channels.</p>
+<p>Now for the interpreter proper. The interpreter will be, essentially, a simulation of the Go runtime. What kind of data does the HaskGo runtime need to keep track of? The runtime must handle goroutines and channels, so we must at least have a list of each. We also need a map from channels to values put in them. For scheduling purposes we also need a ready queue, as well as wait queues for each channel to keep track of goroutines blocked on it. So the runtime state should look something like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">GoRuntime</span> <span class="fu">=</span>
+  <span class="dt">GoRuntime</span> {
+<span class="ot">    curGoroutine  ::</span> <span class="dt">GoRoutine</span>,
+<span class="ot">    nextGoroutine ::</span> <span class="dt">Int</span>,
+<span class="ot">    goroutines    ::</span> <span class="dt">M.Map</span> <span class="dt">GoRoutine</span> (<span class="dt">GoProgram</span> ()),
+<span class="ot">    nextPort      ::</span> <span class="dt">GoChan</span>,
+<span class="ot">    portVals      ::</span> <span class="dt">M.Map</span> <span class="dt">GoChan</span> (<span class="dt">Maybe</span> <span class="dt">GoExpr</span>),
+<span class="ot">    waitQueues    ::</span> <span class="dt">M.Map</span> <span class="dt">GoChan</span> [<span class="dt">GoRoutine</span>],
+<span class="ot">    readyQueue    ::</span> [<span class="dt">GoRoutine</span>]
+  }</code></pre></div>
+<p>This should be almost self-explanatory. <code>curGoroutine</code> is the current goroutine scheduled; <code>nextGoroutine</code> and <code>nextPort</code> are the identifiers of the next created goroutine and channel respectively. <code>goroutines</code> is a map from goroutines to the program they are executing; <code>portVals</code> is a map from channels to the (possible) values they hold. <code>readyQueue</code> and <code>waitQueues</code> keep track of scheduling information as described above. (Why the runtime state keeps data on ports instead of channels will become clear later when we extend HaskGo.)</p>
+<p>Finally, the HaskGo interpreter. First, some helper functions:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">GoInterp</span>   <span class="fu">=</span> <span class="dt">ExceptT</span> <span class="dt">String</span> (<span class="dt">StateT</span> <span class="dt">GoRuntime</span> <span class="dt">IO</span>)
+
+<span class="ot">scheduleNextGoroutine ::</span> <span class="dt">GoInterp</span> ()
+scheduleNextGoroutine <span class="fu">=</span> <span class="kw">do</span>
+  st <span class="ot">&lt;-</span> get
+  <span class="kw">let</span> rq <span class="fu">=</span> readyQueue st
+  <span class="kw">case</span> rq <span class="kw">of</span>
+    rid<span class="fu">:</span>rs <span class="ot">-&gt;</span> <span class="kw">do</span>
+      <span class="kw">case</span> M.lookup rid (goroutines st) <span class="kw">of</span>
+        <span class="dt">Just</span> cont <span class="ot">-&gt;</span> <span class="kw">do</span>
+          put <span class="fu">$</span> st { curGoroutine <span class="fu">=</span> rid, readyQueue <span class="fu">=</span> rs }
+          interpGo cont
+
+        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;invalid goroutine id &quot;</span> <span class="fu">++</span> (show rid)
+
+    [] <span class="ot">-&gt;</span> return ()
+
+<span class="ot">wakeFromWaitQueue ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()
+wakeFromWaitQueue port <span class="fu">=</span> <span class="kw">do</span>
+  st <span class="ot">&lt;-</span> get
+  <span class="kw">let</span> wqs <span class="fu">=</span> waitQueues st
+  <span class="kw">case</span> M.lookup port wqs <span class="kw">of</span>
+    <span class="dt">Just</span> (rid<span class="fu">:</span>rs) <span class="ot">-&gt;</span> <span class="kw">do</span>
+      <span class="co">-- because of select, the woken goroutine might be in</span>
+      <span class="co">-- several wait queues. we must remove it from all wait queues</span>
+      <span class="kw">let</span> wqs'  <span class="fu">=</span> M.map (filter (\rid2 <span class="ot">-&gt;</span> not (rid <span class="fu">==</span> rid2))) wqs
+      <span class="kw">let</span> rq    <span class="fu">=</span> readyQueue st
+      <span class="kw">let</span> rq'   <span class="fu">=</span> rq <span class="fu">++</span> [rid]
+      put <span class="fu">$</span> st { readyQueue <span class="fu">=</span> rq', waitQueues <span class="fu">=</span> wqs' }
+
+    <span class="co">-- nobody to wake!</span>
+    <span class="dt">Just</span> [] <span class="ot">-&gt;</span> return ()
+
+    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;unknown port &quot;</span> <span class="fu">++</span> (show port)
+
+
+<span class="ot">addToWaitQueue ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoRoutine</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()
+addToWaitQueue port rid cont <span class="fu">=</span> <span class="kw">do</span>
+  st <span class="ot">&lt;-</span> get 
+  <span class="kw">let</span> wqs <span class="fu">=</span> waitQueues st
+  <span class="kw">case</span> M.lookup port wqs <span class="kw">of</span>
+    <span class="dt">Just</span> wq <span class="ot">-&gt;</span> <span class="kw">do</span>
+      <span class="co">-- add to port's wait queue</span>
+      <span class="kw">let</span> wq'   <span class="fu">=</span> wq <span class="fu">++</span> [rid]
+      <span class="kw">let</span> wqs'  <span class="fu">=</span> M.insert port wq' wqs
+
+      <span class="co">-- update goroutine program with new instruction stream</span>
+      <span class="kw">let</span> grs <span class="fu">=</span> M.insert rid cont (goroutines st)
+      put <span class="fu">$</span> st { waitQueues <span class="fu">=</span> wqs', goroutines <span class="fu">=</span> grs }
+
+    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;unknown port &quot;</span> <span class="fu">++</span> (show port)</code></pre></div>
+<p>Notice that the interpreter is in a monad transformer stack consisting of <code>IO</code> (to print to <code>stdout</code>), <code>State</code> (to track runtime state) and <code>Except</code> (to handle errors). <code>scheduleNextGoroutine</code> is, as its name implies, the scheduling function. It implements a basic round-robin scheduler. <code>wakeFromWaitQueue</code> and <code>addToWaitQueue</code> either removes or adds a goroutine from channel wait queues. The only thing that might give pause is the <code>cont</code> argument to <code>addToWaitQueue</code>, which contains the rest of the computation (the continuation) that the goroutine needs to execute. If we do not update this, the next time the goroutine is scheduled it will restart execution of the computation from the beginning!</p>
+<p>Once these helper functions are in place, the actual interpreter is quite straightforward.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">interpGo ::</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()
+interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span class="kw">of</span>
+  <span class="co">-- create a new goroutine and add it to the back of the ready queue</span>
+  <span class="dt">Free</span> (<span class="dt">GoRun</span> goroutine next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    st <span class="ot">&lt;-</span> get
+    <span class="kw">let</span> rnum  <span class="fu">=</span> nextGoroutine st
+    <span class="kw">let</span> rmap  <span class="fu">=</span> goroutines st
+    <span class="kw">let</span> rmap' <span class="fu">=</span> M.insert rnum goroutine rmap
+    <span class="kw">let</span> rq    <span class="fu">=</span> readyQueue st
+    <span class="kw">let</span> rq'   <span class="fu">=</span> rq <span class="fu">++</span> [rnum]
+    put <span class="fu">$</span> st { nextGoroutine <span class="fu">=</span> rnum<span class="fu">+</span><span class="dv">1</span>, goroutines <span class="fu">=</span> rmap', readyQueue <span class="fu">=</span> rq' }
+    interpGo next
+
+  <span class="co">-- create a new channel</span>
+  <span class="dt">Free</span> (<span class="dt">GoMakeChan</span> next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    st <span class="ot">&lt;-</span> get
+    <span class="kw">let</span> pnum  <span class="fu">=</span> nextPort st
+    <span class="kw">let</span> pmap  <span class="fu">=</span> portVals st
+    <span class="kw">let</span> pmap' <span class="fu">=</span> M.insert pnum <span class="dt">Nothing</span> pmap
+    <span class="kw">let</span> wqs   <span class="fu">=</span> waitQueues st
+    <span class="kw">let</span> wqs'  <span class="fu">=</span> M.insert pnum [] wqs
+    put <span class="fu">$</span> st { nextPort <span class="fu">=</span> pnum<span class="fu">+</span><span class="dv">1</span>, portVals <span class="fu">=</span> pmap', waitQueues <span class="fu">=</span> wqs' }
+    interpGo <span class="fu">$</span> next pnum</code></pre></div>
+<p><code>GoRun</code> and <code>GoMakeChan</code> create goroutines and channels respectively. There’s just a lot of code to update the runtime state, but otherwise these are pretty straightfoward.</p>
+<p>Next are <code>GoPutChan</code> and <code>GoGetChan</code>.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">  <span class="co">-- put a value in a channel</span>
+  <span class="dt">Free</span> (<span class="dt">GoPutChan</span> port v next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    st <span class="ot">&lt;-</span> get
+    <span class="kw">let</span> pmap <span class="fu">=</span> portVals st
+    <span class="kw">let</span> rid <span class="fu">=</span> curGoroutine st
+
+    <span class="co">-- block goroutine if channel is full, otherwise put value into channel</span>
+    <span class="kw">case</span> M.lookup port pmap <span class="kw">of</span> 
+      <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
+        <span class="kw">let</span> pmap' <span class="fu">=</span> M.insert port (<span class="dt">Just</span> v) pmap
+        put <span class="fu">$</span> st { portVals <span class="fu">=</span> pmap' }
+        wakeFromWaitQueue port
+        interpGo next
+
+      <span class="dt">Just</span> _ <span class="ot">-&gt;</span> <span class="kw">do</span>
+        addToWaitQueue port rid prog
+        scheduleNextGoroutine
+
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span>
+
+  <span class="dt">Free</span> (<span class="dt">GoGetChan</span> port next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    st <span class="ot">&lt;-</span> get
+    <span class="kw">let</span> pmap <span class="fu">=</span> portVals st
+    <span class="kw">let</span> rid <span class="fu">=</span> curGoroutine st
+
+    <span class="co">-- block goroutine if channel is empty, otherwise get value from channel</span>
+    <span class="kw">case</span> M.lookup port pmap <span class="kw">of</span> 
+      <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
+        addToWaitQueue port rid prog
+        scheduleNextGoroutine
+
+      <span class="dt">Just</span> (<span class="dt">Just</span> cval) <span class="ot">-&gt;</span> <span class="kw">do</span>
+        <span class="kw">let</span> pmap' <span class="fu">=</span> M.insert port <span class="dt">Nothing</span> pmap
+        put <span class="fu">$</span> st { portVals <span class="fu">=</span> pmap' }
+        wakeFromWaitQueue port
+        interpGo <span class="fu">$</span> next cval
+
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span></code></pre></div>
+<p>These are duals of each other. <code>GoPutChan</code> puts a value in the channel if it is empty, and blocks the goroutine otherwise. <code>GoGetChan</code> extracts a value from the channel if it is full, and blocks the goroutine otherwise. When either operation is successful (i.e. doesn’t block), we wake goroutines that are blocked on the channel.</p>
+<p>A subtlety: notice that when the goroutine is blocked on the channel, it stores <code>prog</code> as the continuation instead of <code>next</code>. This is so because <code>prog</code> contains the current instruction being executed, and we want to try executing the instruction again when it is woken up. For example, if executing <code>GoGetChan</code> blocks on an empty channel, we want to execute <code>GoGetChan</code> again when the goroutine is woken up and the channel is full.</p>
+<p><code>select</code> is probably the most complicated.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">  <span class="dt">Free</span> (<span class="dt">GoSelect</span> branches next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    st <span class="ot">&lt;-</span> get
+    <span class="kw">let</span> rid <span class="fu">=</span> curGoroutine st
+    unblockedBranches <span class="ot">&lt;-</span> filterM isBranchUnblocked branches
+    <span class="kw">case</span> unblockedBranches <span class="kw">of</span>
+      <span class="co">-- one of the branches is unblocked. jump to it</span>
+      b<span class="fu">:</span>bs <span class="ot">-&gt;</span> <span class="kw">do</span>
+        <span class="kw">let</span> bprog <span class="fu">=</span> branchProg b
+        <span class="co">-- notice that we have to add the instruction stream after the</span>
+        <span class="co">-- branch, otherwise it won't be executed!</span>
+        interpGo <span class="fu">$</span> <span class="dt">Free</span> (<span class="dt">GoGetChan</span> (branchChan b) (\v <span class="ot">-&gt;</span> (bprog v) <span class="fu">&gt;&gt;</span> next))
+
+      <span class="co">-- all of the branches are blocked. block the goroutine until one of</span>
+      <span class="co">-- the branches becomes unblocked</span>
+      [] <span class="ot">-&gt;</span> <span class="kw">do</span>
+        <span class="kw">let</span> ports <span class="fu">=</span> map (snd <span class="fu">.</span> branchChan) branches
+        forM ports <span class="fu">$</span> \port <span class="ot">-&gt;</span> addToWaitQueue port rid prog
+        scheduleNextGoroutine
+
+    <span class="kw">where</span>
+<span class="ot">      isBranchUnblocked ::</span> <span class="dt">GoSelectBranch</span> <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> <span class="dt">Bool</span>
+      isBranchUnblocked branch <span class="fu">=</span> <span class="kw">do</span>
+        st <span class="ot">&lt;-</span> get
+        <span class="kw">let</span> port <span class="fu">=</span> branchChan branch
+        <span class="co">-- default port is always unblocked</span>
+        <span class="kw">if</span> port <span class="fu">==</span> defaultPort
+        <span class="kw">then</span> return <span class="dt">True</span>
+        <span class="kw">else</span> <span class="kw">do</span>
+          <span class="kw">case</span> M.lookup port (portVals st) <span class="kw">of</span>
+            <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> return <span class="dt">False</span>
+            <span class="dt">Just</span> (<span class="dt">Just</span> cval) <span class="ot">-&gt;</span> return <span class="dt">True</span>
+            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span></code></pre></div>
+<p>There are two cases:</p>
+<ul>
+<li><p>If there are branches that are unblocked, we pick the first one, and essentially execute a <code>GoGetChan</code> command: we extract the value from the channel we block on, apply the value to the branch code, and then execute it.</p></li>
+<li><p>If all branches are blocked, we block the goroutine.</p></li>
+</ul>
+<p>Another subtlety: notice that we need to bind the <code>next</code> argument to the executed branch. Otherwise the rest of the instructions after <code>select</code> won’t be executed!</p>
+<p>Finally here’s <code>GoPrint</code>, which is trivial:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">  <span class="dt">Free</span> (<span class="dt">GoPrint</span> e next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    liftIO <span class="fu">$</span> putStrLn e
+    interpGo next
+
+  <span class="co">-- goroutine is finished: run next one</span>
+  <span class="dt">Pure</span> _ <span class="ot">-&gt;</span> scheduleNextGoroutine</code></pre></div>
+<p>We now have a HaskGo interpreter. Let’s write a helper function to initialize the runtime state and run the interpreter:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">run_gomain ::</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+run_gomain main <span class="fu">=</span> <span class="kw">do</span>
+  <span class="kw">let</span> init <span class="fu">=</span> <span class="dt">GoRuntime</span> { curGoroutine <span class="fu">=</span> <span class="dv">1</span>, nextGoroutine <span class="fu">=</span> <span class="dv">2</span>,
+              goroutines <span class="fu">=</span> M.empty, nextPort <span class="fu">=</span> <span class="dv">1</span>, portVals <span class="fu">=</span> M.empty,
+              waitQueues <span class="fu">=</span> M.empty, readyQueue <span class="fu">=</span> [] }
+
+  res <span class="ot">&lt;-</span> evalStateT (runExceptT (interpGo main)) init
+  <span class="kw">case</span> res <span class="kw">of</span>
+    <span class="dt">Left</span> err  <span class="ot">-&gt;</span> putStrLn err
+    <span class="dt">Right</span> _   <span class="ot">-&gt;</span> return ()</code></pre></div>
+<p>Let’s see the output of the producer-consumer HaskGo program from above:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;</span> run_gomain bufmain
+producer<span class="fu">-</span>consumer queue running<span class="fu">!</span>
+<span class="dt">GoInt</span> <span class="dv">1</span>
+<span class="dt">GoInt</span> <span class="dv">2</span>
+<span class="dt">GoInt</span> <span class="dv">3</span>
+<span class="dt">GoInt</span> <span class="dv">4</span>
+<span class="dt">GoInt</span> <span class="dv">5</span>
+<span class="dt">GoInt</span> <span class="dv">6</span>
+<span class="dt">GoInt</span> <span class="dv">7</span>
+<span class="dt">GoInt</span> <span class="dv">8</span>
+<span class="dt">GoInt</span> <span class="dv">9</span>
+<span class="dt">GoInt</span> <span class="dv">10</span></code></pre></div>
+<p>Works as expected!</p>
+<p>How about something more complicated? Here’s a <a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of Eratosthenes</a>! <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">source ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+source max c <span class="fu">=</span> <span class="kw">do</span>
+  forM_ [<span class="dv">2</span><span class="fu">..</span>max] <span class="fu">$</span> \i <span class="ot">-&gt;</span> <span class="kw">do</span>
+    putchan c i
+
+<span class="ot">pfilter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+pfilter p left right <span class="fu">=</span> <span class="kw">do</span>
+  <span class="dt">GoInt</span> v <span class="ot">&lt;-</span> getchan left
+  <span class="kw">if</span> v <span class="ot">`mod`</span> p <span class="fu">/=</span> <span class="dv">0</span>
+  <span class="kw">then</span> <span class="kw">do</span>
+    putchan right v
+    pfilter p left right
+  <span class="kw">else</span> <span class="kw">do</span>
+    pfilter p left right
+
+<span class="ot">sink ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+sink chan <span class="fu">=</span> <span class="kw">do</span>
+  <span class="dt">GoInt</span> v <span class="ot">&lt;-</span> getchan chan
+  goprint <span class="fu">$</span> <span class="st">&quot;got prime: &quot;</span> <span class="fu">++</span> (show v)
+  chan' <span class="ot">&lt;-</span> newchan
+  go <span class="fu">$</span> pfilter v chan chan'
+  sink chan'
+
+<span class="ot">sievemain ::</span> <span class="dt">GoProgram</span>()
+sievemain <span class="fu">=</span> <span class="kw">do</span>
+  goprint <span class="st">&quot;running prime sieve...&quot;</span>
+  c <span class="ot">&lt;-</span> newchan
+  go <span class="fu">$</span> source <span class="dv">50</span> c
+  go <span class="fu">$</span> sink c</code></pre></div>
+<p>Let’s break down what’s going on here. <code>source</code> just puts integers into a channel in sequence, up to some maximum number. <code>sink</code> extracts a value from <code>chan</code> channel, and then once it does it spawns off a <code>pfilter</code> goroutine, creates a new channel, and then extracts values from that. <code>pfilter</code> extracts values from a <code>left</code> chan, checks if it is a multiple of <code>p</code>, and if it isn’t passes it to the <code>right</code> channel.</p>
+<p>Do you see what’s going on? Every time <code>sink</code> extracts a prime number from <code>chan</code>, it creates a new filter between it and <code>source</code> to filter out multiples of the prime number just extracted. It looks like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">source <span class="ot">&lt;--&gt;</span> pfilter <span class="dv">2</span> <span class="ot">&lt;--&gt;</span> pfilter <span class="dv">3</span> <span class="ot">&lt;--&gt;</span> <span class="fu">...</span> <span class="ot">&lt;--&gt;</span> sink</code></pre></div>
+<p>And thus:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;</span> run_gomain sievemain
+running prime sieve<span class="fu">...</span>
+got prime<span class="fu">:</span> <span class="dv">2</span>
+got prime<span class="fu">:</span> <span class="dv">3</span>
+got prime<span class="fu">:</span> <span class="dv">5</span>
+got prime<span class="fu">:</span> <span class="dv">7</span>
+got prime<span class="fu">:</span> <span class="dv">11</span>
+got prime<span class="fu">:</span> <span class="dv">13</span>
+got prime<span class="fu">:</span> <span class="dv">17</span>
+got prime<span class="fu">:</span> <span class="dv">19</span>
+got prime<span class="fu">:</span> <span class="dv">23</span>
+got prime<span class="fu">:</span> <span class="dv">29</span>
+got prime<span class="fu">:</span> <span class="dv">31</span>
+got prime<span class="fu">:</span> <span class="dv">37</span>
+got prime<span class="fu">:</span> <span class="dv">41</span>
+got prime<span class="fu">:</span> <span class="dv">43</span>
+got prime<span class="fu">:</span> <span class="dv">47</span></code></pre></div>
+<p>As you can see, this style of programming leads to particularly elegant solutions, even though concurrency isn’t strictly necessary to solve them. I’m feeling a little philosophical so I’m going to draw a more general lesson here. Most programs we write are structured to reflect an increasingly archaic model of hardware: a single-core processor executing instructions one at a time. We resort to concurrency only when the problem demands it – as in writing web servers or databases, for example – or to exploit multicore processors and make our programs parallelized. But what if we write concurrent programs simply because <em>they’re the most elegant way of solving the problem at hand</em>? How will we change how we code if, instead of treating concurrency as a tool of last resort or as an optimization, we use it pervasively? Is this aversion to concurrency another incarnation of the <a href="https://en.wikipedia.org/wiki/Von_Neumann_architecture#Von_Neumann_bottleneck">von Neumann bottleneck</a>?</p>
+<p>I’m glad Go has expanded the <a href="https://en.wikipedia.org/wiki/Overton_window">Overton window</a>, so to speak, when it comes to what counts as mainstream synchronization primitives. But the design space is obviously still wide and sparse, and I’m sure there are more interesting questions to be answered in the offing.</p>
+<p>I digress – now let’s talk about how to make channels more interesting.</p>
+<h2 id="haskgo-with-channel-combinators">HaskGo with Channel Combinators</h2>
+<p>Here’s where our choice to implement an embedded language instead of implementing one from scratch will pay dividends. Let’s say we want to implement <em>channel combinators</em> – functions that take a channel, does some transformation on it, and return a new channel. What kinds of combinators do we want to write? At a very high level, we can see channels as semantically being <em>streams</em> of values. So let’s start off with some combinators from elementary functional programming.</p>
+<p>Here’s a first pass at <code>chan_map</code>, which like regular old <code>map</code> applies a function “element-wise” to every value in the channel:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">chan_map ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span>
+chan_map f chan <span class="fu">=</span>  <span class="co">-- WHAT TO PUT HERE??</span></code></pre></div>
+<p>Hm. As we’ve seen in the implementation of the HaskGo interpreter, a channel value is really just an identifier. There is no way to extract values from it outside of the interpreter. So <code>chan_map</code> actually needs to be a HaskGo <em>program</em>.</p>
+<p>Here’s a second pass at <code>chan_map</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">chan_map ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span> 
+chan_map f chan <span class="fu">=</span> <span class="kw">do</span>
+  v <span class="ot">&lt;-</span> getchan chan
+  putchan chan (f v)
+  return chan</code></pre></div>
+<p>A little better, though definitely not right either. This will only work as intended if <code>chan_map</code> is scheduled to run before any other goroutine that extracts a value from <code>chan</code>. Also, this will only work at most once, since it only extracts a value from <code>chan</code> once.</p>
+<p>What we really need <code>chan_map</code> to do is to spawn a <em>new</em> goroutine, one that repeatedly extracts values from <code>chan</code>, applies the value to <code>f</code>, and then pushes the output of <code>f</code> into a <em>new</em> channel. In this way, goroutines pushing values should do it to the old channel, and goroutines extracting values should do so from the new channel.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">chan_map ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span>
+chan_map f inchan <span class="fu">=</span> <span class="kw">do</span>
+  outchan <span class="ot">&lt;-</span> newchan 
+  go <span class="fu">$</span> map_goroutine outchan
+  return chan'
+  <span class="kw">where</span> map_goroutine outchan <span class="fu">=</span> <span class="kw">do</span>
+          v <span class="ot">&lt;-</span> getchan inchan
+          putchan outchan v
+          map_goroutine outchan</code></pre></div>
+<p>This works, albeit awkwardly. Here’s one way to use it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">source lst chan <span class="fu">=</span> <span class="kw">do</span>
+  forM_ lst <span class="fu">$</span> \x <span class="ot">-&gt;</span> <span class="kw">do</span>
+    putchan chan x
+
+sink chan <span class="fu">=</span> <span class="kw">do</span>
+  v <span class="ot">&lt;-</span> getchan chan
+  goprint (show v)
+  sink chan
+
+mapmain <span class="fu">=</span> <span class="kw">do</span>
+  inchan <span class="ot">&lt;-</span> newchan
+  outchan <span class="ot">&lt;-</span> chan_map (\<span class="dt">GoInt</span> x <span class="ot">-&gt;</span> <span class="dt">GoInt</span> (x<span class="fu">+</span><span class="dv">100</span>)) inchan
+  go <span class="fu">$</span> source [<span class="dv">1</span><span class="fu">..</span><span class="dv">10</span>] inchan
+  go <span class="fu">$</span> sink outchan</code></pre></div>
+<p>This will work as intended and print out 101 to 200. However, notice that the two channels here are being treated as <em>unidirectional</em>: one channel is only receiving input (i.e. only calls to the channel are <code>putchan</code>) while the other channel is only returning output (i.e. only calls to the channel are <code>getchan</code>). <code>chan_map</code> spawned off a goroutine to pipe the input from <code>inchan</code> to <code>outchan</code>, but that is (and should be) invisible to the user. It would be nice if instead of having two unidirectional channels, we would have just one bidirectional channel – that is, just a regular channel. We want something like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">mapmain <span class="fu">=</span> <span class="kw">do</span>
+  chan <span class="ot">&lt;-</span> newchan <span class="fu">&gt;&gt;=</span> chan_map (\<span class="dt">GoInt</span> x <span class="ot">-&gt;</span> <span class="dt">GoInt</span> (x<span class="fu">+</span><span class="dv">100</span>))
+  go <span class="fu">$</span> source [<span class="dv">1</span><span class="fu">..</span><span class="dv">10</span>] chan
+  go <span class="fu">$</span> sink chan</code></pre></div>
+<p>The <code>source</code> goroutine puts values 1 to 100 in the channel, and then when <code>sink</code> extracts values out of the channel it will magically receive 101 to 200. As currently implemented, <code>chan_map</code> will not work as intended here. How will we implement this feature?</p>
+<p>The trick is as follows: we’re going to change what a channel value means. Currently, a channel is a key into a runtime map that may or may not hold a value. Now instead of a single key into a runtime map, instead it will be a <em>pair</em> of keys: one key will be used to push values into the map, and the other key will be used to get values from it.</p>
+<p>Some diagrams might help with the explanation.</p>
+<div class="figure">
+<img src="../img/chan-regular.png" />
+
+</div>
+<p>The diagram above should be pretty self-explanatory. For this to work properly the <code>source</code> function needs to be passed the <code>inchan</code> channel and the <code>sink</code> channel needs to be passed the <code>outchan</code> channel. <code>chan_map</code> currently returns <code>outchan</code>. To make it so that we can pass the same channel to both <code>source</code> and <code>sink</code>, we’re going to change <code>chan_map</code> so that it returns a “virtual” channel: when a goroutine pushes a value to it, the goroutine is really pushing a value to <code>inchan</code>; when a goroutine extracts a value from it, the goroutine is really extracting a value out of <code>outchan</code>. So under the hood the same thing is happening, but the interface to the user is a bit nicer. Like so:</p>
+<div class="figure">
+<img src="../img/chan-composition.png" />
+
+</div>
+<p>Let’s see how this change looks like in code.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">ChanPort</span> <span class="fu">=</span> <span class="dt">Int</span>
+<span class="kw">type</span> <span class="dt">GoChan</span> <span class="fu">=</span> (<span class="dt">ChanPort</span>, <span class="dt">ChanPort</span>) 
+
+<span class="kw">data</span> <span class="dt">GoRuntime</span> <span class="fu">=</span>
+  <span class="dt">GoRuntime</span> {
+<span class="ot">    curGoroutine  ::</span> <span class="dt">GoRoutine</span>,
+<span class="ot">    nextGoroutine ::</span> <span class="dt">Int</span>,
+<span class="ot">    goroutines    ::</span> <span class="dt">M.Map</span> <span class="dt">GoRoutine</span> (<span class="dt">GoProgram</span> ()),
+<span class="ot">    nextPort      ::</span> <span class="dt">ChanPort</span>,
+<span class="ot">    portVals      ::</span> <span class="dt">M.Map</span> <span class="dt">ChanPort</span> (<span class="dt">Maybe</span> <span class="dt">GoExpr</span>),
+<span class="ot">    waitQueues    ::</span> <span class="dt">M.Map</span> <span class="dt">ChanPort</span> [<span class="dt">GoRoutine</span>],
+<span class="ot">    readyQueue    ::</span> [<span class="dt">GoRoutine</span>]
+  }
+
+<span class="ot">wakeFromWaitQueue ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()
+wakeFromWaitQueue port <span class="fu">=</span> <span class="kw">do</span> <span class="fu">...</span>
+
+<span class="ot">addToWaitQueue ::</span> <span class="dt">ChanPort</span> <span class="ot">-&gt;</span> <span class="dt">GoRoutine</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()
+addToWaitQueue port rid cont <span class="fu">=</span> <span class="kw">do</span> <span class="fu">...</span></code></pre></div>
+<p>As mentioned above, we’re changing channel values to be pairs of keys, one of the “inport” of the channel and another for the “outport” of the channel. Hence the name “port” instead of “channel” in the runtime code. For the helper functions, nothing really changes except the type annotations. Since <code>GoChan</code> is now a pair these should instead take in <code>ChanPort</code> arguments.</p>
+<p>Now to changes to the interpreter proper.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">interpGo ::</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()
+interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span class="kw">of</span>
+  <span class="dt">Free</span> (<span class="dt">GoMakeChan</span> next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    <span class="co">{- code here stays the same ... -}</span>
+    interpGo <span class="fu">$</span> next (pnum, pnum)
+
+  <span class="dt">Free</span> (<span class="dt">GoPutChan</span> (port,_) v next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    <span class="co">{- code here stays the same ... -}</span>
+
+  <span class="dt">Free</span> (<span class="dt">GoGetChan</span> (_,port) next) <span class="ot">-&gt;</span> <span class="kw">do</span>
+    <span class="co">{- code here stays the same ... -}</span></code></pre></div>
+<p>There’s not much to change. <code>GoMakeChan</code> should now return a pair. <code>GoPutChan</code> should put values in the first port of the channel. <code>GoGetChan</code> should put values in the second port of the channel. That’s pretty much it!</p>
+<p>Now, we can finally write <code>chan_map</code>.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">chan_map ::</span> <span class="dt">GoExprable</span> a <span class="ot">=&gt;</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span>
+chan_map f inchan<span class="fu">@</span>(inchan_put,_) <span class="fu">=</span> <span class="kw">do</span>
+	outchan<span class="fu">@</span>(_, outchan_get) <span class="ot">&lt;-</span> newchan
+  go <span class="fu">$</span> map_goroutine inchan outchan
+	return (inchan_put, outchan_get)
+  <span class="kw">where</span> map_goroutine inchan outchan <span class="fu">=</span> <span class="kw">do</span>
+          val <span class="ot">&lt;-</span> getchan inchan
+          putchan outchan <span class="fu">$</span> toGoExpr <span class="fu">$</span> f val
+          map_goroutine inchan outchan</code></pre></div>
+<p>And voila!</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;</span> run_gomain mapmain
+<span class="dt">GoInt</span> <span class="dv">101</span>
+<span class="dt">GoInt</span> <span class="dv">102</span>
+<span class="dt">GoInt</span> <span class="dv">103</span>
+<span class="dt">GoInt</span> <span class="dv">104</span>
+<span class="dt">GoInt</span> <span class="dv">105</span>
+<span class="dt">GoInt</span> <span class="dv">106</span>
+<span class="dt">GoInt</span> <span class="dv">107</span>
+<span class="dt">GoInt</span> <span class="dv">108</span>
+<span class="dt">GoInt</span> <span class="dv">109</span>
+<span class="dt">GoInt</span> <span class="dv">110</span></code></pre></div>
+<p>Here’s a particularly useful combinator, <code>chan_partition</code>, and a nice use for it.</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- partition an input channel into two output channels</span>
+<span class="ot">chan_partition ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> (<span class="dt">GoChan</span>, <span class="dt">GoChan</span>)
+chan_partition pred chan<span class="fu">@</span>(chan_put, _) <span class="fu">=</span> <span class="kw">do</span>
+  lchan<span class="fu">@</span>(_, lchan_get) <span class="ot">&lt;-</span> newchan
+  rchan<span class="fu">@</span>(_, rchan_get) <span class="ot">&lt;-</span> newchan
+  <span class="kw">let</span> lchan' <span class="fu">=</span> (chan_put, rchan_get)
+  <span class="kw">let</span> rchan' <span class="fu">=</span> (chan_put, lchan_get)
+  go <span class="fu">$</span> partition_goroutine lchan rchan
+  return (lchan', rchan')
+  <span class="kw">where</span> partition_goroutine lchan rchan <span class="fu">=</span> <span class="kw">do</span>
+          val <span class="ot">&lt;-</span> getchan chan
+          <span class="kw">if</span> pred val
+          <span class="kw">then</span> <span class="kw">do</span> 
+            putchan lchan val
+            partition_goroutine lchan rchan
+          <span class="kw">else</span> <span class="kw">do</span>
+            putchan rchan val
+            partition_goroutine lchan rchan
+
+<span class="ot">count ::</span> <span class="dt">GoExprable</span> a <span class="ot">=&gt;</span> [a] <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
+count [] chan <span class="fu">=</span> return ()
+count (x<span class="fu">:</span>xs) chan <span class="fu">=</span> <span class="kw">do</span>
+  putchan chan x
+  count xs chan
+
+printLeftRight n left right <span class="fu">=</span> <span class="kw">do</span>
+  forM_ [<span class="dv">1</span><span class="fu">..</span>n] <span class="fu">$</span> \_ <span class="ot">-&gt;</span> <span class="kw">do</span>
+    select [
+      selcase left (\x <span class="ot">-&gt;</span> <span class="kw">do</span>
+        goprint <span class="fu">$</span> <span class="st">&quot;left: &quot;</span> <span class="fu">++</span> (show x)
+      ),
+      selcase right (\x <span class="ot">-&gt;</span> <span class="kw">do</span>
+        goprint <span class="fu">$</span> <span class="st">&quot;right: &quot;</span> <span class="fu">++</span> (show x)
+      )]
+
+<span class="ot">eomain ::</span> <span class="dt">GoProgram</span> ()
+eomain <span class="fu">=</span> <span class="kw">do</span>
+  c <span class="ot">&lt;-</span> newchan
+  (evenchan, oddchan) <span class="ot">&lt;-</span> chan_partition (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> x <span class="ot">`mod`</span> <span class="dv">2</span> <span class="fu">==</span> <span class="dv">0</span>) c
+  go <span class="fu">$</span> count ([<span class="dv">1</span><span class="fu">..</span>]<span class="ot"> ::</span> [<span class="dt">Int</span>]) c
+  go <span class="fu">$</span> printLeftRight <span class="dv">10</span> evenchan oddchan</code></pre></div>
+<p>And as you’d expect:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;</span> run_gomain eomain
+left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">1</span>
+right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">2</span>
+left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">3</span>
+right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">4</span>
+left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">5</span>
+right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">6</span>
+left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">7</span>
+right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">8</span>
+left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">9</span>
+right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">10</span></code></pre></div>
+<p>In fact, you can basically just go through Haskell’s <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Data-List.html">Data.List library</a> and implement most of the functions there. It’s a fun exercise – I recommend doing it.</p>
+<p>That’s it for now. If you want to see the full source code for HaskGo, see <a href="https://gist.github.com/rolph-recto/5e8ca67f701675103d651795a0c70a89">this gist</a>. Until next time!</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>“Free” as in beer (gratis). I’m a little fuzzy on the category theory details, but I think free monads are also free, as in speech (libre). <a href="https://stackoverflow.com/questions/13352205/what-are-free-monads">Here</a> is a discussion on StackOverflow to whet your appetite.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>NB: I originally encountered this implementation of the sieve in a class for which I was a TA, Cornell’s CS 4410 (Operating Systems). It was a testcase for a project that involved implementing a threading library in C. The original C code had to manually manage channels using semaphores. The HaskGo version is a lot simpler, since the semaphores are managed by the runtime: you can see calls to <code>addToWaitQueue</code> and <code>wakeFromWaitQueue</code> in the interpreter as calls to <code>P()</code> and <code>V()</code> to channel semaphores.<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+
+        </div>
+        <div id="footer">
+        </div>
+    </body>
+</html>
