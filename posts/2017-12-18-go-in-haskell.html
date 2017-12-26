@@ -69,7 +69,7 @@ December 18, 2017
   <span class="fu">|</span> <span class="dt">GoPrint</span> <span class="dt">String</span> next
   <span class="kw">deriving</span> (<span class="dt">Functor</span>)</code></pre></div>
 <p>As promised, the instruction set is simple. <code>GoRun</code> denotes the instruction to spawn off a new goroutine. <code>GoMakeChan</code> denotes the creation of a new channel. <code>GoPutChan</code> and <code>GoGetChan</code> denote putting and and getting values from a channel respectively. <code>GoSelect</code> implements Go’s <code>select</code> control structure, which allows the user to wait on a list of channels instead of just one. If there is a branch waiting on a channel that is not blocked, <code>select</code> jumps to that branch; otherwise it blocks until one of the branches is unblocked. <code>GoPrint</code> denotes an instruction to print something on the screen. <code>GoProgram</code> is a type synonym for the free monad for our <code>GoCmd</code> instruction set. <code>GoChan</code>, the type of the channel value that the user has access to, is merely an <code>Int</code> identifier that the runtime uses, as we will see below.</p>
-<p>Some things to note. All of the constructors, with the exception of <code>GoDone</code>, have a <code>next</code> argument. This argument allows the free monad to build a list of instructions. The <code>GoDone</code> constructor doesn’t have a <code>next</code> argument since obviously there’s no next instruction to execute after halting. <code>GoMakeChan</code> and <code>GoGetChan</code> have <code>(GoChan -&gt; next)</code> and <code>(GoExpr -&gt; next)</code> arguments instead of just <code>next</code> because the next instruction for these expects a new variable bound to the value of the new channel or value extracted from the channel respectively. To test your understanding of how free monads work, as yourself why the goroutine argument in <code>GoRun</code> has type <code>GoProgram ()</code> instead of just <code>next</code>.</p>
+<p>Some things to note. All of the constructors have a <code>next</code> argument. This argument allows the free monad to build a list of instructions. <code>GoMakeChan</code> and <code>GoGetChan</code> have <code>(GoChan -&gt; next)</code> and <code>(GoExpr -&gt; next)</code> arguments instead of just <code>next</code> because the next instruction for these expects a new variable bound to the value of the new channel or value extracted from the channel respectively. To test your understanding of how free monads work, as yourself why the goroutine argument in <code>GoRun</code> has type <code>GoProgram ()</code> instead of just <code>next</code>.</p>
 <p>The channels aren’t typed – or, rather, are unityped: they only pass <code>GoExpr</code>s between goroutines. The channels can only store one value at a time – this is not apparent in the datatype, but it will be reflected in the implementation of the interpreter. We can add channel types and channel buffers to the language quite easily, but we’re going to punt on those for now.</p>
 <p>Here’s some free monad boilerplate. These are the monadic functions we will use to build HaskGo programs. I will present these with no further comment – read Gabriel’s blog post linked above to understand how this works!</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">GoExprable</span> a <span class="kw">where</span>
@@ -142,7 +142,8 @@ scheduleNextGoroutine <span class="fu">=</span> <span class="kw">do</span>
           put <span class="fu">$</span> st { curGoroutine <span class="fu">=</span> rid, readyQueue <span class="fu">=</span> rs }
           interpGo cont
 
-        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;invalid goroutine id &quot;</span> <span class="fu">++</span> (show rid)
+        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
+          throwError <span class="fu">$</span> <span class="st">&quot;invalid goroutine id &quot;</span> <span class="fu">++</span> (show rid)
 
     [] <span class="ot">-&gt;</span> return ()
 
@@ -192,7 +193,11 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
     <span class="kw">let</span> rmap' <span class="fu">=</span> M.insert rnum goroutine rmap
     <span class="kw">let</span> rq    <span class="fu">=</span> readyQueue st
     <span class="kw">let</span> rq'   <span class="fu">=</span> rq <span class="fu">++</span> [rnum]
-    put <span class="fu">$</span> st { nextGoroutine <span class="fu">=</span> rnum<span class="fu">+</span><span class="dv">1</span>, goroutines <span class="fu">=</span> rmap', readyQueue <span class="fu">=</span> rq' }
+    put <span class="fu">$</span> st {
+            nextGoroutine <span class="fu">=</span> rnum<span class="fu">+</span><span class="dv">1</span>,
+            goroutines <span class="fu">=</span> rmap',
+            readyQueue <span class="fu">=</span> rq'
+          }
     interpGo next
 
   <span class="co">-- create a new channel</span>
@@ -213,7 +218,8 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
     <span class="kw">let</span> pmap <span class="fu">=</span> portVals st
     <span class="kw">let</span> rid <span class="fu">=</span> curGoroutine st
 
-    <span class="co">-- block goroutine if channel is full, otherwise put value into channel</span>
+    <span class="co">-- block goroutine if channel is full,</span>
+    <span class="co">-- otherwise put value into channel</span>
     <span class="kw">case</span> M.lookup port pmap <span class="kw">of</span> 
       <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
         <span class="kw">let</span> pmap' <span class="fu">=</span> M.insert port (<span class="dt">Just</span> v) pmap
@@ -225,14 +231,16 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
         addToWaitQueue port rid prog
         scheduleNextGoroutine
 
-      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span>
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
+        throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span>
 
   <span class="dt">Free</span> (<span class="dt">GoGetChan</span> port next) <span class="ot">-&gt;</span> <span class="kw">do</span>
     st <span class="ot">&lt;-</span> get
     <span class="kw">let</span> pmap <span class="fu">=</span> portVals st
     <span class="kw">let</span> rid <span class="fu">=</span> curGoroutine st
 
-    <span class="co">-- block goroutine if channel is empty, otherwise get value from channel</span>
+    <span class="co">-- block goroutine if channel is empty,</span>
+    <span class="co">-- otherwise get value from channel</span>
     <span class="kw">case</span> M.lookup port pmap <span class="kw">of</span> 
       <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
         addToWaitQueue port rid prog
@@ -244,7 +252,8 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
         wakeFromWaitQueue port
         interpGo <span class="fu">$</span> next cval
 
-      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span></code></pre></div>
+      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
+        throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span></code></pre></div>
 <p>These are duals of each other. <code>GoPutChan</code> puts a value in the channel if it is empty, and blocks the goroutine otherwise. <code>GoGetChan</code> extracts a value from the channel if it is full, and blocks the goroutine otherwise. When either operation is successful (i.e. doesn’t block), we wake goroutines that are blocked on the channel.</p>
 <p>A subtlety: notice that when the goroutine is blocked on the channel, it stores <code>prog</code> as the continuation instead of <code>next</code>. This is so because <code>prog</code> contains the current instruction being executed, and we want to try executing the instruction again when it is woken up. For example, if executing <code>GoGetChan</code> blocks on an empty channel, we want to execute <code>GoGetChan</code> again when the goroutine is woken up and the channel is full.</p>
 <p><code>select</code> is probably the most complicated.</p>
@@ -255,12 +264,13 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
     <span class="kw">case</span> unblockedBranches <span class="kw">of</span>
       <span class="co">-- one of the branches is unblocked. jump to it</span>
       b<span class="fu">:</span>bs <span class="ot">-&gt;</span> <span class="kw">do</span>
-        <span class="kw">let</span> bprog <span class="fu">=</span> branchProg b
+        <span class="kw">let</span> bprog v <span class="fu">=</span> (branchProg b) v <span class="fu">&gt;&gt;</span> next
         <span class="co">-- notice that we have to add the instruction stream after the</span>
         <span class="co">-- branch, otherwise it won't be executed!</span>
-        interpGo <span class="fu">$</span> <span class="dt">Free</span> (<span class="dt">GoGetChan</span> (branchChan b) (\v <span class="ot">-&gt;</span> (bprog v) <span class="fu">&gt;&gt;</span> next))
+        interpGo <span class="fu">$</span> <span class="dt">Free</span> (<span class="dt">GoGetChan</span> (branchChan b) bprog)
 
-      <span class="co">-- all of the branches are blocked. block the goroutine until one of</span>
+      <span class="co">-- all of the branches are blocked.</span>
+      <span class="co">-- block the goroutine until one of</span>
       <span class="co">-- the branches becomes unblocked</span>
       [] <span class="ot">-&gt;</span> <span class="kw">do</span>
         <span class="kw">let</span> ports <span class="fu">=</span> map (snd <span class="fu">.</span> branchChan) branches
@@ -279,7 +289,8 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
           <span class="kw">case</span> M.lookup port (portVals st) <span class="kw">of</span>
             <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> return <span class="dt">False</span>
             <span class="dt">Just</span> (<span class="dt">Just</span> cval) <span class="ot">-&gt;</span> return <span class="dt">True</span>
-            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span></code></pre></div>
+            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span>
+              throwError <span class="fu">$</span> <span class="st">&quot;Channel &quot;</span> <span class="fu">++</span> (show port) <span class="fu">++</span> <span class="st">&quot; not found!&quot;</span></code></pre></div>
 <p>There are two cases:</p>
 <ul>
 <li><p>If there are branches that are unblocked, we pick the first one, and essentially execute a <code>GoGetChan</code> command: we extract the value from the channel we block on, apply the value to the branch code, and then execute it.</p></li>
@@ -390,10 +401,10 @@ chan_map f chan <span class="fu">=</span> <span class="kw">do</span>
 chan_map f inchan <span class="fu">=</span> <span class="kw">do</span>
   outchan <span class="ot">&lt;-</span> newchan 
   go <span class="fu">$</span> map_goroutine outchan
-  return chan'
+  return outchan
   <span class="kw">where</span> map_goroutine outchan <span class="fu">=</span> <span class="kw">do</span>
           v <span class="ot">&lt;-</span> getchan inchan
-          putchan outchan v
+          putchan outchan (f v)
           map_goroutine outchan</code></pre></div>
 <p>This works, albeit awkwardly. Here’s one way to use it:</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">source lst chan <span class="fu">=</span> <span class="kw">do</span>
@@ -419,12 +430,12 @@ mapmain <span class="fu">=</span> <span class="kw">do</span>
 <p>The trick is as follows: we’re going to change what a channel value means. Currently, a channel is a key into a runtime map that may or may not hold a value. Now instead of a single key into a runtime map, instead it will be a <em>pair</em> of keys: one key will be used to push values into the map, and the other key will be used to get values from it.</p>
 <p>Some diagrams might help with the explanation.</p>
 <div class="figure">
-<img src="../img/chan-regular.png" />
+<img src="../img/chan-regular.svg" />
 
 </div>
 <p>The diagram above should be pretty self-explanatory. For this to work properly the <code>source</code> function needs to be passed the <code>inchan</code> channel and the <code>sink</code> channel needs to be passed the <code>outchan</code> channel. <code>chan_map</code> currently returns <code>outchan</code>. To make it so that we can pass the same channel to both <code>source</code> and <code>sink</code>, we’re going to change <code>chan_map</code> so that it returns a “virtual” channel: when a goroutine pushes a value to it, the goroutine is really pushing a value to <code>inchan</code>; when a goroutine extracts a value from it, the goroutine is really extracting a value out of <code>outchan</code>. So under the hood the same thing is happening, but the interface to the user is a bit nicer. Like so:</p>
 <div class="figure">
-<img src="../img/chan-composition.png" />
+<img src="../img/chan-composition.svg" />
 
 </div>
 <p>Let’s see how this change looks like in code.</p>
@@ -464,13 +475,14 @@ interpGo prog <span class="fu">=</span> <span class="kw">case</span> prog <span 
 <p>Now, we can finally write <code>chan_map</code>.</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">chan_map ::</span> <span class="dt">GoExprable</span> a <span class="ot">=&gt;</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span>
 chan_map f inchan<span class="fu">@</span>(inchan_put,_) <span class="fu">=</span> <span class="kw">do</span>
-	outchan<span class="fu">@</span>(_, outchan_get) <span class="ot">&lt;-</span> newchan
+  outchan<span class="fu">@</span>(_, outchan_get) <span class="ot">&lt;-</span> newchan
   go <span class="fu">$</span> map_goroutine inchan outchan
-	return (inchan_put, outchan_get)
-  <span class="kw">where</span> map_goroutine inchan outchan <span class="fu">=</span> <span class="kw">do</span>
-          val <span class="ot">&lt;-</span> getchan inchan
-          putchan outchan <span class="fu">$</span> toGoExpr <span class="fu">$</span> f val
-          map_goroutine inchan outchan</code></pre></div>
+  return (inchan_put, outchan_get)
+  <span class="kw">where</span>
+    map_goroutine inchan outchan <span class="fu">=</span> <span class="kw">do</span>
+      val <span class="ot">&lt;-</span> getchan inchan
+      putchan outchan <span class="fu">$</span> toGoExpr <span class="fu">$</span> f val
+      map_goroutine inchan outchan</code></pre></div>
 <p>And voila!</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;</span> run_gomain mapmain
 <span class="dt">GoInt</span> <span class="dv">101</span>
@@ -493,15 +505,16 @@ chan_partition pred chan<span class="fu">@</span>(chan_put, _) <span class="fu">
   <span class="kw">let</span> rchan' <span class="fu">=</span> (chan_put, lchan_get)
   go <span class="fu">$</span> partition_goroutine lchan rchan
   return (lchan', rchan')
-  <span class="kw">where</span> partition_goroutine lchan rchan <span class="fu">=</span> <span class="kw">do</span>
-          val <span class="ot">&lt;-</span> getchan chan
-          <span class="kw">if</span> pred val
-          <span class="kw">then</span> <span class="kw">do</span> 
-            putchan lchan val
-            partition_goroutine lchan rchan
-          <span class="kw">else</span> <span class="kw">do</span>
-            putchan rchan val
-            partition_goroutine lchan rchan
+  <span class="kw">where</span>
+    partition_goroutine lchan rchan <span class="fu">=</span> <span class="kw">do</span>
+      val <span class="ot">&lt;-</span> getchan chan
+      <span class="kw">if</span> pred val
+      <span class="kw">then</span> <span class="kw">do</span> 
+        putchan lchan val
+        partition_goroutine lchan rchan
+      <span class="kw">else</span> <span class="kw">do</span>
+        putchan rchan val
+        partition_goroutine lchan rchan
 
 <span class="ot">count ::</span> <span class="dt">GoExprable</span> a <span class="ot">=&gt;</span> [a] <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()
 count [] chan <span class="fu">=</span> return ()
@@ -537,7 +550,13 @@ left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">7</
 right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">8</span>
 left<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">9</span>
 right<span class="fu">:</span> <span class="dt">GoInt</span> <span class="dv">10</span></code></pre></div>
-<p>In fact, you can basically just go through Haskell’s <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Data-List.html">Data.List library</a> and implement most of the functions there. It’s a fun exercise – I recommend doing it.</p>
+<p>In fact, you can basically just go through Haskell’s <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Data-List.html">Data.List library</a> and implement most of the functions there as channel combinators. It’s a fun exercise – I recommend doing it.</p>
+<p>A nice improvement for the future would be to do some kind of deforestation analysis on channel combinators. For example, consider the channel</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">newchan <span class="fu">&gt;&gt;=</span> chan_map (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> x <span class="fu">+</span> <span class="dv">10</span>)
+        <span class="fu">&gt;&gt;=</span> chan_map (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> x<span class="fu">*</span><span class="dv">2</span>)</code></pre></div>
+<p>Instead of creating two intermediate goroutines, we can optimize this to just have one:</p>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">newchan <span class="fu">&gt;&gt;=</span> chan_map (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> (x<span class="fu">+</span><span class="dv">10</span>)<span class="fu">*</span><span class="dv">2</span>)</code></pre></div>
+<p>I think we can get away with having at most one intermediate goroutine that does the transformation between input and output channels, no matter how many channel transformations we bind together. But it would involve adding extra state to the runtime that keeps track of what goroutines feed from and push to which channels.</p>
 <p>That’s it for now. If you want to see the full source code for HaskGo, see <a href="https://gist.github.com/rolph-recto/5e8ca67f701675103d651795a0c70a89">this gist</a>. Until next time!</p>
 <div class="footnotes">
 <hr />
