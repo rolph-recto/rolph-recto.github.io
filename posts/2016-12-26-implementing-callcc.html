@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>rolph recto - Implementing call/cc</title>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i" rel="stylesheet">
+        <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i" rel="stylesheet"> -->
+        <link href="https://fonts.googleapis.com/css?family=Merriweather:400,400i" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="../css/default.css" />
         <link rel="stylesheet" type="text/css" href="../css/syntax.css" />
         <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -14,10 +15,9 @@
     <body>
       <div id="header-bg">
         <div id="header">
-            <div id="logo">
-                <a href="../">rolph recto</a>
-            </div>
             <div id="navigation">
+                <span id="logo">rolph recto</span>
+                &nbsp; &nbsp;
                 <a href="../">about</a>
                 <a href="../blog.html">blog</a>
                 <a href="../archive.html">archive</a>
@@ -25,6 +25,7 @@
         </div>
       </div>
 
+        <div id="container">
         <div id="content">
             <h1>Implementing call/cc</h1>
 
@@ -37,15 +38,13 @@ December 26, 2016
 </p>
 </div>
 
-<p>I’ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. <code>call/cc</code> always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code.</p>
-<!--more-->
-<p>Before diving in to implement this for Lisp, I thought it would be a good exercise to implement an interpreter for a toy language. The idea is that once I’ve implemented <code>call/cc</code> there then I can have a better idea of how to implement it for the Lisp interpreter.</p>
+<p>I’ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations. <!--more--> <code>call/cc</code> always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code. Before diving in to implement this for Lisp, I thought it would be a good exercise to implement an interpreter for a toy language. The idea is that once I’ve implemented <code>call/cc</code> there then I can have a better idea of how to implement it for the Lisp interpreter. <span class="sidenote"> While I’ve got a decent idea of how to implement this feature now, the interpreter is still a bit of a mess. It turns out first-class continuations are a big feature that touches pretty much every part of an interpreter! </span></p>
 <h2 id="continuations-recap">Continuations Recap</h2>
 <p>A quick recap on what continuations are. There’s many ways to describe them, but essentially they define the “context” of a computation. For example, let’s say you’re interpreting the expression:</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dv">2</span> <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">+</span> (<span class="dv">4</span> <span class="fu">+</span> <span class="dv">5</span>)</code></pre></div>
 <p>To interpret this expression, you need to interpret its subexpressions <code>(2 + 3)</code> and <code>(4 + 5)</code>. Say your interpreter evaluates summands left to right so you interpret <code>(2 + 3)</code> first. The context of this computation is</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">[ ] <span class="fu">+</span> (<span class="dv">4</span> <span class="fu">+</span> <span class="dv">5</span>)</code></pre></div>
-<p>Think of it as an expression with a hole<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. In other words, <code>[ ] + (4 + 5)</code> is the <em>current continuation</em> while interpreting <code>(2 + 3)</code>. It’s the “rest of the computation.”</p>
+<p>Think of it as an expression with a hole. <span class="sidenote"> You could also think of this expression-with-a-hole as a function from expressions to expressions: this fact will be important later. </span> In other words, <code>[ ] + (4 + 5)</code> is the <em>current continuation</em> while interpreting <code>(2 + 3)</code>. It’s the “rest of the computation.”</p>
 <p>So that’s the current continuation. What then does <code>call/cc</code> or <code>call-with-current-continuation</code> do? <code>call/cc</code> is a function that basically allows the programmer to <em>manipulate the current continuation or context of computation within the language itself!</em> It takes in another function <code>f</code> as an argument and passes in to <code>f</code> a “reified” version of the current continuation. The reified continuation is basically a function (a lambda abstraction), except that whenever it is called we erase the current continuation, which allows the programmer to replace the current continuation with the reified one.</p>
 <p>That might be confusing so here’s an example. Consider the addition expression above, but with the addition of <code>call/cc</code> as a subexpression:</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(call<span class="fu">/</span>cc (\k <span class="ot">-&gt;</span> k (<span class="dv">2</span> <span class="fu">+</span> <span class="dv">3</span>))) <span class="fu">+</span> (<span class="dv">4</span> <span class="fu">+</span> <span class="dv">5</span>)</code></pre></div>
@@ -215,7 +214,7 @@ eval expr
       <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="fu">$</span> <span class="st">&quot;unexpected free variable: v&quot;</span> <span class="fu">++</span> (show x)
       <span class="dt">Just</span> (<span class="dt">ILit</span> xval) <span class="ot">-&gt;</span> eval (<span class="dt">Plus</span> (<span class="dt">ILit</span> xval) (<span class="dt">Var</span> y))
       otherwise <span class="ot">-&gt;</span> throwError <span class="st">&quot;expected integer argument to Plus&quot;</span></code></pre></div>
-<p>Now it gets a bit interesting. Notice that when we are “traversing down” during interpretation and need to interpret a subexpression, we push a new delimited continuation to the stack and continue interpreting that subexpression. This happens, for example, when addition expressions have variables as summands, or when a function’s argument needs to be interpreted further<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. When no subexpressions need to be further interpreted, such as when we are adding two literals together, we call <code>ret</code> instead of <code>eval</code> and “traverse up.”</p>
+<p>Now it gets a bit interesting. Notice that when we are “traversing down” during interpretation and need to interpret a subexpression, we push a new delimited continuation to the stack and continue interpreting that subexpression. This happens, for example, when addition expressions have variables as summands, or when a function’s argument needs to be interpreted further. <span class="sidenote"> Notice that this language is eagerly evaluated. </span> When no subexpressions need to be further interpreted, such as when we are adding two literals together, we call <code>ret</code> instead of <code>eval</code> and “traverse up.”</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">  <span class="co">-- eval continued ...</span>
 
   <span class="fu">|</span> <span class="dt">Print</span> pexpr <span class="ot">&lt;-</span> expr, isValue pexpr <span class="fu">=</span> <span class="kw">do</span>
@@ -254,7 +253,7 @@ eval expr
 
     <span class="co">-- evaluate the body</span>
     local (M.insert k cont) (eval body)</code></pre></div>
-<p>Again, we create the current continuation by composing the delimited continuations in the stack together (<code>contf</code>). We then reify this continuation, which is a function in the metalanguage / implementation language, into an object language continuation by applying a variable expression to the function, so that it returns an expression with a free variable <code>Var (-1)</code>. By <em>free</em> I mean free in the object language; also, we’re going to punt on issues with capture for now. We then wrap this expression into a <code>Cont</code> to bind the variable, and we’re done!<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> We can now evaluate the body, in whose environment the variable <code>k</code> will be mapped to the reified continuation. Note that syntactically <code>call/cc</code> takes in two arguments: the name of the variable and the body expression to be evaluated whose environment contains the variable so named mapped to the reified continuation. This is equivalent to having <code>call/cc</code> take a function as a single argument.</p>
+<p>Again, we create the current continuation by composing the delimited continuations in the stack together (<code>contf</code>). We then reify this continuation, which is a function in the metalanguage / implementation language, into an object language continuation by applying a variable expression to the function, so that it returns an expression with a free variable <code>Var (-1)</code>. By <em>free</em> I mean free in the object language; also, we’re going to punt on issues with capture for now. We then wrap this expression into a <code>Cont</code> to bind the variable, and we’re done! <span class="sidenote"> You might think, as I originally did, that the interpreter should clear the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2. Explanation for why this answers our question is left as an exercise for the reader! </span> We can now evaluate the body, in whose environment the variable <code>k</code> will be mapped to the reified continuation. Note that syntactically <code>call/cc</code> takes in two arguments: the name of the variable and the body expression to be evaluated whose environment contains the variable so named mapped to the reified continuation. This is equivalent to having <code>call/cc</code> take a function as a single argument.</p>
 <p>That’s the interpreter. Let’s test it out!</p>
 <div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;&gt;</span> <span class="kw">let</span> subexpr <span class="fu">=</span> <span class="dt">Seq</span> [<span class="dt">ILit</span> <span class="dv">98</span>, <span class="dt">App</span> (<span class="dt">Var</span> <span class="dv">0</span>) <span class="dt">Unit</span>]
 <span class="fu">&gt;&gt;</span> <span class="kw">let</span> expr <span class="fu">=</span> <span class="dt">Seq</span> [<span class="dt">CallCC</span> <span class="dv">0</span> subexpr, <span class="dt">Print</span> (<span class="dt">ILit</span> <span class="dv">99</span>)]
@@ -275,18 +274,69 @@ eval expr
 <p>That’s it for now. In retrospect it was a good call to implement <code>call/cc</code> for a toy language first, since now I have a pretty clear idea of how to do it. It certainly was more productive than my futile initial attempts at implementing first-class continuations in my Lisp interpreter, where I was bogged down with trying to fit the implementation with the rest of the interpreter, which made the endeavor a lot more complicated.</p>
 <p>You can find the full source for the interpreter <a href="https://github.com/rolph-recto/lambda-type-systems/blob/master/Cont.hs">here</a>. For further reading, Matt Might has a <a href="http://matt.might.net/articles/writing-an-interpreter-substitution-denotational-big-step-small-step/">good blog post</a> that describes the relationship between small step interpreters and continuations. He mentions the zipper approach that I followed here but he instead uses class methods to manipulate contexts of a computation.</p>
 <p><em>Edit: Fixed some typos and added some clarifications.</em></p>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p>While I’ve got a decent idea of how to implement this feature now, the interpreter is still a bit of a mess. It turns out first-class continuations are a big feature that touches pretty much every part of an interpreter!<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>You could also think of this expression-with-a-hole as a function from expressions to expressions: this fact will be important later.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>Notice that this language is eagerly evaluated.<a href="#fnref3">↩</a></p></li>
-<li id="fn4"><p>You might think, as I originally did, that the interpreter should clear the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2. Explanation for why this answers our question is left as an exercise for the reader!<a href="#fnref4">↩</a></p></li>
-</ol>
+
+
+        <div id="footer">
+        <!--
+        <hr />
+				<div style="display:none" id="quote-1">
+<blockquote>
+<em>
+Maybe it’s passé to think a better world is possible, but we could at least try
+our hand at imagining one. I spent much of my formative years reading writers
+formed by the Cold War who were skeptical of Utopia; perhaps political ideals
+led inevitably, they worried, to dehumanization of opponents, to justified
+atrocity. Their skepticism was well-earned. But I wish I could go back and tell
+them that people are equally capable of brutality for no ideals whatsoever.
+</em>
+</blockquote>
+
+<p align="right" id="quote-1">
+B. D. McClay,
+<a href="http://iasc-culture.org/THR/channels/THR/2018/06/the-art-of-the-possible">
+"The Art of the Possible"
+</a>
+</p>
 </div>
 
+<div style="display:none" id="quote-2">
+<blockquote>
+<em>
+I am the least difficult of men. All I want is boundless love.
+</em>
+</blockquote>
+
+<div align="right">
+Frank O'Hara,
+<a href="https://www.poetryfoundation.org/poetrymagazine/poems/26538/meditations-in-an-emergency">
+"Meditations in an Emergency"
+</a>
+</div>
+</div>
+
+<div style="display:none" id="quote-3">
+<blockquote>
+<em>
+All of humanity's problems stem from man's inability to sit quietly in a room
+alone.
+</em>
+</blockquote>
+
+<div align="right">
+Pascal, <em>Pensées</em>
+</div>
+</div>
+
+<script type="text/javascript">
+var rq = Math.floor(Math.random() * 3) + 1;
+console.log("quote-" + rq);
+document.getElementById("quote-" + rq).style.display = "block";
+</script>
+
+				-->
         </div>
-        <div id="footer">
         </div>
+        </div>
+
     </body>
 </html>
