@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+
+
+<html lang="en-us" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Implementing call/cc - Rolph Recto</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="http://rolph-recto.github.io/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="http://rolph-recto.github.io/favicon.png">
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="http://rolph-recto.github.io/css/style.6155b6d8eded05b985178f56a637943b3e7fcfccc913d9c656bbebce7c91cc6b.css" integrity="sha256-YVW22O3tBbmFF49WpjeUOz5/z8zJE9nGVrvrznyRzGs=">
+    
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="http://rolph-recto.github.io/css/style.09382ffff49667a131a6f82e8d8c82cc72b481648b4deb145d780a4ce2255896.css" integrity="sha256-CTgv//SWZ6ExpvgujYyCzHK0gWSLTesUXXgKTOIlWJY=">
+    
+
+
+
+
+
+<meta property="og:title" content="Implementing call/cc" />
+<meta property="og:description" content="I&rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations. call/cc always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code. Before diving in to implement this for Lisp, I thought it would be a good exercise to implement an interpreter for a toy language." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://rolph-recto.github.io/blog/implementing-callcc/" />
+<meta property="article:published_time" content="2016-12-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2016-12-26T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Implementing call/cc"/>
+<meta name="twitter:description" content="I&rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations. call/cc always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code. Before diving in to implement this for Lisp, I thought it would be a good exercise to implement an interpreter for a toy language."/>
+
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">Rolph Recto</a>
+</h1>
+
+    <nav>
+        
+        
+        <a class="" href="http://rolph-recto.github.io/" title="">home</a>
+        
+        <a class="" href="http://rolph-recto.github.io/personal/" title="">personal</a>
+        
+        <a class="" href="http://rolph-recto.github.io/blog/" title="">blog</a>
+        
+    </nav>
+
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">Implementing call/cc</h1>
+        </header>
+        
+
+    
+
+
+<div class="post-info">
+    
+      Dec 26, 2016
+    
+    
+    
+      &nbsp; - &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/cs">#cs</a> &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/pl">#pl</a> &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/haskell">#haskell</a> &nbsp;
+      
+    
+</div>
+
+        <div class="content">
+            <p>I&rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and
+the next feature on my todo list is first-class continuations.
+<code>call/cc</code> always seemed mysterious to me, and since this is PL, the best way to
+get rid of that air of mystery is to actually implement it in code.
+Before diving in to implement this for Lisp, I thought it would be a good
+exercise to implement an interpreter for a toy language. The idea is that once
+I&rsquo;ve implemented <code>call/cc</code> there then I can have a better idea of how to
+implement it for the Lisp interpreter.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
+<h2 id="continuations-recap">Continuations Recap</h2>
+<p>A quick recap on what continuations are. There&rsquo;s many ways to describe them,
+but essentially they define the &ldquo;context&rdquo; of a computation. For example, let&rsquo;s
+say you&rsquo;re interpreting the expression:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">(<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)
+</code></pre></div><p>To interpret this expression, you need to interpret its subexpressions <code>(2 + 3)</code> and <code>(4 + 5)</code>.  Say your interpreter evaluates summands left to right so
+you interpret <code>(2 + 3)</code> first. The context of this computation is</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">[ ] <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)
+</code></pre></div><p>Think of it as an expression with a hole.<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>
+In other words, <code>[ ] + (4 + 5)</code> is the <em>current continuation</em> while interpreting
+<code>(2 + 3)</code>. It&rsquo;s the &ldquo;rest of the computation.&rdquo;</p>
+<p>So that&rsquo;s the current continuation. What then does <code>call/cc</code> or
+<code>call-with-current-continuation</code> do? <code>call/cc</code> is a function that basically
+allows the programmer to <em>manipulate the current continuation or context of
+computation within the language itself!</em> It takes in another function <code>f</code> as an
+argument and passes in to <code>f</code> a &ldquo;reified&rdquo; version of the current continuation.
+The reified continuation is basically a function (a lambda abstraction), except
+that whenever it is called we erase the current continuation, which allows the
+programmer to replace the current continuation with the reified one.</p>
+<p>That might be confusing so here&rsquo;s an example. Consider the addition expression
+above, but with the addition of <code>call/cc</code> as a subexpression:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">(call<span style="color:#666">/</span>cc (<span style="color:#00f">\</span>k <span style="color:#a2f;font-weight:bold">-&gt;</span> k (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>))) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)
+</code></pre></div><p>This looks weird, but actually it is equivalent to <code>(2 + 3) + (4 + 5)</code>. How?
+Notice that when we interpret the <code>call/cc</code> expression, the current continuation
+is <code>[ ] + (4 + 5)</code>. This continuation becomes reified as a function</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">(<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))
+</code></pre></div><p>Basically, you replace the hole with a variable and create a (special kind of)
+lambda abstraction so that this variable is bound. Recall that <code>call/cc</code> passes
+this function to its argument, and when it is called it replaces the current
+continuation with an empty context, an &ldquo;identity continuation&rdquo;.  So the
+expression above would evaluate as follows:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">(call<span style="color:#666">/</span>cc (<span style="color:#00f">\</span>k <span style="color:#a2f;font-weight:bold">-&gt;</span> k (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>))) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span>
+((<span style="color:#00f">\</span>k <span style="color:#a2f;font-weight:bold">-&gt;</span> k (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>)) (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span>
+(<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)) (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span>
+(<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span>
+<span style="color:#408080;font-style:italic">-- and so on...</span>
+</code></pre></div><p>The expression with <code>call/cc</code> is equivalent to the one without, as promised!
+This doesn&rsquo;t really display the power of <code>call/cc</code> though. Because the
+continuation is reified as a function, <em>you can do whatever you want with it!</em>
+For example, you can &ldquo;short-circuit&rdquo; evaluation by not calling the reified
+continuation at all:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">(call<span style="color:#666">/</span>cc (<span style="color:#00f">\</span>k <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>)) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span>
+((<span style="color:#00f">\</span>k <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>) (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span>
+<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span> <span style="color:#a2f;font-weight:bold">=&gt;</span>
+<span style="color:#666">5</span>
+</code></pre></div><p>This is just a simple example. There&rsquo;s a bewildering number of ways to use
+<code>call/cc</code>, from <a href="http://stackoverflow.com/questions/13338559/scheme-how-does-a-nested-call-cc-work-for-a-coroutine">implementing
+coroutines</a>
+to much more. But now let&rsquo;s think about how to implement this. We want to keep
+track of the current continuation, and when we call <code>call/cc</code> we want to reify
+the current continuation into a function. How do we do this?</p>
+<p>Programs can usually be represented as an abstract syntax tree (AST). You can
+then think of interpreting a program as a traversal through an AST. What this
+traversal entails depends on the semantics of the language. In the case of
+arithmetic expressions, traversing the AST means to compute the number that the
+expression denotes. Continuations are the context of traversing the AST; they
+mark the position on the tree where interpretation is currently taking place.
+We want a good representation of this traversal, so that we can easily move the
+mark through the tree.</p>
+<p>&ldquo;Representing a traversal&rdquo; might ring some bells: continuations can be
+represented by <a href="https://en.wikibooks.org/wiki/Haskel/Zippers">zippers</a>! When we
+traverse a subexpression / subtree during interpretation, we push a new
+expression with a hole into a stack, where the hole represents the
+subexpression being traversed. This expression-with-a-hole is <em>part</em> of the
+context of computation, and can be represented as a function <code>Expr -&gt; Expr</code>
+in the metalanguage (i.e. the implementation language). When the interpretation
+&ldquo;bottoms out,&rdquo; meaning the current expression has no subexpressions left to be
+further interpreted, we compute the value of the current expression, pop the
+head of the stack, place the value into the hole of the head expression (i.e.,
+we apply the value as an argument to the function), and then continue
+interpretation.</p>
+<p>Let&rsquo;s do an example to make this concrete. Here&rsquo;s a trace of interpreting an
+expression:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> (<span style="color:#666">1</span> <span style="color:#666">+</span> (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>)) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)
+<span style="color:#b00040">STACK:</span> <span style="color:#b00040">[]</span>
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole)
+[(<span style="color:#666">1</span> <span style="color:#666">+</span> (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>)) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)] <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse down)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> (<span style="color:#666">1</span> <span style="color:#666">+</span> (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>))
+<span style="color:#b00040">STACK:</span> [(<span style="color:#00f">\</span>h1 <span style="color:#a2f;font-weight:bold">-&gt;</span> h1 <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))]
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))
+[(<span style="color:#666">1</span> <span style="color:#666">+</span> (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>))] <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse down)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> (<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>)
+<span style="color:#b00040">STACK:</span> [(<span style="color:#00f">\</span>h2 <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#666">1</span> <span style="color:#666">+</span> h2), (<span style="color:#00f">\</span>h1 <span style="color:#a2f;font-weight:bold">-&gt;</span> h1 <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))]
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> (<span style="color:#666">1</span> <span style="color:#666">+</span> hole) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))
+(<span style="color:#666">1</span> <span style="color:#666">+</span> [(<span style="color:#666">2</span> <span style="color:#666">+</span> <span style="color:#666">3</span>)]) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse up)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> (<span style="color:#666">1</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)
+<span style="color:#b00040">STACK:</span> [(<span style="color:#00f">\</span>h1 <span style="color:#a2f;font-weight:bold">-&gt;</span> h1 <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))]
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> (<span style="color:#666">1</span> <span style="color:#666">+</span> hole) <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>))
+[(<span style="color:#666">1</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)] <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>) <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse up)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> <span style="color:#666">6</span> <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)
+<span style="color:#b00040">STACK:</span> <span style="color:#b00040">[]</span>
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole)
+[<span style="color:#666">6</span> <span style="color:#666">+</span> (<span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>)] <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse down)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> <span style="color:#666">4</span> <span style="color:#666">+</span> <span style="color:#666">5</span>
+<span style="color:#b00040">STACK:</span> [(<span style="color:#00f">\</span>h1 <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#666">6</span> <span style="color:#666">+</span> h1)]
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#666">6</span> <span style="color:#666">+</span> hole)
+<span style="color:#666">6</span> <span style="color:#666">+</span> [(<span style="color:#666">4</span><span style="color:#666">+</span> <span style="color:#666">5</span>)] <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse up)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> <span style="color:#666">6</span> <span style="color:#666">+</span> <span style="color:#666">9</span>
+<span style="color:#b00040">STACK:</span> <span style="color:#b00040">[]</span>
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole)
+<span style="color:#666">6</span> <span style="color:#666">+</span> <span style="color:#666">9</span>  <span style="color:#a2f;font-weight:bold">=&gt;</span> (traverse up)
+
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">EXPR:</span> <span style="color:#666">15</span>
+<span style="color:#b00040">STACK:</span> <span style="color:#b00040">[]</span>
+<span style="color:#b00040">CURRENT</span> <span style="color:#b00040">CONTINUATION:</span> (<span style="color:#00f">\</span>hole <span style="color:#a2f;font-weight:bold">-&gt;</span> hole)
+<span style="color:#666">15</span>
+</code></pre></div><p>Each interpretation step is annotated with the current expression, the current
+stack, and the current continuation. Each transition <code>(=&gt;)</code> is labeled as
+either &ldquo;traverse down,&rdquo; meaning next we interpret a subexpression of the
+current expression, or &ldquo;traverse up,&rdquo; meaning we interpret the current
+expression directly and place its interpretation (value) in the context of the
+stack head.</p>
+<p>Does this representation of continuations allow us to implement <code>call/cc</code>
+easily? Yes! To reify the current continuation, we just glue the together holed
+expressions (functions) in the stack by function composition. Try it with the
+example above. You&rsquo;ll see that you can compute the current continuation at
+any step just with the contents of the stack: plug the first element into
+the second element, plug the second element into the third, and so on, until
+you only have one function remaining, which should be equivalent to the
+current continuation.</p>
+<h2 id="implementing-the-toy-language">Implementing The Toy Language</h2>
+<p>Now that we have the idea, let&rsquo;s write actual code. This toy language will be
+very simple, but to make it more interesting we&rsquo;ll add commands. Here is the
+AST:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">data</span> <span style="color:#b00040">Expr</span>   <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">ILit</span> <span style="color:#b00040">Int</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">Var</span> <span style="color:#b00040">Int</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">Plus</span> <span style="color:#b00040">Expr</span> <span style="color:#b00040">Expr</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">Lam</span> <span style="color:#b00040">Int</span> <span style="color:#b00040">Expr</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">App</span> <span style="color:#b00040">Expr</span> <span style="color:#b00040">Expr</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">Unit</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">Print</span> <span style="color:#b00040">Expr</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">Seq</span> [<span style="color:#b00040">Expr</span>]
+            <span style="color:#666">|</span> <span style="color:#b00040">Cont</span> <span style="color:#b00040">Int</span> <span style="color:#b00040">Expr</span>
+            <span style="color:#666">|</span> <span style="color:#b00040">CallCC</span> <span style="color:#b00040">Int</span> <span style="color:#b00040">Expr</span>
+            <span style="color:#008000;font-weight:bold">deriving</span> (<span style="color:#b00040">Show</span>)
+</code></pre></div><p>Hopefully this is straightforward. The language has integer literals (<code>ILit</code>),
+variables (<code>Var</code>, indexed by integers instead of the usual strings), lambda
+abstraction (<code>Lam</code>), application (<code>App</code>), unit / zero-tuple (guess which
+constructor??), a print command (<code>Print</code>), a sequence of commands (<code>Seq</code>),
+continuations (<code>Cont</code>), which are basically lambdas with an extra side effect
+as we&rsquo;ll see below, and finally <code>call/cc</code> itself. For simplicity I didn&rsquo;t
+bother having separate datatypes for commands and expressions; everything is
+just an <code>Expr</code>.</p>
+<p>It is important that the interpreter we write for this toy language corresponds
+to the <em>small step</em> semantics of the language. The small step semantics defines
+exactly the order in which interpretation happens. The interpreter trace in the
+example above follows the small step semantics of an arithmetic language where
+summands are interpreted left to right. Contrast this with <em>large step</em>
+semantics, which defines only the value of expressions in a language.
+Interpreters written to reflect this style of semantics cannot capture the
+exact context of the ongoing computation because it leaves the order of
+interpretation up to the semantics of the implementation language. For example,
+a large step interpreter might have the following rule to interpret addition
+expressions:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">interp</span> e
+  <span style="color:#666">|</span> <span style="color:#b00040">Plus</span> e1 e2 <span style="color:#a2f;font-weight:bold">&lt;-</span> e <span style="color:#a2f;font-weight:bold">=</span> (interp e1) <span style="color:#666">+</span> (interp e2)
+</code></pre></div><p>Which gets interpreted first, <code>e1</code> or <code>e2</code>? It is left implicit, and depends
+on Haskell&rsquo;s semantics.</p>
+<p>Let&rsquo;s see some code! First off, some type declarations and convenience
+functions:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">import</span> <span style="color:#008000;font-weight:bold">qualified</span> <span style="color:#00f;font-weight:bold">Data.Map.Strict</span> <span style="color:#008000;font-weight:bold">as</span> M
+
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">Env</span>         <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">Int</span> <span style="color:#b00040">Expr</span>
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">DCont</span>       <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Expr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">Expr</span>
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">InterpState</span> <span style="color:#a2f;font-weight:bold">=</span> [<span style="color:#b00040">DCont</span>]
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">InterpM</span> a   <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">ExceptT</span> <span style="color:#b00040">String</span> (<span style="color:#b00040">ReaderT</span> <span style="color:#b00040">Env</span> (<span style="color:#b00040">StateT</span> <span style="color:#b00040">InterpState</span> <span style="color:#b00040">IO</span>)) a
+
+<span style="color:#00f">isValue</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Expr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">Bool</span>
+<span style="color:#00f">isValue</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">case</span> expr <span style="color:#008000;font-weight:bold">of</span>
+  <span style="color:#b00040">ILit</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">True</span>
+  <span style="color:#b00040">Var</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">True</span>
+  <span style="color:#b00040">Lam</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">True</span>
+  <span style="color:#b00040">App</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">False</span>
+  <span style="color:#b00040">Unit</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">True</span>
+  <span style="color:#b00040">Print</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">False</span>
+  <span style="color:#b00040">Seq</span> <span style="color:#b00040">[]</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">True</span>
+  <span style="color:#b00040">Seq</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">False</span>
+  <span style="color:#b00040">Cont</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">True</span>
+  <span style="color:#b00040">CallCC</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">False</span>
+</code></pre></div><p>Notice that continuations (<code>DCont</code>) are functions in the <em>metalanguage</em> (i.e.
+the implementation language), not the object language (i.e. the toy language).
+They are called <code>DCont</code>s because they are technically <em>delimited
+continuations</em>, which represent not the entire context of a computation but
+only part of it.  We reify the (undelimited) continuation used by <code>call/cc</code> by
+composing these together. Reifying a continuation is the process of turning
+this metalanguage function into an object language function represented by the
+constructor <code>Cont</code>. The control stack (<code>InterpState</code>) consists of a stack of
+<code>DCont</code>s.</p>
+<p>We&rsquo;ll be running the interpreter in the <code>InterpM</code> monad, which has <code>StateT</code> for
+keeping track of the stack / current continuation, a <code>ReaderT</code> component
+for keeping track of bound variables, and an <code>ExceptT</code> for handling errors.</p>
+<p>Lastly, we define an <code>isValue</code> function to define certain expression forms as
+values.  We&rsquo;ll use this information to determine whether to &ldquo;traverse up&rdquo;
+during interpretation.</p>
+<p>Now to the interpreter proper.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">ret</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Expr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">InterpM</span> <span style="color:#b00040">Expr</span>
+<span style="color:#00f">ret</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+  <span style="color:#008000;font-weight:bold">case</span> st <span style="color:#008000;font-weight:bold">of</span>
+    <span style="color:#b00040">[]</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> return expr
+    (c<span style="color:#b00040">:</span>cs) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+      put cs
+      eval (c expr)
+</code></pre></div><p>The <code>ret</code> function corresponds to the (initial part of the) &ldquo;traverse up&rdquo;
+transition in the example trace above. During interpretation, once we have a
+value expression (i.e., an expression that cannot be interpreted further) we
+pass this to <code>ret</code>, which will either place it in the head expression of the
+stack and continue interpretation (&ldquo;traverse down&rdquo;), or, if the stack is empty,
+return the expression. Note that if the stack is empty then the current
+continuation is the &ldquo;identity continuation,&rdquo; <code>(\hole -&gt; hole)</code>.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">pushToStack</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">DCont</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">InterpM</span> <span style="color:#008000">()</span>
+<span style="color:#00f">pushToStack</span> cont <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+  put (cont<span style="color:#b00040">:</span>st)
+</code></pre></div><p><code>pushToStack</code> is an aptly named helper function that pushes a new delimited
+continuation on top of the stack. Alternatively, if you&rsquo;re fine with
+applicative notation or want to play some Haskell code golf, you can write it
+like this:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">pushToStack</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Cont</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">InterpM</span> <span style="color:#008000">()</span>
+<span style="color:#00f">pushToStack</span> cont <span style="color:#a2f;font-weight:bold">=</span> (cont<span style="color:#b00040">:</span>) <span style="color:#666">&lt;$&gt;</span> get <span style="color:#666">&gt;&gt;=</span> put
+</code></pre></div><p>Here part the <code>eval</code> function:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">eval</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Expr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">InterpM</span> <span style="color:#b00040">Expr</span>
+<span style="color:#00f">eval</span> expr
+  <span style="color:#666">|</span> <span style="color:#b00040">ILit</span> n <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> ret expr
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Var</span> v <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    env <span style="color:#a2f;font-weight:bold">&lt;-</span> ask
+    <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup v env <span style="color:#008000;font-weight:bold">of</span>
+      <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;unexpected free variable: v&#34;</span> <span style="color:#666">++</span> (show v)
+      <span style="color:#b00040">Just</span> val <span style="color:#a2f;font-weight:bold">-&gt;</span> ret val
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Lam</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> ret expr
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Cont</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    ret expr
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Unit</span> <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> ret expr
+</code></pre></div><p>This is the boring part, since we&rsquo;re just matching on value expressions and
+immediately calling <code>ret</code>. Note that <code>eval</code> and <code>ret</code> are mutually recursive.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#408080;font-style:italic">-- eval continued...</span>
+
+  <span style="color:#666">|</span> <span style="color:#b00040">App</span> (<span style="color:#b00040">Lam</span> var body) arg <span style="color:#a2f;font-weight:bold">&lt;-</span> expr, isValue arg <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    local (<span style="color:#b00040">M</span><span style="color:#666">.</span>insert var arg) (eval body)
+
+  <span style="color:#666">|</span> <span style="color:#b00040">App</span> (<span style="color:#b00040">Lam</span> var body) arg <span style="color:#a2f;font-weight:bold">&lt;-</span> expr, not (isValue arg) <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    pushToStack <span style="color:#666">$</span> <span style="color:#b00040">App</span> (<span style="color:#b00040">Lam</span> var body)
+    eval arg
+
+  <span style="color:#666">|</span> <span style="color:#b00040">App</span> func arg <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    env <span style="color:#a2f;font-weight:bold">&lt;-</span> ask
+    <span style="color:#008000;font-weight:bold">let</span> cont f <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">App</span> f arg
+    pushToStack cont
+    eval func
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Plus</span> (<span style="color:#b00040">ILit</span> x) (<span style="color:#b00040">ILit</span> y) <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> ret (<span style="color:#b00040">ILit</span> <span style="color:#666">$</span> x <span style="color:#666">+</span> y)
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Plus</span> (<span style="color:#b00040">Var</span> x) (<span style="color:#b00040">ILit</span> y) <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    env <span style="color:#a2f;font-weight:bold">&lt;-</span> ask
+    <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup x env <span style="color:#008000;font-weight:bold">of</span>
+      <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;unexpected free variable: v&#34;</span> <span style="color:#666">++</span> (show x)
+      <span style="color:#b00040">Just</span> (<span style="color:#b00040">ILit</span> xval) <span style="color:#a2f;font-weight:bold">-&gt;</span> ret (<span style="color:#b00040">ILit</span> <span style="color:#666">$</span> xval <span style="color:#666">+</span> y)
+      otherwise <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#ba2121">&#34;expected integer argument to Plus&#34;</span>
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Plus</span> (<span style="color:#b00040">ILit</span> x) (<span style="color:#b00040">Var</span> y) <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> eval (<span style="color:#b00040">Plus</span> (<span style="color:#b00040">Var</span> y) (<span style="color:#b00040">ILit</span> x))
+  
+  <span style="color:#666">|</span> <span style="color:#b00040">Plus</span> (<span style="color:#b00040">Var</span> x) (<span style="color:#b00040">Var</span> y) <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    env <span style="color:#a2f;font-weight:bold">&lt;-</span> ask
+    <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup x env <span style="color:#008000;font-weight:bold">of</span>
+      <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;unexpected free variable: v&#34;</span> <span style="color:#666">++</span> (show x)
+      <span style="color:#b00040">Just</span> (<span style="color:#b00040">ILit</span> xval) <span style="color:#a2f;font-weight:bold">-&gt;</span> eval (<span style="color:#b00040">Plus</span> (<span style="color:#b00040">ILit</span> xval) (<span style="color:#b00040">Var</span> y))
+      otherwise <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#ba2121">&#34;expected integer argument to Plus&#34;</span>
+</code></pre></div><p>Now it gets a bit interesting. Notice that when we are &ldquo;traversing down&rdquo; during
+interpretation and need to interpret a subexpression, we push a new delimited
+continuation to the stack and continue interpreting that subexpression. This
+happens, for example, when addition expressions have variables as summands, or
+when a function&rsquo;s argument needs to be interpreted further.<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>
+When no subexpressions need to be further interpreted, such as when we are
+adding two literals together, we call <code>ret</code> instead of <code>eval</code> and &ldquo;traverse up.&rdquo;</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#408080;font-style:italic">-- eval continued ...</span>
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Print</span> pexpr <span style="color:#a2f;font-weight:bold">&lt;-</span> expr, isValue pexpr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+      liftIO <span style="color:#666">$</span> print pexpr
+      ret <span style="color:#b00040">Unit</span>
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Print</span> pexpr <span style="color:#a2f;font-weight:bold">&lt;-</span> expr, not (isValue pexpr) <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+      pushToStack <span style="color:#b00040">Print</span>
+      eval pexpr
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Seq</span> (cmd<span style="color:#b00040">:</span>tlcmds) <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+      pushToStack <span style="color:#666">$</span> const (<span style="color:#b00040">Seq</span> tlcmds)
+      eval cmd
+
+  <span style="color:#666">|</span> <span style="color:#b00040">Seq</span> <span style="color:#b00040">[]</span> <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+      ret <span style="color:#b00040">Unit</span>
+</code></pre></div><p>Here are the commands. They are interpreted similarly to the expressions above,
+except of course they have side effects, as seen in the first pattern match
+on <code>Print</code>. The only interesting thing to notice is that when interpreting
+sequences, the delimited continuation for interpreting the next command of the
+sequence just discards its argument. This makes sense since the context for
+interpreting (executing) a command is just the rest of the commands to be
+executed; no information from the current command is needed. Hence the unused
+argument.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#408080;font-style:italic">-- eval continued ...</span>
+
+  <span style="color:#666">|</span> <span style="color:#b00040">App</span> (<span style="color:#b00040">Cont</span> var body) arg <span style="color:#a2f;font-weight:bold">&lt;-</span> expr, isValue arg <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    put <span style="color:#b00040">[]</span>
+    local (<span style="color:#b00040">M</span><span style="color:#666">.</span>insert var arg) (eval body)
+
+  <span style="color:#666">|</span> <span style="color:#b00040">App</span> (<span style="color:#b00040">Cont</span> var body) arg <span style="color:#a2f;font-weight:bold">&lt;-</span> expr, not (isValue arg) <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    pushToStack <span style="color:#666">$</span> <span style="color:#b00040">App</span> (<span style="color:#b00040">Cont</span> var body)
+    eval arg
+</code></pre></div><p>As promised, reified continuations are exactly like lambdas, except that when
+calling them we erase the current context of computation by erasing the
+stack. This essentially allows the reified continuation to replace the current
+continuation whenever it is called.</p>
+<p>Finally, <code>call/cc</code>:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#408080;font-style:italic">-- eval continued ...</span>
+
+  <span style="color:#666">|</span> <span style="color:#b00040">CallCC</span> k body <span style="color:#a2f;font-weight:bold">&lt;-</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+    <span style="color:#408080;font-style:italic">-- reify the current continuation into a function</span>
+    st <span style="color:#a2f;font-weight:bold">&lt;-</span> get 
+    <span style="color:#008000;font-weight:bold">let</span> contf <span style="color:#a2f;font-weight:bold">=</span> foldr (<span style="color:#666">.</span>) id <span style="color:#666">$</span> reverse st
+    <span style="color:#008000;font-weight:bold">let</span> cont <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Cont</span> (<span style="color:#666">-</span><span style="color:#666">1</span>) (contf (<span style="color:#b00040">Var</span> (<span style="color:#666">-</span><span style="color:#666">1</span>)))
+
+    <span style="color:#408080;font-style:italic">-- evaluate the body</span>
+    local (<span style="color:#b00040">M</span><span style="color:#666">.</span>insert k cont) (eval body)
+</code></pre></div><p>Again, we create the current continuation by composing the delimited
+continuations in the stack together (<code>contf</code>). We then reify this continuation,
+which is a function in the metalanguage / implementation language, into an
+object language continuation by applying a variable expression to the function,
+so that it returns an expression with a free variable <code>Var (-1)</code>. By <em>free</em> I
+mean free in the object language; also, we&rsquo;re going to punt on issues with
+capture for now. We then wrap this expression into a <code>Cont</code> to bind the
+variable, and we&rsquo;re done<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+<p>We can now evaluate the body, in whose environment the variable <code>k</code> will be
+mapped to the reified continuation. Note that syntactically <code>call/cc</code> takes in
+two arguments: the name of the variable and the body expression to be evaluated
+whose environment contains the variable so named mapped to the reified
+continuation. This is equivalent to having <code>call/cc</code> take a function as a single
+argument.</p>
+<p>That&rsquo;s the interpreter. Let&rsquo;s test it out!</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#666">&gt;&gt;</span> <span style="color:#008000;font-weight:bold">let</span> subexpr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Seq</span> [<span style="color:#b00040">ILit</span> <span style="color:#666">98</span>, <span style="color:#b00040">App</span> (<span style="color:#b00040">Var</span> <span style="color:#666">0</span>) <span style="color:#b00040">Unit</span>]
+<span style="color:#666">&gt;&gt;</span> <span style="color:#008000;font-weight:bold">let</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Seq</span> [<span style="color:#b00040">CallCC</span> <span style="color:#666">0</span> subexpr, <span style="color:#b00040">Print</span> (<span style="color:#b00040">ILit</span> <span style="color:#666">99</span>)]
+<span style="color:#666">&gt;&gt;</span> res <span style="color:#a2f;font-weight:bold">&lt;-</span> evalStateT (runReaderT (runExceptT (eval expr)) <span style="color:#b00040">M</span><span style="color:#666">.</span>empty) initState
+<span style="color:#666">&gt;&gt;</span> putStrLn <span style="color:#666">$</span> either id show res
+<span style="color:#666">&gt;&gt;</span>
+<span style="color:#b00040">ILit</span> <span style="color:#666">98</span>
+<span style="color:#b00040">ILit</span> <span style="color:#666">99</span>
+</code></pre></div><p>We have a sequence of commands where <code>call/cc</code> is executed first. So the
+current continuation when <code>call/cc</code> is executed is the rest of the sequence,
+<code>\hole -&gt; Seq [Print (ILit 99)]</code>. <code>call/cc</code> then passes this continuation to a
+function whose body is also a sequence. <code>98</code> gets printed out first, and then
+we call the continuation, which prints <code>99</code>.</p>
+<p>This use of <code>call/cc</code> is a bit pointless, since <code>99</code> would&rsquo;ve been printed
+after <code>98</code> anyway. Here&rsquo;s a slightly less pointless use of <code>call/cc</code>:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#666">&gt;&gt;</span> <span style="color:#008000;font-weight:bold">let</span> subexpr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Seq</span> [<span style="color:#b00040">App</span> (<span style="color:#b00040">Var</span> <span style="color:#666">0</span>) <span style="color:#b00040">Unit</span>, <span style="color:#b00040">Print</span> (<span style="color:#b00040">ILit</span> <span style="color:#666">98</span>)]
+<span style="color:#666">&gt;&gt;</span> <span style="color:#008000;font-weight:bold">let</span> expr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Seq</span> [<span style="color:#b00040">CallCC</span> <span style="color:#666">0</span> subexpr, <span style="color:#b00040">Print</span> (<span style="color:#b00040">ILit</span> <span style="color:#666">99</span>)]
+<span style="color:#666">&gt;&gt;</span> res <span style="color:#a2f;font-weight:bold">&lt;-</span> evalStateT (runReaderT (runExceptT (eval expr)) <span style="color:#b00040">M</span><span style="color:#666">.</span>empty) initState
+<span style="color:#666">&gt;&gt;</span> putStrLn <span style="color:#666">$</span> either id show res
+<span style="color:#666">&gt;&gt;</span>
+<span style="color:#b00040">ILit</span> <span style="color:#666">99</span>
+</code></pre></div><p>So instead of printing <code>98</code>, we skip that command and instead
+print <code>99</code> right away. This happens because calling the reified continuation
+erases the stack, which destroys the current continuation that would&rsquo;ve printed
+<code>98</code> next. As you can see, we can use <code>call/cc</code> to implement jumps!</p>
+<p>That&rsquo;s it for now. In retrospect it was a good call to implement <code>call/cc</code> for
+a toy language first, since now I have a pretty clear idea of how to do it.
+It certainly was more productive than my futile initial attempts at implementing
+first-class continuations in my Lisp interpreter, where I was bogged down with
+trying to fit the implementation with the rest of the interpreter, which made
+the endeavor a lot more complicated.</p>
+<p>You can find the full source for the interpreter
+<a href="https://github.com/rolph-recto/lambda-type-systems/blob/master/Cont.hs">here</a>.
+For further reading, Matt Might has a <a href="http://matt.might.net/articles/writing-an-interpreter-substitution-denotational-big-step-small-step/">good blog
+post</a>
+that describes the relationship between small step interpreters and
+continuations. He mentions the zipper approach that I followed here but he
+instead uses class methods to manipulate contexts of a computation.</p>
+<p><em>Edit: Fixed some typos and added some clarifications.</em></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>While I&rsquo;ve got a decent idea of how to implement this feature now, the
+interpreter is still a bit of a mess. It turns out first-class continuations
+are a big feature that touches pretty much every part of an interpreter! <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>You could also think of this expression-with-a-hole as a function from
+expressions to expressions: this fact will be important later. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Notice that this language is eagerly evaluated. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>You might think, as I originally did, that the interpreter should clear
+the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that
+misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2.
+Explanation for why this answers our question is left as an exercise for the
+reader! <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+        </div>
+    </article>
+
+    
+
+    <hr>
+    <center>
+    
+      <p>
+      <a href="/blog/simulating-random-walks/">&nbsp;&lt;&lt;&nbsp;Simulating Random Walks with the List Monad</a>
+      </p>
+    
+    
+      <p>
+      <a href="/blog/go-in-haskell/">Embedding and Extending Go in Haskell&nbsp;&gt;&gt;</a>
+      </p>
+      
+    
+      <p>
+      Back to <a href="/blog/">Blog</a>
+      </p>
+    
+    </center>
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+    <div class="common-footer-bottom">
+        
+        
+
+
+   
+    </div>
+</footer>
+
+        
+    </div>
+</body>
+</html>

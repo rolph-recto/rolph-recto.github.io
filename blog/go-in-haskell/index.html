@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+
+
+<html lang="en-us" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Embedding and Extending Go in Haskell - Rolph Recto</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="http://rolph-recto.github.io/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="http://rolph-recto.github.io/favicon.png">
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="http://rolph-recto.github.io/css/style.6155b6d8eded05b985178f56a637943b3e7fcfccc913d9c656bbebce7c91cc6b.css" integrity="sha256-YVW22O3tBbmFF49WpjeUOz5/z8zJE9nGVrvrznyRzGs=">
+    
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="http://rolph-recto.github.io/css/style.09382ffff49667a131a6f82e8d8c82cc72b481648b4deb145d780a4ce2255896.css" integrity="sha256-CTgv//SWZ6ExpvgujYyCzHK0gWSLTesUXXgKTOIlWJY=">
+    
+
+
+
+
+
+<meta property="og:title" content="Embedding and Extending Go in Haskell" />
+<meta property="og:description" content="Here&rsquo;s a fun question: what would Go look like embedded inside of Haskell?
+By &ldquo;Go&rdquo; here I don&rsquo;t mean the full language itself but some kind of core calculus with the features that people really like about Go: namely, its synchronization primitives. This core calculus should at least have the ability to spawn new goroutines and the ability to pass data between goroutines using channels.
+By &ldquo;embedding&rdquo; a language in Haskell, I mean that I want to re-use Haskell&rsquo;s constructs for most things and only write what is specific to the language." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://rolph-recto.github.io/blog/go-in-haskell/" />
+<meta property="article:published_time" content="2017-12-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2017-12-18T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Embedding and Extending Go in Haskell"/>
+<meta name="twitter:description" content="Here&rsquo;s a fun question: what would Go look like embedded inside of Haskell?
+By &ldquo;Go&rdquo; here I don&rsquo;t mean the full language itself but some kind of core calculus with the features that people really like about Go: namely, its synchronization primitives. This core calculus should at least have the ability to spawn new goroutines and the ability to pass data between goroutines using channels.
+By &ldquo;embedding&rdquo; a language in Haskell, I mean that I want to re-use Haskell&rsquo;s constructs for most things and only write what is specific to the language."/>
+
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">Rolph Recto</a>
+</h1>
+
+    <nav>
+        
+        
+        <a class="" href="http://rolph-recto.github.io/" title="">home</a>
+        
+        <a class="" href="http://rolph-recto.github.io/personal/" title="">personal</a>
+        
+        <a class="" href="http://rolph-recto.github.io/blog/" title="">blog</a>
+        
+    </nav>
+
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">Embedding and Extending Go in Haskell</h1>
+        </header>
+        
+
+    
+
+
+<div class="post-info">
+    
+      Dec 18, 2017
+    
+    
+    
+      &nbsp; - &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/cs">#cs</a> &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/pl">#pl</a> &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/haskell">#haskell</a> &nbsp;
+      
+          <a href="http://rolph-recto.github.io/tags/golang">#golang</a> &nbsp;
+      
+    
+</div>
+
+        <div class="content">
+            <p>Here&rsquo;s a fun question: what would Go look like embedded inside of Haskell?</p>
+<p>By &ldquo;Go&rdquo; here I don&rsquo;t mean the full language itself but some kind of core
+calculus with the features that people really like about Go: namely, its
+synchronization primitives. This core calculus should at least have the ability
+to spawn new goroutines and the ability to pass data between goroutines using
+channels.</p>
+<p>By &ldquo;embedding&rdquo; a language in Haskell, I mean that I want to re-use Haskell&rsquo;s
+constructs for most things and only write what is specific to the language.
+That means only writing code involving goroutines and channels.
+Everything else&mdash;variables, functions, control structures&mdash;are Haskell&rsquo;s.
+The interpreter
+we&rsquo;re going to write for this language&mdash;let&rsquo;s call it &ldquo;HaskGo&rdquo;&mdash;will look
+like a virtual machine executing a small instruction set. This makes the
+interpreter quite simple, since there&rsquo;s no AST to traverse: HaskGo programs are
+just lists of instructions.</p>
+<p>It&rsquo;s not just for fun that I wanted to embed Go in Haskell. Embedding a language
+inside of Haskell is an easy way to model its actual implementation.  There&rsquo;s no
+lexer or parser to create, just the interpreter and the instruction set.
+Embedding a language in Haskell allows us to easily experiment with extending
+the language with new extensions. For example, determining what might <em>channel
+combinators</em> in Go look like, as we will see later on, is as easy as writing a
+few example programs and changing the interpreter&mdash;all within one language,
+Haskell.</p>
+<h2 id="writing-haskgo-with-free-monads">Writing HaskGo with Free Monads</h2>
+<p>The standard way of embedding a language in Haskell is through <em>free monads</em>.
+I&rsquo;m not going to dwell too much on how free monads work since there are already
+a lot of good resources that provide an introduction. I&rsquo;m particularly fond of
+Gabriel Gonzalez&rsquo;s blog post on the topic, linked
+<a href="http://www.haskellforall.com/2012/06/you-could-have-invented-free-monads.html">here</a>.
+The short of it is that free monads are so named because from any functor, we
+can derive a monad for it, for free.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Free monads are useful for creating
+embedded languages because they allow you to write monadic expressions that look
+like regular imperative code&mdash;just like how expressions in the <code>IO</code> monad look
+like imperative code&mdash;but actually denote a list of instructions for our
+language&rsquo;s interpeter / virtual machine to execute.</p>
+<p>With that preamble, let&rsquo;s get to the code. Here&rsquo;s the datatype representing the
+instruction set of our language:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">data</span> <span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">=</span>
+    <span style="color:#b00040">GoInt</span> <span style="color:#b00040">Int</span>
+  <span style="color:#666">|</span> <span style="color:#b00040">GoBool</span> <span style="color:#b00040">Bool</span>
+  <span style="color:#666">|</span> <span style="color:#b00040">GoString</span> <span style="color:#b00040">String</span>
+  <span style="color:#008000;font-weight:bold">deriving</span> (<span style="color:#b00040">Show</span>, <span style="color:#b00040">Eq</span>)
+
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Int</span>
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">GoProgram</span> a <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Free</span> <span style="color:#b00040">GoCmd</span> a
+
+<span style="color:#008000;font-weight:bold">data</span> <span style="color:#b00040">GoSelectBranch</span> <span style="color:#a2f;font-weight:bold">=</span>
+  <span style="color:#b00040">GoSelectBranch</span> {
+    branchChan <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span>, 
+    branchProg <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+  }
+
+<span style="color:#008000;font-weight:bold">data</span> <span style="color:#b00040">GoCmd</span> next <span style="color:#a2f;font-weight:bold">=</span> 
+    <span style="color:#b00040">GoRun</span> (<span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>) next
+  <span style="color:#666">|</span> <span style="color:#b00040">GoMakeChan</span> (<span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> next)
+  <span style="color:#666">|</span> <span style="color:#b00040">GoPutChan</span> <span style="color:#b00040">GoChan</span> <span style="color:#b00040">GoExpr</span> next
+  <span style="color:#666">|</span> <span style="color:#b00040">GoGetChan</span> <span style="color:#b00040">GoChan</span> (<span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> next)
+  <span style="color:#666">|</span> <span style="color:#b00040">GoSelect</span> [<span style="color:#b00040">GoSelectBranch</span>] next
+  <span style="color:#666">|</span> <span style="color:#b00040">GoPrint</span> <span style="color:#b00040">String</span> next
+  <span style="color:#008000;font-weight:bold">deriving</span> (<span style="color:#b00040">Functor</span>)
+</code></pre></div><p>As promised, the instruction set is simple. <code>GoRun</code> denotes the instruction to
+spawn off a new goroutine. <code>GoMakeChan</code> denotes the creation of a new channel.
+<code>GoPutChan</code> and <code>GoGetChan</code> denote putting and and getting values from a
+channel respectively. <code>GoSelect</code> implements Go&rsquo;s <code>select</code> control structure,
+which allows the user to wait on a list of channels instead of just one. If
+there is a branch waiting on a channel that is not blocked, <code>select</code> jumps to
+that branch; otherwise it blocks until one of the branches is unblocked.
+<code>GoPrint</code> denotes an instruction to print something on the screen. <code>GoProgram</code>
+is a type synonym for the free monad for our <code>GoCmd</code> instruction set.
+<code>GoChan</code>, the type of the channel value that the user has access to, is merely
+an <code>Int</code> identifier that the runtime uses, as we will see below.</p>
+<p>Some things to note. All of the constructors have a <code>next</code> argument. This
+argument allows the free monad to build a list of instructions. <code>GoMakeChan</code> and
+<code>GoGetChan</code> have <code>(GoChan -&gt; next)</code> and <code>(GoExpr -&gt; next)</code> arguments instead of
+just <code>next</code> because the next instruction for these expects a new variable bound
+to the value of the new channel or value extracted from the channel
+respectively. To test your understanding of how free monads work, as yourself
+why the goroutine argument in <code>GoRun</code> has type <code>GoProgram ()</code> instead of just
+<code>next</code>.</p>
+<p>The channels aren&rsquo;t typed&mdash;or, rather, are unityped: they only pass <code>GoExpr</code>s
+between goroutines. The channels can only store one value at a time&mdash;this is
+not apparent in the datatype, but it will be reflected in the implementation of
+the interpreter. We can add channel types and channel buffers to the language
+quite easily, but we&rsquo;re going to punt on those for now.</p>
+<p>Here&rsquo;s some free monad boilerplate. These are the monadic functions we will use
+to build HaskGo programs. I will present these with no further comment&mdash;read
+Gabriel&rsquo;s blog post linked above to understand how this works!</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">class</span> <span style="color:#b00040">GoExprable</span> a <span style="color:#008000;font-weight:bold">where</span>
+  toGoExpr <span style="color:#a2f;font-weight:bold">::</span> a <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoExpr</span>
+  
+<span style="color:#008000;font-weight:bold">instance</span> <span style="color:#b00040">GoExprable</span> <span style="color:#b00040">Int</span> <span style="color:#008000;font-weight:bold">where</span>
+  toGoExpr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">GoInt</span>
+
+<span style="color:#008000;font-weight:bold">instance</span> <span style="color:#b00040">GoExprable</span> <span style="color:#b00040">Bool</span> <span style="color:#008000;font-weight:bold">where</span>
+  toGoExpr <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">GoBool</span>
+
+<span style="color:#008000;font-weight:bold">instance</span> <span style="color:#b00040">GoExprable</span> <span style="color:#b00040">GoExpr</span> <span style="color:#008000;font-weight:bold">where</span>
+  toGoExpr <span style="color:#a2f;font-weight:bold">=</span> id
+
+<span style="color:#00f">liftFree</span> x    <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Free</span> (fmap <span style="color:#b00040">Pure</span> x)
+
+<span style="color:#00f">defaultPort</span>   <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#666">0</span>
+<span style="color:#00f">selcase</span> c p   <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">GoSelectBranch</span> c p
+<span style="color:#00f">seldefault</span> p  <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">GoSelectBranch</span> defaultPort p
+
+<span style="color:#00f">go</span> cmd        <span style="color:#a2f;font-weight:bold">=</span> liftFree (<span style="color:#b00040">GoRun</span> cmd <span style="color:#008000">()</span>)
+<span style="color:#00f">newchan</span>       <span style="color:#a2f;font-weight:bold">=</span> liftFree (<span style="color:#b00040">GoMakeChan</span> id)
+<span style="color:#00f">putchan</span> c v   <span style="color:#a2f;font-weight:bold">=</span> liftFree (<span style="color:#b00040">GoPutChan</span> c (toGoExpr v) <span style="color:#008000">()</span>)
+<span style="color:#00f">getchan</span> c     <span style="color:#a2f;font-weight:bold">=</span> liftFree (<span style="color:#b00040">GoGetChan</span> c id)
+<span style="color:#00f">select</span> bs     <span style="color:#a2f;font-weight:bold">=</span> liftFree (<span style="color:#b00040">GoSelect</span> bs <span style="color:#008000">()</span>)
+<span style="color:#00f">goprint</span> s     <span style="color:#a2f;font-weight:bold">=</span> liftFree (<span style="color:#b00040">GoPrint</span> s <span style="color:#008000">()</span>)
+</code></pre></div><p>An interesting thing to note is that <code>select</code> as implemented above is strictly
+more expressive than in Go, as the list of branches on which it waits is just a
+regular value. That means it can block on a list of branches given as an
+argument to a function, something that is impossible in Go.</p>
+<p>Here&rsquo;s what a HaskGo program looks like, using the functions above. The
+following is an elegant solution to the classic producer-consumer problem:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">consume</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">consume</span> chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  v <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan chan
+  goprint <span style="color:#666">$</span> show v
+  consume chan
+
+<span style="color:#00f">produce</span> <span style="color:#a2f;font-weight:bold">::</span> [<span style="color:#b00040">Int</span>] <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">produce</span> range chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  forM_ range <span style="color:#666">$</span> <span style="color:#00f">\</span>i <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    putchan chan i
+
+<span style="color:#00f">bufmain</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">bufmain</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  c <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  go <span style="color:#666">$</span> produce [<span style="color:#666">1</span><span style="color:#666">..</span><span style="color:#666">10</span>] c
+  go <span style="color:#666">$</span> consume c
+  goprint <span style="color:#ba2121">&#34;producer-consumer queue running!&#34;</span>
+</code></pre></div><p>While distinctly Haskell in syntax, if you squint a little it does indeed have
+Go-like synchronization primitives: you can create a channel and bind a
+variable to it (i.e. channels are first-class); you can spawn off goroutines
+just with the <code>go</code> command; and you can get and put values into channels.</p>
+<p>Now for the interpreter proper. The interpreter will be, essentially, a
+simulation of the Go runtime. What kind of data does the HaskGo runtime need to
+keep track of? The runtime must handle goroutines and channels, so we must at
+least have a list of each. We also need a map from channels to values put in
+them. For scheduling purposes we also need a ready queue, as well as wait
+queues for each channel to keep track of goroutines blocked on it. So the
+runtime state should look something like this:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">data</span> <span style="color:#b00040">GoRuntime</span> <span style="color:#a2f;font-weight:bold">=</span>
+  <span style="color:#b00040">GoRuntime</span> {
+    curGoroutine  <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoRoutine</span>,
+    nextGoroutine <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Int</span>,
+    goroutines    <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">GoRoutine</span> (<span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>),
+    nextPort      <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span>,
+    portVals      <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">GoChan</span> (<span style="color:#b00040">Maybe</span> <span style="color:#b00040">GoExpr</span>),
+    waitQueues    <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">GoChan</span> [<span style="color:#b00040">GoRoutine</span>],
+    readyQueue    <span style="color:#a2f;font-weight:bold">::</span> [<span style="color:#b00040">GoRoutine</span>]
+  }
+</code></pre></div><p>This should be almost self-explanatory. <code>curGoroutine</code> is the current goroutine
+scheduled; <code>nextGoroutine</code> and <code>nextPort</code> are the identifiers of the next
+created goroutine and channel respectively. <code>goroutines</code> is a map from
+goroutines to the program they are executing; <code>portVals</code> is a map from channels
+to the (possible) values they hold. <code>readyQueue</code> and  <code>waitQueues</code> keep track of
+scheduling information as described above. (Why the runtime state keeps data on
+ports instead of channels will become clear later when we extend HaskGo.)</p>
+<p>Finally, the HaskGo interpreter. First, some helper functions:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">GoInterp</span>   <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">ExceptT</span> <span style="color:#b00040">String</span> (<span style="color:#b00040">StateT</span> <span style="color:#b00040">GoRuntime</span> <span style="color:#b00040">IO</span>)
+
+<span style="color:#00f">scheduleNextGoroutine</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">scheduleNextGoroutine</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+  <span style="color:#008000;font-weight:bold">let</span> rq <span style="color:#a2f;font-weight:bold">=</span> readyQueue st
+  <span style="color:#008000;font-weight:bold">case</span> rq <span style="color:#008000;font-weight:bold">of</span>
+    rid<span style="color:#b00040">:</span>rs <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+      <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup rid (goroutines st) <span style="color:#008000;font-weight:bold">of</span>
+        <span style="color:#b00040">Just</span> cont <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+          put <span style="color:#666">$</span> st { curGoroutine <span style="color:#a2f;font-weight:bold">=</span> rid, readyQueue <span style="color:#a2f;font-weight:bold">=</span> rs }
+          interpGo cont
+
+        <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+          throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;invalid goroutine id &#34;</span> <span style="color:#666">++</span> (show rid)
+
+    <span style="color:#b00040">[]</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> return <span style="color:#008000">()</span>
+
+<span style="color:#00f">wakeFromWaitQueue</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">wakeFromWaitQueue</span> port <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+  <span style="color:#008000;font-weight:bold">let</span> wqs <span style="color:#a2f;font-weight:bold">=</span> waitQueues st
+  <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup port wqs <span style="color:#008000;font-weight:bold">of</span>
+    <span style="color:#b00040">Just</span> (rid<span style="color:#b00040">:</span>rs) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+      <span style="color:#408080;font-style:italic">-- because of select, the woken goroutine might be in</span>
+      <span style="color:#408080;font-style:italic">-- several wait queues. we must remove it from all wait queues</span>
+      <span style="color:#008000;font-weight:bold">let</span> wqs&#39;  <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>map (filter (<span style="color:#00f">\</span>rid2 <span style="color:#a2f;font-weight:bold">-&gt;</span> not (rid <span style="color:#666">==</span> rid2))) wqs
+      <span style="color:#008000;font-weight:bold">let</span> rq    <span style="color:#a2f;font-weight:bold">=</span> readyQueue st
+      <span style="color:#008000;font-weight:bold">let</span> rq&#39;   <span style="color:#a2f;font-weight:bold">=</span> rq <span style="color:#666">++</span> [rid]
+      put <span style="color:#666">$</span> st { readyQueue <span style="color:#a2f;font-weight:bold">=</span> rq&#39;, waitQueues <span style="color:#a2f;font-weight:bold">=</span> wqs&#39; }
+
+    <span style="color:#408080;font-style:italic">-- nobody to wake!</span>
+    <span style="color:#b00040">Just</span> <span style="color:#b00040">[]</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> return <span style="color:#008000">()</span>
+
+    <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;unknown port &#34;</span> <span style="color:#666">++</span> (show port)
+
+
+<span style="color:#00f">addToWaitQueue</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoRoutine</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">addToWaitQueue</span> port rid cont <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  st <span style="color:#a2f;font-weight:bold">&lt;-</span> get 
+  <span style="color:#008000;font-weight:bold">let</span> wqs <span style="color:#a2f;font-weight:bold">=</span> waitQueues st
+  <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup port wqs <span style="color:#008000;font-weight:bold">of</span>
+    <span style="color:#b00040">Just</span> wq <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+      <span style="color:#408080;font-style:italic">-- add to port&#39;s wait queue</span>
+      <span style="color:#008000;font-weight:bold">let</span> wq&#39;   <span style="color:#a2f;font-weight:bold">=</span> wq <span style="color:#666">++</span> [rid]
+      <span style="color:#008000;font-weight:bold">let</span> wqs&#39;  <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert port wq&#39; wqs
+
+      <span style="color:#408080;font-style:italic">-- update goroutine program with new instruction stream</span>
+      <span style="color:#008000;font-weight:bold">let</span> grs <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert rid cont (goroutines st)
+      put <span style="color:#666">$</span> st { waitQueues <span style="color:#a2f;font-weight:bold">=</span> wqs&#39;, goroutines <span style="color:#a2f;font-weight:bold">=</span> grs }
+
+    <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;unknown port &#34;</span> <span style="color:#666">++</span> (show port)
+</code></pre></div><p>Notice that the interpreter is in a monad transformer stack consisting of <code>IO</code>
+(to print to <code>stdout</code>), <code>State</code> (to track runtime state) and <code>Except</code> (to handle
+errors). <code>scheduleNextGoroutine</code> is, as its name implies, the scheduling
+function. It implements a basic round-robin scheduler. <code>wakeFromWaitQueue</code> and
+<code>addToWaitQueue</code> either removes or adds a goroutine from channel wait queues.
+The only thing that might give pause is the <code>cont</code> argument to
+<code>addToWaitQueue</code>, which contains the rest of the computation (the continuation)
+that the goroutine needs to execute. If we do not update this, the next time
+the goroutine is scheduled it will restart execution of the computation from
+the beginning!</p>
+<p>Once these helper functions are in place, the actual interpreter is quite
+straightforward.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">interpGo</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">interpGo</span> prog <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">case</span> prog <span style="color:#008000;font-weight:bold">of</span>
+  <span style="color:#408080;font-style:italic">-- create a new goroutine and add it to the back of the ready queue</span>
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoRun</span> goroutine next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+    <span style="color:#008000;font-weight:bold">let</span> rnum  <span style="color:#a2f;font-weight:bold">=</span> nextGoroutine st
+    <span style="color:#008000;font-weight:bold">let</span> rmap  <span style="color:#a2f;font-weight:bold">=</span> goroutines st
+    <span style="color:#008000;font-weight:bold">let</span> rmap&#39; <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert rnum goroutine rmap
+    <span style="color:#008000;font-weight:bold">let</span> rq    <span style="color:#a2f;font-weight:bold">=</span> readyQueue st
+    <span style="color:#008000;font-weight:bold">let</span> rq&#39;   <span style="color:#a2f;font-weight:bold">=</span> rq <span style="color:#666">++</span> [rnum]
+    put <span style="color:#666">$</span> st {
+            nextGoroutine <span style="color:#a2f;font-weight:bold">=</span> rnum<span style="color:#666">+</span><span style="color:#666">1</span>,
+            goroutines <span style="color:#a2f;font-weight:bold">=</span> rmap&#39;,
+            readyQueue <span style="color:#a2f;font-weight:bold">=</span> rq&#39;
+          }
+    interpGo next
+
+  <span style="color:#408080;font-style:italic">-- create a new channel</span>
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoMakeChan</span> next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+    <span style="color:#008000;font-weight:bold">let</span> pnum  <span style="color:#a2f;font-weight:bold">=</span> nextPort st
+    <span style="color:#008000;font-weight:bold">let</span> pmap  <span style="color:#a2f;font-weight:bold">=</span> portVals st
+    <span style="color:#008000;font-weight:bold">let</span> pmap&#39; <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert pnum <span style="color:#b00040">Nothing</span> pmap
+    <span style="color:#008000;font-weight:bold">let</span> wqs   <span style="color:#a2f;font-weight:bold">=</span> waitQueues st
+    <span style="color:#008000;font-weight:bold">let</span> wqs&#39;  <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert pnum <span style="color:#b00040">[]</span> wqs
+    put <span style="color:#666">$</span> st { nextPort <span style="color:#a2f;font-weight:bold">=</span> pnum<span style="color:#666">+</span><span style="color:#666">1</span>, portVals <span style="color:#a2f;font-weight:bold">=</span> pmap&#39;, waitQueues <span style="color:#a2f;font-weight:bold">=</span> wqs&#39; }
+    interpGo <span style="color:#666">$</span> next pnum
+</code></pre></div><p><code>GoRun</code> and <code>GoMakeChan</code> create goroutines and channels respectively. There&rsquo;s
+just a lot of code to update the runtime state, but otherwise these are pretty
+straightfoward.</p>
+<p>Next are <code>GoPutChan</code> and <code>GoGetChan</code>.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#408080;font-style:italic">-- put a value in a channel</span>
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoPutChan</span> port v next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+    <span style="color:#008000;font-weight:bold">let</span> pmap <span style="color:#a2f;font-weight:bold">=</span> portVals st
+    <span style="color:#008000;font-weight:bold">let</span> rid <span style="color:#a2f;font-weight:bold">=</span> curGoroutine st
+
+    <span style="color:#408080;font-style:italic">-- block goroutine if channel is full,</span>
+    <span style="color:#408080;font-style:italic">-- otherwise put value into channel</span>
+    <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup port pmap <span style="color:#008000;font-weight:bold">of</span> 
+      <span style="color:#b00040">Just</span> <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        <span style="color:#008000;font-weight:bold">let</span> pmap&#39; <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert port (<span style="color:#b00040">Just</span> v) pmap
+        put <span style="color:#666">$</span> st { portVals <span style="color:#a2f;font-weight:bold">=</span> pmap&#39; }
+        wakeFromWaitQueue port
+        interpGo next
+
+      <span style="color:#b00040">Just</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        addToWaitQueue port rid prog
+        scheduleNextGoroutine
+
+      <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;Channel &#34;</span> <span style="color:#666">++</span> (show port) <span style="color:#666">++</span> <span style="color:#ba2121">&#34; not found!&#34;</span>
+
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoGetChan</span> port next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+    <span style="color:#008000;font-weight:bold">let</span> pmap <span style="color:#a2f;font-weight:bold">=</span> portVals st
+    <span style="color:#008000;font-weight:bold">let</span> rid <span style="color:#a2f;font-weight:bold">=</span> curGoroutine st
+
+    <span style="color:#408080;font-style:italic">-- block goroutine if channel is empty,</span>
+    <span style="color:#408080;font-style:italic">-- otherwise get value from channel</span>
+    <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup port pmap <span style="color:#008000;font-weight:bold">of</span> 
+      <span style="color:#b00040">Just</span> <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        addToWaitQueue port rid prog
+        scheduleNextGoroutine
+
+      <span style="color:#b00040">Just</span> (<span style="color:#b00040">Just</span> cval) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        <span style="color:#008000;font-weight:bold">let</span> pmap&#39; <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>insert port <span style="color:#b00040">Nothing</span> pmap
+        put <span style="color:#666">$</span> st { portVals <span style="color:#a2f;font-weight:bold">=</span> pmap&#39; }
+        wakeFromWaitQueue port
+        interpGo <span style="color:#666">$</span> next cval
+
+      <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;Channel &#34;</span> <span style="color:#666">++</span> (show port) <span style="color:#666">++</span> <span style="color:#ba2121">&#34; not found!&#34;</span>
+</code></pre></div><p>These are duals of each other. <code>GoPutChan</code> puts a value in the channel if it is
+empty, and blocks the goroutine otherwise. <code>GoGetChan</code> extracts a value from the
+channel if it is full, and blocks the goroutine otherwise. When either operation
+is successful (i.e. doesn&rsquo;t block), we wake goroutines that are blocked on the
+channel.</p>
+<p>A subtlety: notice that when the goroutine is blocked on the channel, it stores
+<code>prog</code> as the continuation instead of <code>next</code>. This is so because <code>prog</code> contains
+the current instruction being executed, and we want to try executing the
+instruction again when it is woken up. For example, if executing <code>GoGetChan</code>
+blocks on an empty channel, we want to execute <code>GoGetChan</code> again when the
+goroutine is woken up and the channel is full.</p>
+<p><code>select</code> is probably the most complicated.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoSelect</span> branches next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+    <span style="color:#008000;font-weight:bold">let</span> rid <span style="color:#a2f;font-weight:bold">=</span> curGoroutine st
+    unblockedBranches <span style="color:#a2f;font-weight:bold">&lt;-</span> filterM isBranchUnblocked branches
+    <span style="color:#008000;font-weight:bold">case</span> unblockedBranches <span style="color:#008000;font-weight:bold">of</span>
+      <span style="color:#408080;font-style:italic">-- one of the branches is unblocked. jump to it</span>
+      b<span style="color:#b00040">:</span>bs <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        <span style="color:#008000;font-weight:bold">let</span> bprog v <span style="color:#a2f;font-weight:bold">=</span> (branchProg b) v <span style="color:#666">&gt;&gt;</span> next
+        <span style="color:#408080;font-style:italic">-- notice that we have to add the instruction stream after the</span>
+        <span style="color:#408080;font-style:italic">-- branch, otherwise it won&#39;t be executed!</span>
+        interpGo <span style="color:#666">$</span> <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoGetChan</span> (branchChan b) bprog)
+
+      <span style="color:#408080;font-style:italic">-- all of the branches are blocked.</span>
+      <span style="color:#408080;font-style:italic">-- block the goroutine until one of</span>
+      <span style="color:#408080;font-style:italic">-- the branches becomes unblocked</span>
+      <span style="color:#b00040">[]</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        <span style="color:#008000;font-weight:bold">let</span> ports <span style="color:#a2f;font-weight:bold">=</span> map (snd <span style="color:#666">.</span> branchChan) branches
+        forM ports <span style="color:#666">$</span> <span style="color:#00f">\</span>port <span style="color:#a2f;font-weight:bold">-&gt;</span> addToWaitQueue port rid prog
+        scheduleNextGoroutine
+
+    <span style="color:#008000;font-weight:bold">where</span>
+      isBranchUnblocked <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoSelectBranch</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#b00040">Bool</span>
+      isBranchUnblocked branch <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+        st <span style="color:#a2f;font-weight:bold">&lt;-</span> get
+        <span style="color:#008000;font-weight:bold">let</span> port <span style="color:#a2f;font-weight:bold">=</span> branchChan branch
+        <span style="color:#408080;font-style:italic">-- default port is always unblocked</span>
+        <span style="color:#008000;font-weight:bold">if</span> port <span style="color:#666">==</span> defaultPort
+        <span style="color:#008000;font-weight:bold">then</span> return <span style="color:#b00040">True</span>
+        <span style="color:#008000;font-weight:bold">else</span> <span style="color:#008000;font-weight:bold">do</span>
+          <span style="color:#008000;font-weight:bold">case</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>lookup port (portVals st) <span style="color:#008000;font-weight:bold">of</span>
+            <span style="color:#b00040">Just</span> <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> return <span style="color:#b00040">False</span>
+            <span style="color:#b00040">Just</span> (<span style="color:#b00040">Just</span> cval) <span style="color:#a2f;font-weight:bold">-&gt;</span> return <span style="color:#b00040">True</span>
+            <span style="color:#b00040">Nothing</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+              throwError <span style="color:#666">$</span> <span style="color:#ba2121">&#34;Channel &#34;</span> <span style="color:#666">++</span> (show port) <span style="color:#666">++</span> <span style="color:#ba2121">&#34; not found!&#34;</span>
+</code></pre></div><p>There are two cases:</p>
+<ul>
+<li>
+<p>If there are branches that are unblocked, we pick the first one, and
+essentially execute a <code>GoGetChan</code> command: we extract the value from the
+channel we block on, apply the value to the branch code, and then execute it.</p>
+</li>
+<li>
+<p>If all branches are blocked, we block the goroutine.</p>
+</li>
+</ul>
+<p>Another subtlety: notice that we need to bind the <code>next</code> argument to the
+executed branch. Otherwise the rest of the instructions after <code>select</code> won&rsquo;t be
+executed!</p>
+<p>Finally here&rsquo;s <code>GoPrint</code>, which is trivial:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell">  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoPrint</span> e next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    liftIO <span style="color:#666">$</span> putStrLn e
+    interpGo next
+
+  <span style="color:#408080;font-style:italic">-- goroutine is finished: run next one</span>
+  <span style="color:#b00040">Pure</span> <span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> scheduleNextGoroutine
+</code></pre></div><p>We now have a HaskGo interpreter. Let&rsquo;s write a helper function to initialize
+the runtime state and run the interpreter:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">run_gomain</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">IO</span> <span style="color:#008000">()</span>
+<span style="color:#00f">run_gomain</span> main <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  <span style="color:#008000;font-weight:bold">let</span> init <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">GoRuntime</span> { curGoroutine <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#666">1</span>, nextGoroutine <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#666">2</span>,
+              goroutines <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>empty, nextPort <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#666">1</span>, portVals <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>empty,
+              waitQueues <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">M</span><span style="color:#666">.</span>empty, readyQueue <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">[]</span> }
+
+  res <span style="color:#a2f;font-weight:bold">&lt;-</span> evalStateT (runExceptT (interpGo main)) init
+  <span style="color:#008000;font-weight:bold">case</span> res <span style="color:#008000;font-weight:bold">of</span>
+    <span style="color:#b00040">Left</span> err  <span style="color:#a2f;font-weight:bold">-&gt;</span> putStrLn err
+    <span style="color:#b00040">Right</span> <span style="color:#008000;font-weight:bold">_</span>   <span style="color:#a2f;font-weight:bold">-&gt;</span> return <span style="color:#008000">()</span>
+</code></pre></div><p>Let&rsquo;s see the output of the producer-consumer HaskGo program from above:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#666">&gt;&gt;</span> run_gomain bufmain
+<span style="color:#00f">producer</span><span style="color:#666">-</span>consumer queue running<span style="color:#666">!</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">1</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">2</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">3</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">4</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">5</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">6</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">7</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">8</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">9</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">10</span>
+</code></pre></div><p>Works as expected!</p>
+<p>How about something more complicated? Here&rsquo;s a
+<a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of Eratosthenes</a><sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup></p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">source</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Int</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">source</span> max c <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  forM_ [<span style="color:#666">2</span><span style="color:#666">..</span>max] <span style="color:#666">$</span> <span style="color:#00f">\</span>i <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    putchan c i
+
+<span style="color:#00f">pfilter</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Int</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">pfilter</span> p left right <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  <span style="color:#b00040">GoInt</span> v <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan left
+  <span style="color:#008000;font-weight:bold">if</span> v `mod` p <span style="color:#666">/=</span> <span style="color:#666">0</span>
+  <span style="color:#008000;font-weight:bold">then</span> <span style="color:#008000;font-weight:bold">do</span>
+    putchan right v
+    pfilter p left right
+  <span style="color:#008000;font-weight:bold">else</span> <span style="color:#008000;font-weight:bold">do</span>
+    pfilter p left right
+
+<span style="color:#00f">sink</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">sink</span> chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  <span style="color:#b00040">GoInt</span> v <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan chan
+  goprint <span style="color:#666">$</span> <span style="color:#ba2121">&#34;got prime: &#34;</span> <span style="color:#666">++</span> (show v)
+  chan&#39; <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  go <span style="color:#666">$</span> pfilter v chan chan&#39;
+  sink chan&#39;
+
+<span style="color:#00f">sievemain</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoProgram</span><span style="color:#008000">()</span>
+<span style="color:#00f">sievemain</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  goprint <span style="color:#ba2121">&#34;running prime sieve...&#34;</span>
+  c <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  go <span style="color:#666">$</span> source <span style="color:#666">50</span> c
+  go <span style="color:#666">$</span> sink c
+</code></pre></div><p>Let&rsquo;s break down what&rsquo;s going on here. <code>source</code> just puts integers into a
+channel in sequence, up to some maximum number. <code>sink</code> extracts a value from
+<code>chan</code> channel, and then once it does it spawns off a <code>pfilter</code> goroutine,
+creates a new channel, and then extracts values from that. <code>pfilter</code> extracts
+values from a <code>left</code> chan, checks if it is a multiple of <code>p</code>, and if it isn&rsquo;t
+passes it to the <code>right</code> channel.</p>
+<p>Do you see what&rsquo;s going on? Every time <code>sink</code> extracts a prime number from
+<code>chan</code>, it creates a new filter between it and <code>source</code> to filter out multiples
+of the prime number just extracted. It looks like this:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">source</span> <span style="color:#666">&lt;--&gt;</span> pfilter <span style="color:#666">2</span> <span style="color:#666">&lt;--&gt;</span> pfilter <span style="color:#666">3</span> <span style="color:#666">&lt;--&gt;</span> <span style="color:#666">...</span> <span style="color:#666">&lt;--&gt;</span> sink
+</code></pre></div><p>And thus:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#666">&gt;&gt;</span> run_gomain sievemain
+<span style="color:#00f">running</span> prime sieve<span style="color:#666">...</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">2</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">3</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">5</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">7</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">11</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">13</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">17</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">19</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">23</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">29</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">31</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">37</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">41</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">43</span>
+<span style="color:#00f">got</span> prime<span style="color:#b00040">:</span> <span style="color:#666">47</span>
+</code></pre></div><p>As you can see, this style of programming leads to particularly elegant
+solutions, even though concurrency isn&rsquo;t strictly necessary to solve them.  I&rsquo;m
+feeling a little philosophical so I&rsquo;m going to draw a more general lesson here.
+Most programs we write are structured to reflect an increasingly archaic model
+of hardware: a single-core processor executing instructions one at a time. We
+resort to concurrency only when the problem demands it&mdash;as in writing web
+servers or databases, for example&mdash;or to exploit multicore processors and make
+our programs parallelized. But what if we write concurrent programs simply
+because <em>they&rsquo;re the most elegant way of solving the problem at hand</em>? How will
+we change how we code if, instead of treating concurrency as a tool of last
+resort or as an optimization, we use it pervasively? Is this aversion to
+concurrency another incarnation of the <a href="https://en.wikipedia.org/wiki/Von_Neumann_architecture#Von_Neumann_bottleneck">von Neumann
+bottleneck</a>?</p>
+<p>I&rsquo;m glad Go has expanded the <a href="https://en.wikipedia.org/wiki/Overton_window">Overton
+window</a>, so to speak, when it
+comes to what counts as mainstream synchronization primitives. But the design
+space is obviously still wide and sparse, and I&rsquo;m sure there are more interesting
+questions to be answered in the offing.</p>
+<p>I digress&mdash;now let&rsquo;s talk about how to make channels more interesting.</p>
+<h2 id="haskgo-with-channel-combinators">HaskGo with Channel Combinators</h2>
+<p>Here&rsquo;s where our choice to implement an embedded language instead of
+implementing one from scratch will pay dividends. Let&rsquo;s say we want to
+implement <em>channel combinators</em>&mdash;functions that take a channel, does some
+transformation on it, and return a new channel. What kinds of combinators do we
+want to write? At a very high level, we can see channels as semantically being
+<em>streams</em> of values. So let&rsquo;s start off with some combinators from elementary
+functional programming.</p>
+<p>Here&rsquo;s a first pass at <code>chan_map</code>, which like regular old <code>map</code> applies a
+function &ldquo;element-wise&rdquo; to every value in the channel:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">chan_map</span> <span style="color:#a2f;font-weight:bold">::</span> (<span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoExpr</span>) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span>
+<span style="color:#00f">chan_map</span> f chan <span style="color:#a2f;font-weight:bold">=</span>  <span style="color:#408080;font-style:italic">-- WHAT TO PUT HERE??</span>
+</code></pre></div><p>Hm. As we&rsquo;ve seen in the implementation of the HaskGo interpreter, a channel
+value is really just an identifier. There is no way to extract values from it
+outside of the interpreter. So <code>chan_map</code> actually needs to be a HaskGo
+<em>program</em>.</p>
+<p>Here&rsquo;s a second pass at <code>chan_map</code>:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">chan_map</span> <span style="color:#a2f;font-weight:bold">::</span> (<span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoExpr</span>) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#b00040">GoChan</span> 
+<span style="color:#00f">chan_map</span> f chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  v <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan chan
+  putchan chan (f v)
+  return chan
+</code></pre></div><p>A little better, though definitely not  right either. This will only work as
+intended if <code>chan_map</code> is scheduled to run before any other goroutine that
+extracts a value from <code>chan</code>. Also, this will only work at most once, since it
+only extracts a value from <code>chan</code> once.</p>
+<p>What we really need <code>chan_map</code> to do is to spawn a <em>new</em> goroutine, one that
+repeatedly extracts values from <code>chan</code>, applies the value to <code>f</code>, and then
+pushes the output of <code>f</code> into a <em>new</em> channel. In this way, goroutines pushing
+values should do it to the old channel, and goroutines extracting values should
+do so from the new channel.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">chan_map</span> <span style="color:#a2f;font-weight:bold">::</span> (<span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoExpr</span>) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#b00040">GoChan</span>
+<span style="color:#00f">chan_map</span> f inchan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  outchan <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan 
+  go <span style="color:#666">$</span> map_goroutine outchan
+  return outchan
+  <span style="color:#008000;font-weight:bold">where</span> map_goroutine outchan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+          v <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan inchan
+          putchan outchan (f v)
+          map_goroutine outchan
+</code></pre></div><p>This works, albeit awkwardly. Here&rsquo;s one way to use it:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">source</span> lst chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  forM_ lst <span style="color:#666">$</span> <span style="color:#00f">\</span>x <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    putchan chan x
+
+<span style="color:#00f">sink</span> chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  v <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan chan
+  goprint (show v)
+  sink chan
+
+<span style="color:#00f">mapmain</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  inchan <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  outchan <span style="color:#a2f;font-weight:bold">&lt;-</span> chan_map (<span style="color:#00f">\</span><span style="color:#b00040">GoInt</span> x <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInt</span> (x<span style="color:#666">+</span><span style="color:#666">100</span>)) inchan
+  go <span style="color:#666">$</span> source [<span style="color:#666">1</span><span style="color:#666">..</span><span style="color:#666">10</span>] inchan
+  go <span style="color:#666">$</span> sink outchan
+</code></pre></div><p>This will work as intended and print out 101 to 200. However, notice that the
+two channels here are being treated as <em>unidirectional</em>: one channel is only
+receiving input (i.e. only calls to the channel are <code>putchan</code>) while the other
+channel is only returning output (i.e. only calls to the channel are <code>getchan</code>).
+<code>chan_map</code> spawned off a goroutine to pipe the input from <code>inchan</code> to <code>outchan</code>,
+but that is (and should be) invisible to the user. It would be nice if instead
+of having two unidirectional channels, we would have just one bidirectional
+channel &ndash; that is, just a regular channel. We want something like this:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">mapmain</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  chan <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan <span style="color:#666">&gt;&gt;=</span> chan_map (<span style="color:#00f">\</span><span style="color:#b00040">GoInt</span> x <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInt</span> (x<span style="color:#666">+</span><span style="color:#666">100</span>))
+  go <span style="color:#666">$</span> source [<span style="color:#666">1</span><span style="color:#666">..</span><span style="color:#666">10</span>] chan
+  go <span style="color:#666">$</span> sink chan
+</code></pre></div><p>The <code>source</code> goroutine puts values 1 to 100 in the channel, and then when
+<code>sink</code> extracts values out of the channel it will magically receive 101 to 200.
+As currently implemented, <code>chan_map</code> will not work as intended here. How will we
+implement this feature?</p>
+<p>The trick is as follows: we&rsquo;re going to change what a channel value means.
+Currently, a channel is a key into a runtime map that may or may not hold a
+value. Now instead of a single key into a runtime map, instead it will be a
+<em>pair</em> of keys: one key will be used to push values into the map, and the other
+key will be used to get values from it.</p>
+<p>Some diagrams might help with the explanation.</p>
+<p><img src="/img/chan-regular.svg" alt=""></p>
+<p>The diagram above should be pretty self-explanatory. For this to work properly
+the <code>source</code> function needs to be passed the <code>inchan</code> channel and the <code>sink</code>
+channel needs to be passed the <code>outchan</code> channel. <code>chan_map</code> currently returns
+<code>outchan</code>. To make it so that we can pass the same channel to both <code>source</code> and
+<code>sink</code>, we&rsquo;re going to change <code>chan_map</code> so that it returns a &ldquo;virtual&rdquo; channel:
+when a goroutine pushes a value to it, the goroutine is really pushing a value
+to <code>inchan</code>; when a goroutine extracts a value from it, the goroutine is really
+extracting a value out of <code>outchan</code>. So under the hood the same thing is
+happening, but the interface to the user is a bit nicer. Like so:</p>
+<p><img src="/img/chan-composition.svg" alt=""></p>
+<p>Let&rsquo;s see how this change looks like in code.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">ChanPort</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#b00040">Int</span>
+<span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">=</span> (<span style="color:#b00040">ChanPort</span>, <span style="color:#b00040">ChanPort</span>) 
+
+<span style="color:#008000;font-weight:bold">data</span> <span style="color:#b00040">GoRuntime</span> <span style="color:#a2f;font-weight:bold">=</span>
+  <span style="color:#b00040">GoRuntime</span> {
+    curGoroutine  <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoRoutine</span>,
+    nextGoroutine <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">Int</span>,
+    goroutines    <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">GoRoutine</span> (<span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>),
+    nextPort      <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">ChanPort</span>,
+    portVals      <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">ChanPort</span> (<span style="color:#b00040">Maybe</span> <span style="color:#b00040">GoExpr</span>),
+    waitQueues    <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">M</span><span style="color:#666">.</span><span style="color:#b00040">Map</span> <span style="color:#b00040">ChanPort</span> [<span style="color:#b00040">GoRoutine</span>],
+    readyQueue    <span style="color:#a2f;font-weight:bold">::</span> [<span style="color:#b00040">GoRoutine</span>]
+  }
+
+<span style="color:#00f">wakeFromWaitQueue</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">wakeFromWaitQueue</span> port <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span> <span style="color:#666">...</span>
+
+<span style="color:#00f">addToWaitQueue</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">ChanPort</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoRoutine</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">addToWaitQueue</span> port rid cont <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span> <span style="color:#666">...</span>
+</code></pre></div><p>As mentioned above, we&rsquo;re changing channel values to be pairs of keys, one of
+the &ldquo;inport&rdquo; of the channel and another for the &ldquo;outport&rdquo; of the channel. Hence
+the name &ldquo;port&rdquo; instead of &ldquo;channel&rdquo; in the runtime code. For the helper
+functions, nothing really changes except the type annotations. Since <code>GoChan</code>
+is now a pair these should instead take in <code>ChanPort</code> arguments.</p>
+<p>Now to changes to the interpreter proper.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">interpGo</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoInterp</span> <span style="color:#008000">()</span>
+<span style="color:#00f">interpGo</span> prog <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">case</span> prog <span style="color:#008000;font-weight:bold">of</span>
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoMakeChan</span> next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    <span style="color:#408080;font-style:italic">{- code here stays the same ... -}</span>
+    interpGo <span style="color:#666">$</span> next (pnum, pnum)
+
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoPutChan</span> (port,<span style="color:#008000;font-weight:bold">_</span>) v next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    <span style="color:#408080;font-style:italic">{- code here stays the same ... -}</span>
+
+  <span style="color:#b00040">Free</span> (<span style="color:#b00040">GoGetChan</span> (<span style="color:#008000;font-weight:bold">_</span>,port) next) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    <span style="color:#408080;font-style:italic">{- code here stays the same ... -}</span>
+</code></pre></div><p>There&rsquo;s not much to change. <code>GoMakeChan</code> should now return a pair. <code>GoPutChan</code>
+should put values in the first port of the channel. <code>GoGetChan</code> should put
+values in the second port of the channel. That&rsquo;s pretty much it!</p>
+<p>Now, we can finally write <code>chan_map</code>.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">chan_map</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoExprable</span> a <span style="color:#a2f;font-weight:bold">=&gt;</span> (<span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> a) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#b00040">GoChan</span>
+<span style="color:#00f">chan_map</span> f inchan<span style="color:#666">@</span>(inchan_put,<span style="color:#008000;font-weight:bold">_</span>) <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  outchan<span style="color:#666">@</span>(<span style="color:#008000;font-weight:bold">_</span>, outchan_get) <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  go <span style="color:#666">$</span> map_goroutine inchan outchan
+  return (inchan_put, outchan_get)
+  <span style="color:#008000;font-weight:bold">where</span>
+    map_goroutine inchan outchan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+      val <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan inchan
+      putchan outchan <span style="color:#666">$</span> toGoExpr <span style="color:#666">$</span> f val
+      map_goroutine inchan outchan
+</code></pre></div><p>And voila!</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#666">&gt;&gt;</span> run_gomain mapmain
+<span style="color:#b00040">GoInt</span> <span style="color:#666">101</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">102</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">103</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">104</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">105</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">106</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">107</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">108</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">109</span>
+<span style="color:#b00040">GoInt</span> <span style="color:#666">110</span>
+</code></pre></div><p>Here&rsquo;s a particularly useful combinator, <code>chan_partition</code>, and a nice
+use for it.</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#408080;font-style:italic">-- partition an input channel into two output channels</span>
+<span style="color:#00f">chan_partition</span> <span style="color:#a2f;font-weight:bold">::</span> (<span style="color:#b00040">GoExpr</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">Bool</span>) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> (<span style="color:#b00040">GoChan</span>, <span style="color:#b00040">GoChan</span>)
+<span style="color:#00f">chan_partition</span> pred chan<span style="color:#666">@</span>(chan_put, <span style="color:#008000;font-weight:bold">_</span>) <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  lchan<span style="color:#666">@</span>(<span style="color:#008000;font-weight:bold">_</span>, lchan_get) <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  rchan<span style="color:#666">@</span>(<span style="color:#008000;font-weight:bold">_</span>, rchan_get) <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  <span style="color:#008000;font-weight:bold">let</span> lchan&#39; <span style="color:#a2f;font-weight:bold">=</span> (chan_put, rchan_get)
+  <span style="color:#008000;font-weight:bold">let</span> rchan&#39; <span style="color:#a2f;font-weight:bold">=</span> (chan_put, lchan_get)
+  go <span style="color:#666">$</span> partition_goroutine lchan rchan
+  return (lchan&#39;, rchan&#39;)
+  <span style="color:#008000;font-weight:bold">where</span>
+    partition_goroutine lchan rchan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+      val <span style="color:#a2f;font-weight:bold">&lt;-</span> getchan chan
+      <span style="color:#008000;font-weight:bold">if</span> pred val
+      <span style="color:#008000;font-weight:bold">then</span> <span style="color:#008000;font-weight:bold">do</span> 
+        putchan lchan val
+        partition_goroutine lchan rchan
+      <span style="color:#008000;font-weight:bold">else</span> <span style="color:#008000;font-weight:bold">do</span>
+        putchan rchan val
+        partition_goroutine lchan rchan
+
+<span style="color:#00f">count</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoExprable</span> a <span style="color:#a2f;font-weight:bold">=&gt;</span> [a] <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoChan</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">count</span> <span style="color:#b00040">[]</span> chan <span style="color:#a2f;font-weight:bold">=</span> return <span style="color:#008000">()</span>
+<span style="color:#00f">count</span> (x<span style="color:#b00040">:</span>xs) chan <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  putchan chan x
+  count xs chan
+
+<span style="color:#00f">printLeftRight</span> n left right <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  forM_ [<span style="color:#666">1</span><span style="color:#666">..</span>n] <span style="color:#666">$</span> <span style="color:#00f">\</span><span style="color:#008000;font-weight:bold">_</span> <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+    select [
+      selcase left (<span style="color:#00f">\</span>x <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        goprint <span style="color:#666">$</span> <span style="color:#ba2121">&#34;left: &#34;</span> <span style="color:#666">++</span> (show x)
+      ),
+      selcase right (<span style="color:#00f">\</span>x <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#008000;font-weight:bold">do</span>
+        goprint <span style="color:#666">$</span> <span style="color:#ba2121">&#34;right: &#34;</span> <span style="color:#666">++</span> (show x)
+      )]
+
+<span style="color:#00f">eomain</span> <span style="color:#a2f;font-weight:bold">::</span> <span style="color:#b00040">GoProgram</span> <span style="color:#008000">()</span>
+<span style="color:#00f">eomain</span> <span style="color:#a2f;font-weight:bold">=</span> <span style="color:#008000;font-weight:bold">do</span>
+  c <span style="color:#a2f;font-weight:bold">&lt;-</span> newchan
+  (evenchan, oddchan) <span style="color:#a2f;font-weight:bold">&lt;-</span> chan_partition (<span style="color:#00f">\</span>(<span style="color:#b00040">GoInt</span> x) <span style="color:#a2f;font-weight:bold">-&gt;</span> x `mod` <span style="color:#666">2</span> <span style="color:#666">==</span> <span style="color:#666">0</span>) c
+  go <span style="color:#666">$</span> count ([<span style="color:#666">1</span><span style="color:#666">..</span>] <span style="color:#a2f;font-weight:bold">::</span> [<span style="color:#b00040">Int</span>]) c
+  go <span style="color:#666">$</span> printLeftRight <span style="color:#666">10</span> evenchan oddchan
+</code></pre></div><p>And as you&rsquo;d expect:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#666">&gt;&gt;</span> run_gomain eomain
+<span style="color:#00f">left</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">1</span>
+<span style="color:#00f">right</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">2</span>
+<span style="color:#00f">left</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">3</span>
+<span style="color:#00f">right</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">4</span>
+<span style="color:#00f">left</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">5</span>
+<span style="color:#00f">right</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">6</span>
+<span style="color:#00f">left</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">7</span>
+<span style="color:#00f">right</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">8</span>
+<span style="color:#00f">left</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">9</span>
+<span style="color:#00f">right</span><span style="color:#b00040">:</span> <span style="color:#b00040">GoInt</span> <span style="color:#666">10</span>
+</code></pre></div><p>In fact, you can basically just go through Haskell&rsquo;s <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Data-List.html">Data.List
+library</a>
+and implement most of the functions there as channel combinators. It&rsquo;s a fun
+exercise&mdash;I recommend doing it.</p>
+<p>A nice improvement for the future would be to do some kind of deforestation
+analysis on channel combinators. For example, consider the channel</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">newchan</span> <span style="color:#666">&gt;&gt;=</span> chan_map (<span style="color:#00f">\</span>(<span style="color:#b00040">GoInt</span> x) <span style="color:#a2f;font-weight:bold">-&gt;</span> x <span style="color:#666">+</span> <span style="color:#666">10</span>)
+        <span style="color:#666">&gt;&gt;=</span> chan_map (<span style="color:#00f">\</span>(<span style="color:#b00040">GoInt</span> x) <span style="color:#a2f;font-weight:bold">-&gt;</span> x<span style="color:#666">*</span><span style="color:#666">2</span>)
+</code></pre></div><p>Instead of creating two intermediate goroutines, we can optimize this to
+just have one:</p>
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Haskell" data-lang="Haskell"><span style="color:#00f">newchan</span> <span style="color:#666">&gt;&gt;=</span> chan_map (<span style="color:#00f">\</span>(<span style="color:#b00040">GoInt</span> x) <span style="color:#a2f;font-weight:bold">-&gt;</span> (x<span style="color:#666">+</span><span style="color:#666">10</span>)<span style="color:#666">*</span><span style="color:#666">2</span>)
+</code></pre></div><p>I think we can get away with having at most one intermediate goroutine that does
+the transformation between input and output channels, no matter how many channel
+transformations we bind together. But it would involve adding extra state to
+the runtime that keeps track of what goroutines feed from and push to which
+channels.</p>
+<p>That&rsquo;s it for now. If you want to see the full source code for HaskGo, see <a href="https://gist.github.com/rolph-recto/5e8ca67f701675103d651795a0c70a89">this
+gist</a>.
+Until next time!</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>&ldquo;Free&rdquo; as in beer (gratis). I&rsquo;m a little fuzzy on the category theory
+details, but I think free monads are also free, as in speech (libre).
+<a href="https://stackoverflow.com/questions/13352205/what-are-free-monads">Here</a> is
+a discussion on StackOverflow to whet your appetite. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>NB: I originally encountered this implementation of the sieve in a class
+for which I was a TA, Cornell&rsquo;s CS 4410 (Operating Systems). It was a testcase
+for a project that involved implementing a threading library in C.  The
+original C code had to manually manage channels using semaphores. The HaskGo
+version is a lot simpler, since the semaphores are managed by the runtime: you
+can see calls to <code>addToWaitQueue</code> and <code>wakeFromWaitQueue</code> in the interpreter
+as calls to <code>P()</code> and <code>V()</code> to channel semaphores. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+        </div>
+    </article>
+
+    
+
+    <hr>
+    <center>
+    
+      <p>
+      <a href="/blog/implementing-callcc/">&nbsp;&lt;&lt;&nbsp;Implementing call/cc</a>
+      </p>
+    
+    
+    
+      <p>
+      Back to <a href="/blog/">Blog</a>
+      </p>
+    
+    </center>
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+    <div class="common-footer-bottom">
+        
+        
+
+
+   
+    </div>
+</footer>
+
+        
+    </div>
+</body>
+</html>
