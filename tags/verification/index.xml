@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>verification on Rolph Recto</title>
-    <link>http://rolph-recto.github.io/tags/verification/</link>
+    <link>/tags/verification/</link>
     <description>Rolph Recto (verification)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 22 Dec 2020 00:00:00 +0000</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/tags/verification/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/verification/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>On Proofs, Programs, and Houses</title>
-      <link>http://rolph-recto.github.io/blog/on-proofs-programs-and-houses/</link>
+      <link>/blog/on-proofs-programs-and-houses/</link>
       <pubDate>Tue, 22 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/on-proofs-programs-and-houses/</guid>
+      <guid>/blog/on-proofs-programs-and-houses/</guid>
       <description>&lt;p&gt;I recently read the (in)famous &lt;a href=&#34;https://www.cs.umd.edu/~gasarch/BLOGPAPERS/social.pdf&#34;&gt;&amp;ldquo;Social Processes&amp;rdquo; paper&lt;/a&gt; that
 dismissed the then-nascent area of program verification.  Forty years after its
 publication, there&amp;rsquo;s still a lot of things that the paper got right, especially

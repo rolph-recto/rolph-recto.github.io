@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog on Rolph Recto</title>
-    <link>http://rolph-recto.github.io/blog/</link>
+    <link>/blog/</link>
     <description>Rolph Recto (Blog)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 22 Dec 2020 00:00:00 +0000</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>On Proofs, Programs, and Houses</title>
-      <link>http://rolph-recto.github.io/blog/on-proofs-programs-and-houses/</link>
+      <link>/blog/on-proofs-programs-and-houses/</link>
       <pubDate>Tue, 22 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/on-proofs-programs-and-houses/</guid>
+      <guid>/blog/on-proofs-programs-and-houses/</guid>
       <description>&lt;p&gt;I recently read the (in)famous &lt;a href=&#34;https://www.cs.umd.edu/~gasarch/BLOGPAPERS/social.pdf&#34;&gt;&amp;ldquo;Social Processes&amp;rdquo; paper&lt;/a&gt; that
 dismissed the then-nascent area of program verification.  Forty years after its
 publication, there&amp;rsquo;s still a lot of things that the paper got right, especially
@@ -166,17 +166,17 @@ to &lt;a href=&#34;http://adam.chlipala.net/cpdt/html/Intro.html&#34;&gt;CPDT&lt
     
     <item>
       <title>Hamilton and Hiring Women Guards</title>
-      <link>http://rolph-recto.github.io/blog/hamilton-hiring-and-women-guards/</link>
+      <link>/blog/hamilton-hiring-and-women-guards/</link>
       <pubDate>Sun, 05 Jul 2020 00:00:00 -0400</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/hamilton-hiring-and-women-guards/</guid>
+      <guid>/blog/hamilton-hiring-and-women-guards/</guid>
       <description>&lt;p&gt;I completely missed the &lt;em&gt;Hamilton&lt;/em&gt; discourse five years ago, but
 in the wake of the movie version&amp;rsquo;s release, there have been a new round
 of takes. Here I&amp;rsquo;ll give my own. I&amp;rsquo;m going to skip discussion of its merits
 as a play (I enjoyed it quite a bit—sue me) and go directly to discussing
 its politics.&lt;/p&gt;
 &lt;p&gt;You can sum up a lot of leftist criticisms of liberalism with this meme:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/women-guards-meme.png&#34; alt=&#34;Hire Women Guards Meme&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/women-guards-meme.png&#34; alt=&#34;Hire Women Guards Meme&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The joke is that the Democrats are as bad as Republicans, but they appeal to
 women and minorities. Instead of working to fundamentally change institutions
 and fix their underlying rot, liberals would rather address identitarian
@@ -254,10 +254,10 @@ cudgel against southern landowners, as in Hamilton&amp;rsquo;s repartees to Jeff
     
     <item>
       <title>Embedding and Extending Go in Haskell</title>
-      <link>http://rolph-recto.github.io/blog/go-in-haskell/</link>
+      <link>/blog/go-in-haskell/</link>
       <pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/go-in-haskell/</guid>
+      <guid>/blog/go-in-haskell/</guid>
       <description>&lt;p&gt;Here&amp;rsquo;s a fun question: what would Go look like embedded inside of Haskell?&lt;/p&gt;
 &lt;p&gt;By &amp;ldquo;Go&amp;rdquo; here I don&amp;rsquo;t mean the full language itself but some kind of core
 calculus with the features that people really like about Go: namely, its
@@ -806,7 +806,7 @@ value. Now instead of a single key into a runtime map, instead it will be a
 &lt;em&gt;pair&lt;/em&gt; of keys: one key will be used to push values into the map, and the other
 key will be used to get values from it.&lt;/p&gt;
 &lt;p&gt;Some diagrams might help with the explanation.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The diagram above should be pretty self-explanatory. For this to work properly
 the &lt;code&gt;source&lt;/code&gt; function needs to be passed the &lt;code&gt;inchan&lt;/code&gt; channel and the &lt;code&gt;sink&lt;/code&gt;
 channel needs to be passed the &lt;code&gt;outchan&lt;/code&gt; channel. &lt;code&gt;chan_map&lt;/code&gt; currently returns
@@ -816,7 +816,7 @@ when a goroutine pushes a value to it, the goroutine is really pushing a value
 to &lt;code&gt;inchan&lt;/code&gt;; when a goroutine extracts a value from it, the goroutine is really
 extracting a value out of &lt;code&gt;outchan&lt;/code&gt;. So under the hood the same thing is
 happening, but the interface to the user is a bit nicer. Like so:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s see how this change looks like in code.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Haskell&#34; data-lang=&#34;Haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Int&lt;/span&gt;
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;GoChan&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;, &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;) 
@@ -980,10 +980,10 @@ as calls to &lt;code&gt;P()&lt;/code&gt; and &lt;code&gt;V()&lt;/code&gt; to cha
     
     <item>
       <title>Implementing call/cc</title>
-      <link>http://rolph-recto.github.io/blog/implementing-callcc/</link>
+      <link>/blog/implementing-callcc/</link>
       <pubDate>Mon, 26 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/implementing-callcc/</guid>
+      <guid>/blog/implementing-callcc/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and
 the next feature on my todo list is first-class continuations.
 &lt;code&gt;call/cc&lt;/code&gt; always seemed mysterious to me, and since this is PL, the best way to
@@ -1406,10 +1406,10 @@ reader! &lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34
     
     <item>
       <title>Simulating Random Walks with the List Monad</title>
-      <link>http://rolph-recto.github.io/blog/simulating-random-walks/</link>
+      <link>/blog/simulating-random-walks/</link>
       <pubDate>Thu, 07 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/simulating-random-walks/</guid>
+      <guid>/blog/simulating-random-walks/</guid>
       <description>&lt;p&gt;The List monad is usually used to model nondeterministic computations: it
 allows you to describe taking a choice from a set of possibilities and then
 merge the outcomes from each possibility together. In this post I&amp;rsquo;ll show
@@ -1496,7 +1496,7 @@ pile at 0 gets split in half; the halves are moved to the left and right,
 so there is a pile at -1 of height 0.5 and a pile at 1 of height 0.5.
 The animation below visualizes how the &amp;ldquo;pile of sand&amp;rdquo; gets spread from 0
 to neighboring states as time goes by.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/random-walk.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/random-walk.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;However, don&amp;rsquo;t let the analogy confuse you: the piles of sand represent the
 &lt;em&gt;probabilities&lt;/em&gt; of being at particular states. There can be many piles of
 sand at any given timestep, since there can be many states for which there
@@ -1653,10 +1653,10 @@ commonly for processes with finite state spaces, the stochastic matrix P. &lt;a 
     
     <item>
       <title>Hello World, Meet Blog</title>
-      <link>http://rolph-recto.github.io/blog/hello-world/</link>
+      <link>/blog/hello-world/</link>
       <pubDate>Wed, 06 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/hello-world/</guid>
+      <guid>/blog/hello-world/</guid>
       <description>&lt;p&gt;So I finally got a blog published. Apparently if you&amp;rsquo;re a computer science
 major it&amp;rsquo;s now somewhat requisite to maintain a blog or website, so alas
 I cave in to peer pressure. But anyway, for me the main impetus for having

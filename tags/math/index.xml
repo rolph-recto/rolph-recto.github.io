@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>math on Rolph Recto</title>
-    <link>http://rolph-recto.github.io/tags/math/</link>
+    <link>/tags/math/</link>
     <description>Rolph Recto (math)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 07 Jan 2016 00:00:00 +0000</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/tags/math/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/math/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Simulating Random Walks with the List Monad</title>
-      <link>http://rolph-recto.github.io/blog/simulating-random-walks/</link>
+      <link>/blog/simulating-random-walks/</link>
       <pubDate>Thu, 07 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/simulating-random-walks/</guid>
+      <guid>/blog/simulating-random-walks/</guid>
       <description>&lt;p&gt;The List monad is usually used to model nondeterministic computations: it
 allows you to describe taking a choice from a set of possibilities and then
 merge the outcomes from each possibility together. In this post I&amp;rsquo;ll show
@@ -103,7 +103,7 @@ pile at 0 gets split in half; the halves are moved to the left and right,
 so there is a pile at -1 of height 0.5 and a pile at 1 of height 0.5.
 The animation below visualizes how the &amp;ldquo;pile of sand&amp;rdquo; gets spread from 0
 to neighboring states as time goes by.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/random-walk.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/random-walk.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;However, don&amp;rsquo;t let the analogy confuse you: the piles of sand represent the
 &lt;em&gt;probabilities&lt;/em&gt; of being at particular states. There can be many piles of
 sand at any given timestep, since there can be many states for which there

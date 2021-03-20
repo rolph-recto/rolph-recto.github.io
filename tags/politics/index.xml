@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>politics on Rolph Recto</title>
-    <link>http://rolph-recto.github.io/tags/politics/</link>
+    <link>/tags/politics/</link>
     <description>Rolph Recto (politics)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Jul 2020 00:00:00 -0400</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/tags/politics/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/politics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Hamilton and Hiring Women Guards</title>
-      <link>http://rolph-recto.github.io/blog/hamilton-hiring-and-women-guards/</link>
+      <link>/blog/hamilton-hiring-and-women-guards/</link>
       <pubDate>Sun, 05 Jul 2020 00:00:00 -0400</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/hamilton-hiring-and-women-guards/</guid>
+      <guid>/blog/hamilton-hiring-and-women-guards/</guid>
       <description>&lt;p&gt;I completely missed the &lt;em&gt;Hamilton&lt;/em&gt; discourse five years ago, but
 in the wake of the movie version&amp;rsquo;s release, there have been a new round
 of takes. Here I&amp;rsquo;ll give my own. I&amp;rsquo;m going to skip discussion of its merits
 as a play (I enjoyed it quite a bit—sue me) and go directly to discussing
 its politics.&lt;/p&gt;
 &lt;p&gt;You can sum up a lot of leftist criticisms of liberalism with this meme:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/women-guards-meme.png&#34; alt=&#34;Hire Women Guards Meme&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/women-guards-meme.png&#34; alt=&#34;Hire Women Guards Meme&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The joke is that the Democrats are as bad as Republicans, but they appeal to
 women and minorities. Instead of working to fundamentally change institutions
 and fix their underlying rot, liberals would rather address identitarian
