@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+
+
+<html lang="en-us" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>A Toy Halide Autoscheduler - Rolph Recto</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.6155b6d8eded05b985178f56a637943b3e7fcfccc913d9c656bbebce7c91cc6b.css" integrity="sha256-YVW22O3tBbmFF49WpjeUOz5/z8zJE9nGVrvrznyRzGs=">
+    
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.09382ffff49667a131a6f82e8d8c82cc72b481648b4deb145d780a4ce2255896.css" integrity="sha256-CTgv//SWZ6ExpvgujYyCzHK0gWSLTesUXXgKTOIlWJY=">
+    
+
+
+
+
+
+<meta property="og:title" content="A Toy Halide Autoscheduler" />
+<meta property="og:description" content="This post was written for the Cornell CS 6120 Fall 2019 class blog with Gabriela Correa Calinao and Ryan Doenges. See the original version here.
+Halide is a domain-specific language embedded in C&#43;&#43; for writing code that processes images and, more generally, arrays. The main innovation of Halide is that it separates algorithm &mdash; the actual function being computed &ndash; from schedule &mdash; the decisions regarding when to perform computations and when to store intermediate results." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blog/halide-autoscheduler/" />
+<meta property="article:published_time" content="2019-12-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2019-12-18T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="A Toy Halide Autoscheduler"/>
+<meta name="twitter:description" content="This post was written for the Cornell CS 6120 Fall 2019 class blog with Gabriela Correa Calinao and Ryan Doenges. See the original version here.
+Halide is a domain-specific language embedded in C&#43;&#43; for writing code that processes images and, more generally, arrays. The main innovation of Halide is that it separates algorithm &mdash; the actual function being computed &ndash; from schedule &mdash; the decisions regarding when to perform computations and when to store intermediate results."/>
+
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">Rolph Recto</a>
+</h1>
+
+    <nav>
+        
+        
+        <a class="" href="/" title="">home</a>
+        
+        <a class="" href="/personal/" title="">personal</a>
+        
+        <a class="" href="/blog/" title="">blog</a>
+        
+    </nav>
+
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">A Toy Halide Autoscheduler</h1>
+        </header>
+        
+
+    
+
+
+<div class="post-info">
+    
+      Dec 18, 2019
+    
+    
+    
+</div>
+
+        <div class="content">
+            <p><em>This post was written for the Cornell CS 6120 Fall 2019 class blog with
+Gabriela Correa Calinao and Ryan Doenges.
+See the original version <a href="https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/halide-autoscheduler/">here</a></em>.</p>
+<p><a href="https://halide-lang.org/">Halide</a> is a domain-specific language embedded in C++ for writing code
+that processes images and, more generally, arrays.
+The main innovation of Halide is that it separates <em>algorithm</em> &mdash; the actual
+function being computed &ndash; from <em>schedule</em> &mdash; the decisions regarding when
+to perform computations and when to store intermediate results.
+This allows developers to write the function that their image pipelines
+implement once and then performance-tune the implementation by swapping out
+schedules &mdash; different schedules can be used for different platforms while
+not modifying function code.</p>
+<p>Writing an efficient schedule for Halide functions requires expertise in
+performance tuning.
+To alleviate this, in this project we create a toy autoscheduler for Halide
+that attempts to automatically generate an efficient schedule
+for Halide functions.
+(Note that Halide has an autoscheduler built-in: see <a href="https://halide-lang.org/papers/autoscheduler2019.html">this paper</a>
+for more information.)</p>
+<p>Our autoscheduler is implemented in Python 2.7 and can be found at
+<a href="https://github.com/rolph-recto/cs6120-autoscheduler">this repository</a>.</p>
+<h2 id="design-overview">Design Overview</h2>
+<p>The following presentation of schedules as trees manipulated by
+schedule transformers closely follows Chapter 7 of Jonathan Ragan-Kelley&rsquo;s
+<a href="https://people.csail.mit.edu/jrk/jrkthesis.pdf">thesis</a>.
+The images below are from that document.</p>
+<p>In order to search for schedule, we represent them as <em>schedule trees</em>,
+wherein the ancestry relationships between nodes represent ordering information.
+Schedule trees have the following kinds of nodes:</p>
+<ul>
+<li>
+<p><strong>Root nodes</strong> represent the top of the schedule tree.</p>
+</li>
+<li>
+<p><strong>Loop nodes</strong> represent the traversal of how the function is computed
+along a given dimension.
+Loop nodes are associated with a function and a variable (dimension).
+Since functions are assumed two-dimensional, by default functions have
+two variables: <em>x</em> and <em>y</em>.
+Loop nodes also contain information such as whether the loop is run
+sequentially, run in parallel, or vectorized.</p>
+</li>
+<li>
+<p><strong>Storage nodes</strong> represent storage for intermediate results to be used later.</p>
+</li>
+<li>
+<p><strong>Compute nodes</strong> are the leaves of the schedule tree, and they represent
+computation being performed.
+Compute nodes can have other compute nodes as children to represent
+functions that are inlined instead of loaded from intermediate storage.</p>
+</li>
+</ul>
+<p>Schedule trees are considered <em>well-formed</em> if they satisfy the
+following criteria:</p>
+<ul>
+<li>
+<p>The ancestry path from a function&rsquo;s compute node to the root node contains
+all the loop nodes and the storage node
+(if the function is not the output<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>)
+for that function.
+Intuitively, this means that the traversal of how the function is computed
+is completely defined, and storage for the function&rsquo;s results is available.</p>
+</li>
+<li>
+<p>If a function calls another function and the callee is not inlined,
+the compute node for the callee must occur before the compute node of the
+caller in a depth-first traversal.
+Intuitively, this ensures that the callee&rsquo;s results are stored before
+the caller is computed.</p>
+</li>
+</ul>
+<p>For any function we can define the <em>default schedule</em>, which traverses
+the output function in row-major order and inlines all called functions,
+like so:</p>
+<p><img src="default.png" alt="default schedule"></p>
+<p>We can give a semantics for schedule trees as nested loops.
+Consider the schedule below for three functions, <em>in</em>, <em>bx</em>, and <em>by</em>, where
+<em>by</em> calls <em>bx</em> and <em>bx</em> calls <em>in</em>.
+The schedule tree on the left represents the nested loop on the right.</p>
+<p><img src="semantics.png" alt="schedule semantics"></p>
+<h3 id="schedule-transformers">Schedule Transformers</h3>
+<p>We define transformers over schedule trees.
+We use these to traverse the search space of schedules.</p>
+<ul>
+<li>
+<p><strong>Split</strong> - split a function&rsquo;s variable into two.
+For example, we can split a function&rsquo;s <code>x</code> variable into <code>x_inner</code>
+and <code>x_outer</code>.
+This allows <em>tiered</em> traversal of a function&rsquo;s extent along one dimension.
+For example, splitting the <code>x</code> variable changes this loop:</p>
+<pre><code>for x in [1..16]:
+  a[x] = ...
+</code></pre><p>into:</p>
+<pre><code>for x_outer in [1..4]:
+  for x_inner in [1..4]:
+    a[(x_outer*4)+x_inner] = ...
+</code></pre><p>Combined with <em>reorder</em>, <em>split</em> can represent schedules that <em>tile</em>
+computations.</p>
+</li>
+<li>
+<p><strong>Change Loop Type</strong> - change how the loop will be traversed; by default the
+loop type is <code>sequential</code>, but it could also be <code>parallel</code>, <code>unrolled</code>,
+or <code>vectorized</code>.
+For simplicity our implementation only supports <code>sequential</code> and <code>vectorized</code>.</p>
+</li>
+<li>
+<p><strong>Reorder</strong> - switch loop nodes for the same function.</p>
+</li>
+<li>
+<p><strong>Hoist / lower compute</strong> - change the granularity in which intermediate
+results are computed.</p>
+</li>
+<li>
+<p><strong>Hoist / lower storage</strong> - change the granularity in which storage for
+intermediate results is allocated.</p>
+</li>
+<li>
+<p><strong>Inline / deinline</strong> - inline functions into callers (don&rsquo;t store their results
+in intermediate storage) or deinline function out of callers.
+Intuitively, inlining functions trades off smaller memory usage for
+redundant computations, while de-inlining trades off higher memory usage
+for fewer redundant computations.</p>
+</li>
+</ul>
+<p>Below are some diagrams to give intuition to how these scheduler transformers
+work.</p>
+<p><img src="reorder.png" alt="reorder"></p>
+<p><img src="hoist-compute.png" alt="hoist compute"></p>
+<p><img src="lower-compute.png" alt="lower compute"></p>
+<p><img src="lower-compute.png" alt="hoist storage"></p>
+<p><img src="inline.png" alt="inline"></p>
+<p><img src="deinline.png" alt="deinline"></p>
+<h3 id="bounds-inference">Bounds Inference</h3>
+<p>Now that we have a representation for schedules and a set of
+schedule transformers, we are close to arriving at a search algorithm
+for finding efficient schedules.
+The last component that we need is a notion of <em>cost</em> for schedules.
+In order to provide a cost model for schedules, we need to determine the
+number of iterations performed by loops in the schedule.
+This determines the number of times instructions inside the body of loops
+will be executed, as well as the size of intermediate storage to be
+allocated.
+We determine this by computing the extent in which functions will be computed.
+For the output function, we assume that the extent is given by a call to the
+<code>realize</code> function.
+For called functions that are not inlined, the extent is the dimensions of
+the function that will be stored as intermediate results.
+Because storage will be reused depending on the granularity
+with which intermediate results are stored, the extent of called functions
+does not necessarily coincide with the total extent over which the function
+will be computed (e.g., the called function might be computed on
+a per-scanline basis).</p>
+<p>For example, consider the simple pipeline below that has one producer (<code>g</code>)
+and one consumer (<code>f</code>):</p>
+<p><code>g(x, y) = x * y</code></p>
+<p><code>f(x, y) = g(x, y) + g(x+1, y+1)</code></p>
+<p>Given that <code>f</code> is realized in a 512x512 box and a schedule where <code>g</code> is
+computed in total before computing <code>f</code>, the extent of <code>g</code> is 513x513.</p>
+<p>Computing the extent in which functions will be computed is hard in general,
+but since Halide makes the simplifying assumption that all extents are
+rectangular (as opposed to, say, polytopes in the polyhedral model),
+there is a simple method for doing this:
+we only need to check the maximum and minimum points of the caller functions
+and check the arguments to the callee.
+Note that we also assume that function arguments are drawn from a grammar
+of &ldquo;simple&rdquo; arithmetic expressions consisting only of <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>,
+variables and constants.</p>
+<p>In the example above, the extent of <code>f</code> is defined by the box bounded by
+<code>(1,1)</code> and <code>(512, 512)</code>.
+The arguments to <code>g</code> at these points are:</p>
+<ul>
+<li>at <code>(1,1)</code>: <code>(1,1), (2,2)</code></li>
+<li>at <code>(512,512)</code>: <code>(512,512), (513,513)</code></li>
+</ul>
+<p>Thus we can determine the extent of <code>g</code> to be 513x513.</p>
+<p>We encode these caller-callee relationships into logical formulas and
+use the <a href="https://github.com/Z3Prover/z3">Z3</a> SMT solver to a retrieve model that contains concrete values
+for the arguments.</p>
+<h3 id="search-algorithm-for-schedules">Search Algorithm for Schedules</h3>
+<p>Once loop sizes have been inferred, we have enough information to determine
+important execution features of the schedule, such as how much memory
+it will allocate and how many operations it will perform.
+The <em>cost</em> of the schedule is then a weighted sum of these data points.</p>
+<p>By default our implementation groups execution features into the following:</p>
+<ul>
+<li>
+<p><em>mem</em> - amount of memory allocated</p>
+</li>
+<li>
+<p><em>loads</em> - number of intermediate results loaded from storage</p>
+</li>
+<li>
+<p><em>stores</em> - number of intermediate results stored</p>
+</li>
+<li>
+<p><em>arithmetic operations</em> - number of <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code> operations performed</p>
+</li>
+<li>
+<p><em>mathematical operations</em> - number of <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>sqrt</code> operations
+performed</p>
+</li>
+</ul>
+<p>Each of these groups has a weight that determines the importance of these
+features with respect to the schedule&rsquo;s cost (see <strong>Evaluation</strong> below).</p>
+<p>Now that we can give a notion of cost to schedules, we can search for efficient
+schedules.
+We use beam search as our search algorithm, with the default schedule as
+the starting node.
+We describe the concrete parameters used for search below in <strong>Evaluation</strong>.</p>
+<h3 id="conversion-to-halide">Conversion to Halide</h3>
+<p>Once we have a candidate schedule tree, we convert it into Halide.
+We do this by checking the ancestry path from compute nodes:
+this path determines whether a function&rsquo;s variables are split,
+the traversal order for computing the function, and, for called functions,
+the granularity at which the function is stored and computed.</p>
+<p>Consider the schedule above for the functions <code>bx</code>, <code>by</code>, and <code>in</code>.
+Converted into Halide code, the schedule looks like the following:</p>
+<pre><code>by.reorder(y, x);
+
+bx.store_root();
+bx.compute_at(by, y);
+bx.reorder(y, x);
+</code></pre><h2 id="evaluation">Evaluation</h2>
+<p>We evaluate the performance of the autoscheduler over three benchmarks.
+We do this by comparing the performance of the autoscheduled run
+(OPT configuration) vs. the run with the default schedule (DEF configuration).
+We measure runtime and memory usage using <code>gprof</code>.</p>
+<p>For the experiments, we set the weights for execution features as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mem</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>loads</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>stores</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>arith ops</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>math ops</td>
+<td>10.0</td>
+</tr>
+</tbody>
+</table>
+<p>We run beam search with a depth of 10 and beam width of 300.</p>
+<p>For all benchmarks, the output functions are realized across an extent of
+2048x2048.
+The results below are averaged across three runs.</p>
+<h3 id="benchmark-1">Benchmark 1</h3>
+<pre><code>g(x,y) = sqrt(cos(x) + sin(y));
+f(x,y) = g(x + 1,y) + g(x,y) + g(x + 1,y + 1) + g(x,y + 1);
+</code></pre><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Runtime (ms)</th>
+<th>Peak heap usage (bytes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f (DEF)</td>
+<td>87.72</td>
+<td>0</td>
+</tr>
+<tr>
+<td>f (OPT)</td>
+<td>13.48</td>
+<td>0</td>
+</tr>
+<tr>
+<td>g (DEF)</td>
+<td>N/A</td>
+<td>0</td>
+</tr>
+<tr>
+<td>g (OPT)</td>
+<td>172.70</td>
+<td>32874</td>
+</tr>
+</tbody>
+</table>
+<h3 id="benchmark-2">Benchmark 2</h3>
+<pre><code>blur_x(x,y) = input(x - 1,y) + input(x,y) + input(x + 1,y) / 3;
+blur_y(x,y) = blur_x(x - 1,y) + blur_x(x,y) + blur_x(x + 1,y) / 3;
+</code></pre><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Runtime (ms)</th>
+<th>Peak heap usage (bytes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>blur_y (DEF)</td>
+<td>12.70</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blur_y (OPT)</td>
+<td>19.02</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blur_x (DEF)</td>
+<td>N/A</td>
+<td>0</td>
+</tr>
+<tr>
+<td>blur_x (OPT)</td>
+<td>16.16</td>
+<td>16400</td>
+</tr>
+</tbody>
+</table>
+<h3 id="benchmark-3">Benchmark 3</h3>
+<pre><code>f(x,y) = x + y;
+</code></pre><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Runtime (ms)</th>
+<th>Peak heap usage (bytes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f (DEF)</td>
+<td>11.85</td>
+<td>0</td>
+</tr>
+<tr>
+<td>f (OPT)</td>
+<td>12.18</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="discussion">Discussion</h3>
+<p>Note that for the DEF configuration, only the output functions have runtimes
+associated with them since all called functions are inlined.</p>
+<p>The autoscheduler performs rather poorly relative to the default schedule.
+While it successfully makes space-runtime tradeoffs (e.g., <code>f</code> in Benchmark 1),
+allowing the computation of a function to run much faster by saving
+intermediate results, it runs more slowly and uses more memory than the
+default schedule across all benchmarks.</p>
+<p>We believe the poor performance of the autoscheduler has two main causes:</p>
+<ul>
+<li>
+<p><strong>Wrong feature weights.</strong> The feature weights for the cost model
+are chosen by fiat; if these were learned instead given a set of
+training data, then more the weights can probably better capture the
+execution profile of schedules.</p>
+</li>
+<li>
+<p><strong>Missing execution features</strong>. There are some execution features not
+captured in the current cost model that probably has a significant effect
+on performance.
+Most importantly, the cost model does not reason about locality.
+Because of this, the autoscheduler sometimes generates schedules with
+loop order that has poor locality
+(e.g., a function being traversed in column-major order instead
+of row-major order).
+It is not clear how to quantify locality in the cost model, but it is an
+obvious extension to the cost model.</p>
+</li>
+</ul>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>By convention the output function does not have a storage
+node in the schedule tree since it is assumed that storage for the output
+has already been allocated and thus there is no decision to be made about
+the granularity with which to allocate it. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+        </div>
+    </article>
+
+    
+
+    <hr>
+    <center>
+    
+      <p>
+      <a href="/blog/equivalence-modulo-inputs/">&nbsp;&lt;&lt;&nbsp;Compiler Validation via Equivalence Modulo Inputs</a>
+      </p>
+    
+    
+      <p>
+      <a href="/blog/hamilton-hiring-and-women-guards/">Hamilton and Hiring Women Guards&nbsp;&gt;&gt;</a>
+      </p>
+      
+    
+      <p>
+      Back to <a href="/blog/">Blog</a>
+      </p>
+    
+    </center>
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+    <div class="common-footer-bottom">
+        
+        
+
+
+   
+    </div>
+</footer>
+
+        
+    </div>
+</body>
+</html>

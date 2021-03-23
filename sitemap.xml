@@ -94,6 +94,21 @@
   </url>
   
   <url>
+    <loc>/tags/culture/</loc>
+    <lastmod>2020-08-23T00:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/politics/</loc>
+    <lastmod>2020-08-23T00:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/you-cant-stop-cancel-culture/</loc>
+    <lastmod>2020-08-23T00:00:00-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/review/cult-of-smart/</loc>
     <lastmod>2020-08-20T00:00:00+00:00</lastmod>
   </url>
@@ -109,17 +124,7 @@
   </url>
   
   <url>
-    <loc>/tags/culture/</loc>
-    <lastmod>2020-07-05T00:00:00-04:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/blog/hamilton-hiring-and-women-guards/</loc>
-    <lastmod>2020-07-05T00:00:00-04:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/politics/</loc>
     <lastmod>2020-07-05T00:00:00-04:00</lastmod>
   </url>
   
@@ -136,6 +141,21 @@
   <url>
     <loc>/review/love-of-a-good-woman/</loc>
     <lastmod>2020-01-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/halide-autoscheduler/</loc>
+    <lastmod>2019-12-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/equivalence-modulo-inputs/</loc>
+    <lastmod>2019-12-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/llvm-autovec/</loc>
+    <lastmod>2019-11-13T00:00:00+00:00</lastmod>
   </url>
   
   <url>
