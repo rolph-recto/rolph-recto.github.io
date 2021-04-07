@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>pl on Rolph Recto</title>
-    <link>http://rolph-recto.github.io/tags/pl/</link>
+    <link>/tags/pl/</link>
     <description>Rolph Recto (pl)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 18 Dec 2017 00:00:00 +0000</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/tags/pl/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/tags/pl/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Embedding and Extending Go in Haskell</title>
-      <link>http://rolph-recto.github.io/blog/go-in-haskell/</link>
+      <link>/blog/go-in-haskell/</link>
       <pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/go-in-haskell/</guid>
+      <guid>/blog/go-in-haskell/</guid>
       <description>&lt;p&gt;Here&amp;rsquo;s a fun question: what would Go look like embedded inside of Haskell?&lt;/p&gt;
 &lt;p&gt;By &amp;ldquo;Go&amp;rdquo; here I don&amp;rsquo;t mean the full language itself but some kind of core
 calculus with the features that people really like about Go: namely, its
@@ -565,7 +565,7 @@ value. Now instead of a single key into a runtime map, instead it will be a
 &lt;em&gt;pair&lt;/em&gt; of keys: one key will be used to push values into the map, and the other
 key will be used to get values from it.&lt;/p&gt;
 &lt;p&gt;Some diagrams might help with the explanation.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The diagram above should be pretty self-explanatory. For this to work properly
 the &lt;code&gt;source&lt;/code&gt; function needs to be passed the &lt;code&gt;inchan&lt;/code&gt; channel and the &lt;code&gt;sink&lt;/code&gt;
 channel needs to be passed the &lt;code&gt;outchan&lt;/code&gt; channel. &lt;code&gt;chan_map&lt;/code&gt; currently returns
@@ -575,7 +575,7 @@ when a goroutine pushes a value to it, the goroutine is really pushing a value
 to &lt;code&gt;inchan&lt;/code&gt;; when a goroutine extracts a value from it, the goroutine is really
 extracting a value out of &lt;code&gt;outchan&lt;/code&gt;. So under the hood the same thing is
 happening, but the interface to the user is a bit nicer. Like so:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s see how this change looks like in code.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Haskell&#34; data-lang=&#34;Haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Int&lt;/span&gt;
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;GoChan&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;, &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;) 
@@ -739,10 +739,10 @@ as calls to &lt;code&gt;P()&lt;/code&gt; and &lt;code&gt;V()&lt;/code&gt; to cha
     
     <item>
       <title>Implementing call/cc</title>
-      <link>http://rolph-recto.github.io/blog/implementing-callcc/</link>
+      <link>/blog/implementing-callcc/</link>
       <pubDate>Mon, 26 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/implementing-callcc/</guid>
+      <guid>/blog/implementing-callcc/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and
 the next feature on my todo list is first-class continuations.
 &lt;code&gt;call/cc&lt;/code&gt; always seemed mysterious to me, and since this is PL, the best way to

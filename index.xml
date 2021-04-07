@@ -2,21 +2,123 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rolph Recto</title>
-    <link>http://rolph-recto.github.io/</link>
+    <link>/</link>
     <description>Rolph Recto</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 23 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 27 Mar 2021 00:00:00 +0000</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Klara and the Sun by Kazuo Ishiguro</title>
+      <link>/reviews/klara-and-the-sun/</link>
+      <pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/reviews/klara-and-the-sun/</guid>
+      <description>&lt;p&gt;Like &lt;em&gt;Never Let Me Go&lt;/em&gt; (though I&amp;rsquo;ve only seen the movie), this is emotionally
+devastating, made even more so by Klara&amp;rsquo;s equanimity. Unlike replicants from
+&lt;em&gt;Blade Runner&lt;/em&gt; or the boy from Spielberg/Kubrick&amp;rsquo;s &lt;em&gt;A.I.&lt;/em&gt;, Klara is quite
+content being a robot. But what a human robot she is! She is the only character
+in the book who expresses any sort of religious feeling&amp;mdash;the only one who
+experiences a kind of enchanted world where the iron cage of modernity does not
+exist, where the Sun is an object of primitive worship. Ishiguro slyly plays
+along with Klara&amp;rsquo;s magical thinking in the scene where the Sun &amp;ldquo;heals&amp;rdquo; Josie.&lt;/p&gt;
+&lt;p&gt;What is really terrifying here, like in &lt;em&gt;Never Let Me Go&lt;/em&gt;, is the setting being
+in the near future, where the new technology that broaches human nature (cloning
+in &lt;em&gt;NLMG&lt;/em&gt;, artificial intelligence here) is not yet taken for granted. There are
+true believers (Capaldi), but the drama of the yet-to-be-converted (Chrissie),
+their struggle against the broach, and their acceptance of it in desperation (in
+both books, the despair of mortality), is terrifying exactly because it traces
+how we might accept similar broaches. It is a kind of horror where, in making
+small concessions here and there, we find ourselves in inhuman situations that
+we might never have accepted if the transition happened all at once.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The Dialectic of Sex by Shulamith Firestone</title>
+      <link>/review/dialectic-of-sex/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/review/dialectic-of-sex/</guid>
+      <description>&lt;p&gt;In the intro she paints a view of radical feminism as a continuation and the
+fulfillment of socialism, as Marx and Engels failed to consider sex difference
+as the &amp;ldquo;tapeworm of exploitation,&amp;rdquo; more primordial than class struggle itself.
+But most of the book is more indebted to Freud than Marx and Engels; only the
+last chapter really fleshed out the vision of radical feminism she paints in the
+beginning.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m allergic to Freud being used to explain group psychology. The chapter on
+racism, where she analogizes Black psychology to the Oedipus complex and Electra
+complex, is particularly egregious in this. She uncomfortably veers into very
+bad stereotypes in the service of group psychologizing!&lt;/p&gt;
+&lt;p&gt;She also has very outre views about child sexuality. I understand that it is of
+a piece with her stance on family abolition, but it is very weird to read a
+radical feminist and not a libertarian talk positively about pedophilia. Her
+vision of transient &amp;ldquo;households&amp;rdquo; where the child can leave at any time (but,
+amusingly, the adults are bound to temporary contracts) just seems like
+something that&amp;rsquo;s not really well thought out. For someone who is very incisive
+about the way love, marriage, and family oppress women and children, it does not
+seem like she has thought at all how to avoid oppression with her utopian vision
+of what personal life would look like.&lt;/p&gt;
+&lt;p&gt;I liked her discussion of sexuality being unnaturally constrained to
+heterosexual intercourse. She advocates for a re-enchantment or an eroticization
+of the world by releasing society from this constraint, so that all relations
+will be suffused with sexuality. This is an interesting take but I wished she
+described it in more detail.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Debt: The First 5000 Years by David Graeber</title>
+      <link>/review/debt-the-first-5000-years/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/review/debt-the-first-5000-years/</guid>
+      <description>&lt;p&gt;This book is really interesting. Unfortunately, it is also quite a mess. There&amp;rsquo;s
+a thesis buried in it somewhere, but Graeber never makes it clear. Here&amp;rsquo;s a stab
+at it:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The origins of money can be traced to violence: war and slavery. In both cases
+the &amp;ldquo;context&amp;rdquo; of a thing is removed, which exactly is the thing that makes it
+fungible. There are some societies where women where seemingly treated like
+currency (what Graeber calls human economies), but the important difference
+between these and a &amp;ldquo;real&amp;rdquo; economy that trades in money is that it is only in
+extraordinary circumstances (e.g. in conflicts with unknown, faraway tribes)
+that items are seen to be commensurate with human &amp;ldquo;property&amp;rdquo; and thus
+exchangeable for it. Human economies usually only traded women for women.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Historically, societies oscillated between virtual money (credit) and actual
+money depending on circumstances. During the Axial Age, there was a shift
+towards actual money because of the prevalence of war and the need of states
+to pay soldiers. Coin money is useful as payment because it is &amp;ldquo;contextless&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The standard economic picture of development from barter to money to credit is
+exactly backwards; most human societies have only credit, and then in certain
+circumstances (outlined above) transitioned to use money. Barter, where people
+performed &amp;ldquo;spot trades&amp;rdquo; with no expectation of trading again in the future, is
+a recent development that only makes sense from early modernity (?) on. What
+people usually call &amp;ldquo;barter&amp;rdquo; they really mean credit&amp;mdash;you give something to
+your neighbor today, with the expectation that he will be able to return the
+favor some time in the future. What he will give to you will be roughly
+commensurate, but never exact as in monetary compensation. Thus everyone is in
+a little bit of debt to each other all the time&amp;mdash;exactly opposite of the
+economics picture.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>A Libertarian Walks Into a Bear by Matthew Honglitz-Hetling</title>
-      <link>http://rolph-recto.github.io/review/a-libertarian-walks-into-a-bear/</link>
+      <link>/review/a-libertarian-walks-into-a-bear/</link>
       <pubDate>Wed, 23 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/a-libertarian-walks-into-a-bear/</guid>
+      <guid>/review/a-libertarian-walks-into-a-bear/</guid>
       <description>&lt;p&gt;A funny, Bill-Bryson-esque look into a small town in New Hampshire. The humor
 mostly works, but I got the sense that Honglitz-Hetling was self-consciously
 hamming up the text to force a laugh, which somewhat detracts from the actual
@@ -50,10 +152,10 @@ state of nature is also populated by quite a few bears.&lt;/p&gt;
     
     <item>
       <title>On Proofs, Programs, and Houses</title>
-      <link>http://rolph-recto.github.io/blog/on-proofs-programs-and-houses/</link>
+      <link>/blog/on-proofs-programs-and-houses/</link>
       <pubDate>Tue, 22 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/on-proofs-programs-and-houses/</guid>
+      <guid>/blog/on-proofs-programs-and-houses/</guid>
       <description>&lt;p&gt;I recently read the (in)famous &lt;a href=&#34;https://www.cs.umd.edu/~gasarch/BLOGPAPERS/social.pdf&#34;&gt;&amp;ldquo;Social Processes&amp;rdquo; paper&lt;/a&gt; that
 dismissed the then-nascent area of program verification.  Forty years after its
 publication, there&amp;rsquo;s still a lot of things that the paper got right, especially
@@ -203,10 +305,10 @@ to &lt;a href=&#34;http://adam.chlipala.net/cpdt/html/Intro.html&#34;&gt;CPDT&lt
     
     <item>
       <title>A Childrens Bible by Lydia Millet</title>
-      <link>http://rolph-recto.github.io/review/childrens-bible/</link>
+      <link>/review/childrens-bible/</link>
       <pubDate>Mon, 30 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/childrens-bible/</guid>
+      <guid>/review/childrens-bible/</guid>
       <description>&lt;p&gt;A poignant&amp;mdash;and funny!&amp;mdash;allegory of sorts about climate change. The main
 conceit of the book is that the children, full of gumption and resolve, switches
 roles with their parents, who are despondent and lazy, more preoccupied with sex
@@ -218,10 +320,10 @@ the will to fix things while we still have some time.&lt;/p&gt;
     
     <item>
       <title>The Known World by Edward P. Jones</title>
-      <link>http://rolph-recto.github.io/review/the-known-world/</link>
+      <link>/review/the-known-world/</link>
       <pubDate>Sat, 28 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-known-world/</guid>
+      <guid>/review/the-known-world/</guid>
       <description>&lt;p&gt;Amazing book&amp;mdash;probably the best use of the &amp;ldquo;God&amp;rsquo;s-eye&amp;rdquo; narrator I&amp;rsquo;ve read. The
 story zips back and forth through time, as if the narrator sees all of history
 all at once, rather like the Tralfamadorians of &lt;em&gt;Slaughterhouse-Five&lt;/em&gt;. One
@@ -247,10 +349,10 @@ So, in owning Moses, she sees herself as white.&lt;/p&gt;
     
     <item>
       <title>Jack by Marilynne Robinson</title>
-      <link>http://rolph-recto.github.io/review/jack/</link>
+      <link>/review/jack/</link>
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/jack/</guid>
+      <guid>/review/jack/</guid>
       <description>&lt;p&gt;This book didn&amp;rsquo;t hit me as hard as the other books in the Gilead series. I think
 it&amp;rsquo;s because it&amp;rsquo;s more abstract, less concerned with Jack&amp;rsquo;s immediate
 surroundings and more concerned about the workings of his inner despair. So
@@ -274,10 +376,10 @@ Della&amp;rsquo;s presence does he become someone we want to read about.&lt;/p&g
     
     <item>
       <title>Dune by Frank Herbert</title>
-      <link>http://rolph-recto.github.io/review/dune/</link>
+      <link>/review/dune/</link>
       <pubDate>Sun, 27 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/dune/</guid>
+      <guid>/review/dune/</guid>
       <description>&lt;p&gt;Dune has incredibly memorable world-building. It&amp;rsquo;s clear that Herbert put a lot
 of time in building the mythology and the setting of Arrakis, and the result is
 a lived-in world rich in detail. The only problem is that he can&amp;rsquo;t really write!
@@ -290,10 +392,10 @@ Let&amp;rsquo;s introduce concepts (&lt;em&gt;jihad&lt;/em&gt;) without really f
     
     <item>
       <title>The Moviegoer by Walker Percy</title>
-      <link>http://rolph-recto.github.io/review/the-moviegoer/</link>
+      <link>/review/the-moviegoer/</link>
       <pubDate>Thu, 10 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-moviegoer/</guid>
+      <guid>/review/the-moviegoer/</guid>
       <description>&lt;p&gt;A meandering book that doesn&amp;rsquo;t really have a plot, but what a pleasure to read.
 I was expecting a &amp;ldquo;come to Jesus&amp;rdquo; moment for Binx, but the closest he got was
 Aunt Emily&amp;rsquo;s dressing down of him after coming back from Chicago. Even that is
@@ -304,10 +406,10 @@ for Binx if he actually grew spiritually as a person, but alas no.&lt;/p&gt;
     
     <item>
       <title>Silence by Shūsaku Endō</title>
-      <link>http://rolph-recto.github.io/review/silence/</link>
+      <link>/review/silence/</link>
       <pubDate>Sat, 29 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/silence/</guid>
+      <guid>/review/silence/</guid>
       <description>&lt;p&gt;A powerful book about faith. The central issue of the book&amp;mdash;whether Rodrigues&amp;rsquo;s
 apostatizing is an act of weakness or an act of love for those being tortured in
 the pit&amp;mdash;is not answered, and is kept ambiguous. It&amp;rsquo;s not clear to me at all!
@@ -333,10 +435,10 @@ for nothing.&lt;/p&gt;
     
     <item>
       <title>Orthodoxy by G. K. Chesterton</title>
-      <link>http://rolph-recto.github.io/review/orthodoxy/</link>
+      <link>/review/orthodoxy/</link>
       <pubDate>Wed, 26 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/orthodoxy/</guid>
+      <guid>/review/orthodoxy/</guid>
       <description>&lt;p&gt;Reading this reminds me quite a bit of C. S. Lewis, though Chesterton is much
 more charming. Both are fun to read, but there&amp;rsquo;s always a whiff of sophistical
 reasoning that prevents me from, say, actually converting. To be fair to
@@ -359,10 +461,10 @@ kind of materialism.&lt;/p&gt;
     
     <item>
       <title>Why Liberalism Failed by Patrick Deneen</title>
-      <link>http://rolph-recto.github.io/review/why-liberalism-failed/</link>
+      <link>/review/why-liberalism-failed/</link>
       <pubDate>Tue, 25 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/why-liberalism-failed/</guid>
+      <guid>/review/why-liberalism-failed/</guid>
       <description>&lt;p&gt;This was a great read and a good synthesis of a lot of conservative critiques
 that I have been hearing recently. I especially found that idea that the two
 great manifestations of liberalism&amp;mdash;the state and the market&amp;mdash;are mutually
@@ -394,11 +496,123 @@ public vision of the Good and work towards that.&lt;/p&gt;
     </item>
     
     <item>
+      <title>You can&#39;t stop cancel culture</title>
+      <link>/blog/you-cant-stop-cancel-culture/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 -0400</pubDate>
+      
+      <guid>/blog/you-cant-stop-cancel-culture/</guid>
+      <description>&lt;p&gt;There&amp;rsquo;s been another &lt;a href=&#34;https://www.nytimes.com/2020/08/19/us/politics/aaron-coleman-kansas.html&#34;&gt;wave&lt;/a&gt; of cancel culture discourse following
+the &lt;a href=&#34;https://harpers.org/a-letter-on-justice-and-open-debate/&#34;&gt;Harper&amp;rsquo;s letter&lt;/a&gt;, so here&amp;rsquo;s my take on it.&lt;/p&gt;
+&lt;p&gt;There&amp;rsquo;s a series of rhetorical evasions that I&amp;rsquo;ve seen people perform whenenver
+the topic of cancelling comes up. The first is to say that cancel culture
+doesn&amp;rsquo;t exist; or if it does exist, the person cancelled deserved it; or if the
+person didn&amp;rsquo;t deserve it, then it doesn&amp;rsquo;t happen that often and very act of
+discussing it, which is taken to be a &amp;ldquo;symbolic&amp;rdquo; problem, makes you blind to
+real problems at hand.&lt;/p&gt;
+&lt;p&gt;I think these people make these evasions because of some uncomfortable
+resonances cancellation has with other things they clearly don&amp;rsquo;t like. Calling
+someone&amp;rsquo;s boss to complain about something that person did outside of their job
+is prototypical &amp;ldquo;Karen&amp;rdquo; behavior—and no one wants to think themselves of being
+a Karen. Of course, &lt;a href=&#34;https://www.cnn.com/2020/05/26/us/central-park-video-dog-video-african-american-trnd/index.html&#34;&gt;Amy Cooper calling the cops&lt;/a&gt; is especially
+egregious, but it is of a piece with trying to get someone fired.&lt;/p&gt;
+&lt;p&gt;The other, darker parallel you can make to cancelling is that it is an attempt
+to enact moral instruction using the market. You cancel someone to teach them a
+lesson, and for the lesson to stick they need to be humiliated in public, and to
+lose their livelihood. But this is the same principle that animates the push for
+means-testing in welfare programs, or for dismantling the welfare state
+altogether. Being on the government dole as &amp;ldquo;welfare queens&amp;rdquo; without incentive
+to look for work is a concern conservatives have that leftists see as an excuse
+to leave people in poverty. If we don&amp;rsquo;t like poor people to be taught by the
+market that they are lazy and only through grit can they rise above their
+station, why should we think that cancelling people and having them fired would
+make them learn to have the right opinions?&lt;/p&gt;
+&lt;p&gt;Also: sure, the people loudest about the dangers of cancelling seem to be doing
+just fine—the Harper&amp;rsquo;s letter signatories seem to be doing quite well!—or
+seem to center it as &lt;em&gt;the&lt;/em&gt; most important crisis of the culture when there are
+obviously bigger and more important problems around. But regardless of what we
+think of the messengers, it is hard to deny the message is true, and that there
+have &lt;a href=&#34;https://nymag.com/intelligencer/2020/06/why-did-the-washington-post-get-this-woman-fired.html&#34;&gt;been&lt;/a&gt; &lt;a href=&#34;https://twitter.com/SwipeWright/status/1281793002986336256&#34;&gt;plenty&lt;/a&gt; &lt;a href=&#34;https://www.insider.com/gillian-philip-childrens-author-sacked-tweeting-support-jk-rowling-2020-7&#34;&gt;of&lt;/a&gt;
+&lt;a href=&#34;https://www.vox.com/2020/7/29/21340308/david-shor-omar-wasow-speech&#34;&gt;cases&lt;/a&gt; to point to as examples of real, legitimate cancellations.
+People in precarous positions have been fired—this is not a &amp;ldquo;symbolic
+problem.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Maybe people fear that admitting cancellations happen would give license to the
+people who are loudest in decrying them and would fuel their histrionics which
+seem to be clearly motivated by less than noble reasons of defending free
+speech. Maybe Bari Weiss or Bret Stephens have a point, but they&amp;rsquo;re still
+blowhards. But I don&amp;rsquo;t think it&amp;rsquo;s really that big of a bullet to bite. To deny
+cancel culture exists is to effectively deny that people try to get other people
+fired for having bad opinions. But put in that way, it&amp;rsquo;s obvious that cancel
+culture is real—it&amp;rsquo;s real in an almost banal way. It&amp;rsquo;s not a recent
+phenomenon, but something that has probably been going on since people had
+bosses to whom people can yell about their behavior. People like to complain,
+bosses don&amp;rsquo;t want the headache of bad publicity, and if there&amp;rsquo;s an easy
+scapegoat to make the problem go away, they get the axe. Hard to deny that&amp;rsquo;s
+real! Furthermore, this is an ecumenical phenomenon, something that groups of
+people have done forever, not just something particular to the contemporary
+left. Here&amp;rsquo;s where I remind you that the Dixie Chicks exist.&lt;/p&gt;
+&lt;p&gt;The only feature that is recent about cancel culture is its manifestation in
+social media, which I think has two effects. It&amp;rsquo;s now much
+&lt;a href=&#34;https://twitter.com/heideggrrrl/status/1282864014436044800&#34;&gt;easier&lt;/a&gt; to have lots of random people can band together and
+call your work, harass your boss, and so on. And, yes, maybe this has
+exacerbated the situation, and being cancelled in the age of the internet
+happens more frequently and with greater intensity than before. The second
+effect is that cancellation is now more public: as &lt;a href=&#34;https://www.stitcher.com/podcast/vox/the-ezra-klein-show/e/75794632&#34;&gt;Ezra Klein points
+out&lt;/a&gt;, cancellations happened in the past, in meetings behind
+closed doors, but the idea of &amp;ldquo;cancel culture&amp;rdquo; can only be possible once we can
+witness it happening. So even if online discourse has indeed intensified the
+problem of cancellation, it has also probably exaggerated it.&lt;/p&gt;
+&lt;p&gt;But I&amp;rsquo;ll bracket that point for now. The real answer that you can make to the
+Bari Weisses of the world is that they are fighting cancel culture the wrong
+way. You can&amp;rsquo;t stop cancel culture: it&amp;rsquo;s an informal, distributed process, not a
+formal legal process. You can&amp;rsquo;t talk to the manager of a cancel mob even as they
+might be talking to your manager. It&amp;rsquo;s intensified by technology in the way that
+technology, in its instrumental way, makes a lot of things easier to do. You
+can&amp;rsquo;t stop random people from calling your boss, and as tweet begets
+tweet&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;, it&amp;rsquo;s even harder to stop a Twitter mob. It&amp;rsquo;s also quite
+optimistic to assume we can achieve consensus on what constitutes harmful
+speech. So for any particular thing that you might say or write, there will
+always be some people who find it harmful and complain to your boss about it.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m not trying to be fatalistic by pointing out this fact. Rather, consider:
+even if you try to make the definition of harmful speech as exacting as
+possible, what happens to those who get cancelled for speech that is very
+clearly harmful? To put too fine a point on it: what happens to Holocaust
+deniers? Clearly they should be shunned from polite society, and we should make
+no accomodations for their speech. But should they just not get a job so they
+starve and die?&lt;/p&gt;
+&lt;p&gt;To really stop cancel culture, it is not enough to expand the Overton window, or
+to minimize the boundaries of harmful speech. People will keep cancelling, and
+some of the cancelled will not deserve it. Rather, the real solution is to make
+people &lt;em&gt;uncancellable&lt;/em&gt;—to make it so that the brouhaha over their bad opinions
+can&amp;rsquo;t prevent their access to fundamental goods that should be guaranteed for
+everyone. This means an end to at-will employment and employer-based healthcare,
+at the very least. Who cares if people yell at your boss about you, when you
+know that you can&amp;rsquo;t be fired just to make it go away? Even if you do get fired,
+you can be sure that you still have access to health care.&lt;/p&gt;
+&lt;p&gt;This move will have the double effect of ending the chilling effect that people
+worry so much about cancellations, and will advance the project of the left to
+secure goods through universal programs. It&amp;rsquo;s a win-win situation. The tiresome
+debates about &amp;ldquo;open discourse&amp;rdquo; can end, because the problem that the Harper&amp;rsquo;s
+letter signatories are complaining about would then be truly symbolic. Or they
+can continue, but as being purely the free play of meaningless chatter
+online—as all online chatter should be.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;As Robert Frost once wrote: &amp;ldquo;As tweet begets more tweets / So
+Eden sank in grief&amp;rdquo; &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Cult of Smart by Freddie deBoer</title>
-      <link>http://rolph-recto.github.io/review/cult-of-smart/</link>
+      <link>/review/cult-of-smart/</link>
       <pubDate>Thu, 20 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/cult-of-smart/</guid>
+      <guid>/review/cult-of-smart/</guid>
       <description>&lt;p&gt;I think Freddie&amp;rsquo;s main thesis is incontestible. However, at points I don&amp;rsquo;t think
 he fully engages (&amp;ldquo;steelmans&amp;rdquo;) the orthodox position he&amp;rsquo;s trying to push
 against. For example, in discussing elite colleges, the more sophisticated
@@ -417,11 +631,11 @@ it tenously to a greater political project to have its fullest expression.&lt;/p
     
     <item>
       <title>Catch and Kill by Ronan Farrow</title>
-      <link>http://rolph-recto.github.io/review/catch-and-kill/</link>
+      <link>/review/catch-and-kill/</link>
       <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/catch-and-kill/</guid>
-      <description>&lt;p&gt;This reminds of me of &lt;a href=&#34;http://rolph-recto.github.io/review/bad-blood&#34;&gt;Bad Blood&lt;/a&gt; in that they&amp;rsquo;re both
+      <guid>/review/catch-and-kill/</guid>
+      <description>&lt;p&gt;This reminds of me of &lt;a href=&#34;/review/bad-blood&#34;&gt;Bad Blood&lt;/a&gt; in that they&amp;rsquo;re both
 thrillers about real scandals, but I liked this book less. It started to get
 repetitive and Farrow&amp;rsquo;s prose is a bit clunky. He doesn&amp;rsquo;t often pull back from
 the details and explain the broader picture. The thriller elements (e.g., being
@@ -442,10 +656,10 @@ or morose.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
     
     <item>
       <title>Philosophy and Real Politics by Raymond Geuss</title>
-      <link>http://rolph-recto.github.io/review/philosophy-and-real-politics/</link>
+      <link>/review/philosophy-and-real-politics/</link>
       <pubDate>Sat, 01 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/philosophy-and-real-politics/</guid>
+      <guid>/review/philosophy-and-real-politics/</guid>
       <description>&lt;p&gt;The main critical thrust of this book is the familiar rejoinder that analytic
 philosophy is ahistorical&amp;mdash;both in the sense that it does not take seriously
 the historical developments of ideas, but also it assumes that its subjects of
@@ -469,11 +683,99 @@ principles.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Hamilton and Hiring Women Guards</title>
+      <link>/blog/hamilton-hiring-and-women-guards/</link>
+      <pubDate>Sun, 05 Jul 2020 00:00:00 -0400</pubDate>
+      
+      <guid>/blog/hamilton-hiring-and-women-guards/</guid>
+      <description>&lt;p&gt;I completely missed the &lt;em&gt;Hamilton&lt;/em&gt; discourse five years ago, but
+in the wake of the movie version&amp;rsquo;s release, there have been a new round
+of takes. Here I&amp;rsquo;ll give my own. I&amp;rsquo;m going to skip discussion of its merits
+as a play (I enjoyed it quite a bit—sue me) and go directly to discussing
+its politics.&lt;/p&gt;
+&lt;p&gt;You can sum up a lot of leftist criticisms of liberalism with this meme:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/women-guards-meme.png&#34; alt=&#34;Hire Women Guards Meme&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The joke is that the Democrats are as bad as Republicans, but they appeal to
+women and minorities. Instead of working to fundamentally change institutions
+and fix their underlying rot, liberals would rather address identitarian
+concerns as a kind of band-aid. Instead of addressing economic concerns,
+liberals are obssessed with cultural ones.&lt;/p&gt;
+&lt;p&gt;This is the &lt;a href=&#34;https://www.nytimes.com/2020/06/23/opinion/bernie-sanders-protesters-democrats.html&#34;&gt;cynical interpretation&lt;/a&gt; of the recent unrest following
+George Floyd&amp;rsquo;s murder: the powers that be can immediately take up the cause of
+Black Lives Matter and the broader demands for a reckoning with racism exactly
+because, despite their revolutionary airs, the changes they
+demand—diversification of elite institutions and its leadership—are not
+structural changes.
+The demands would change what the personnel of these institutions look like,
+but not how they run.
+Calls to &amp;ldquo;defund the police&amp;rdquo; of course does not fit this,
+but the rest of the broader happenings around the
+protests, which have been more successful in meeting their demands, do revolve
+around toppling statues, renaming institutions, firing problematic
+leaders—indeed, all cultural victories.
+We&amp;rsquo;ve yet to see whether these cultural victories can be leveraged into
+&lt;a href=&#34;https://www.nytimes.com/2020/06/26/opinion/black-lives-matter-injustice.html&#34;&gt;economic ones&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To be clear, I think this is an overblown interpretation, and there&amp;rsquo;s reason to
+believe that there will be real, substantive &lt;a href=&#34;https://www.nytimes.com/2020/06/07/us/minneapolis-police-abolish.html&#34;&gt;reforms&lt;/a&gt; to follow
+the protests. And identitarian concerns are themselves important ends that
+cannot be wholly subordinate to material ends. But regardless of whether the
+interpretation is overblown or not, &lt;em&gt;Hamilton&lt;/em&gt; embodies the criticism because
+it takes the traditional narrative about the Founding Fathers
+and gives it a patina of diversity without challenging its fundamental
+assumptions.
+It uses non-white actors and non-white music to tell a triumphalist story
+about how white people founded America.&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;
+It recasts the life of Hamilton as a &amp;ldquo;young, scrappy, and hungry&amp;rdquo;
+&lt;a href=&#34;https://www.youtube.com/watch?v=WNFf7nMIGnE&#34;&gt;embodiment of hip-hop&lt;/a&gt;—he grew up poor, immigrated to the big city
+and became successful through his own hustle, had intense rivalries with Burr
+and Jefferson and the other Founders—to let minorities see that his life
+and struggles parallel theirs.&lt;/p&gt;
+&lt;p&gt;Regardless of Lin-Manuel Miranda&amp;rsquo;s intentions, his reframing of the founding
+has the insidious consequence of legitimizing its traditional narrative and
+occluding its real faults. As Lyra Monteiro &lt;a href=&#34;https://ncph.org/history-at-work/its-not-just-a-musical/&#34;&gt;notes&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In a country in which those of us who are not white men are still subjected to
+quotidian discrimination and continue to suffer from the legacies of our
+oppression on which the country was founded, to tell that history in a way
+that encourages people of color to feel closer to it only makes it harder for
+us to see clearly the inequalities that shape our lives&amp;hellip;such a move does,
+however, work beautifully with the color-blind ideology promoted by white
+liberals. This musical is guilty of many of the same flaws as the vast
+majority of stories about the founding era: it glosses over the racism and the
+sexism involved in the founding our country, as if these were design flaws,
+not deliberate features.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There&amp;rsquo;s an argument to be made that &lt;em&gt;Hamilton&lt;/em&gt; has been so massively popular and
+successful exactly because its politics are so anodyne and reassuring, that it
+does not tear down the story of the founding but instead makes it more
+superficially inclusive. In that, it&amp;rsquo;s a great update of American civic
+religion. But it&amp;rsquo;s long past time to take the narrative of this religion
+uncritically, one where minorities play no role in the shaping of its founding,
+and whose oppression can be acknowledged as part of this religion and yet does
+not fundamentally alter its expression. For those imprisoned into oblivion, it
+must be cold comfort to see that their jailers now look like them.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Lyra Monteiro&amp;rsquo;s &lt;a href=&#34;https://online.ucpress.edu/tph/article/38/1/89/90687/Review-Essay-Race-Conscious-Casting-and-the&#34;&gt;review essay&lt;/a&gt; goes into
+extensive detail about the erasure of black people in the play. This is most
+notable in the almost complete absence of slave characters, save for an
+oblique reference to Sally Hemings. Even when slavery is mentioned, it mostly
+serves to highlight the anti-slavery efforts of white characters, or as a
+cudgel against southern landowners, as in Hamilton&amp;rsquo;s repartees to Jefferson. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+    </item>
+    
+    <item>
       <title>The Power by Naomi Alderman</title>
-      <link>http://rolph-recto.github.io/review/the-power/</link>
+      <link>/review/the-power/</link>
       <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-power/</guid>
+      <guid>/review/the-power/</guid>
       <description>&lt;p&gt;I have some problems with the execution, but the central narrative conceit is
 fascinating: given the chance to wield power like men, women will inevitably
 be as cruel and cold and calculating in its use as men. The matriarchy will
@@ -521,10 +823,10 @@ execution sometimes left me wanting.&lt;/p&gt;
     
     <item>
       <title>Eileen by Ottessa Moshfegh</title>
-      <link>http://rolph-recto.github.io/review/eileen/</link>
+      <link>/review/eileen/</link>
       <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/eileen/</guid>
+      <guid>/review/eileen/</guid>
       <description>&lt;p&gt;This is the third book I&amp;rsquo;ve read from Ottessa Moshfegh, and I have to say that
 its charms haven&amp;rsquo;t worn off. I suppose Eileen can be characterized as a &amp;ldquo;female
 incel,&amp;rdquo; but the importance difference between her and a stereotypical incels is
@@ -553,10 +855,10 @@ time believing that she would actually tie Mrs. Polk up.&lt;/p&gt;
     
     <item>
       <title>Love of a Good Woman by Alice Munro</title>
-      <link>http://rolph-recto.github.io/review/love-of-a-good-woman/</link>
+      <link>/review/love-of-a-good-woman/</link>
       <pubDate>Fri, 31 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/love-of-a-good-woman/</guid>
+      <guid>/review/love-of-a-good-woman/</guid>
       <description>&lt;p&gt;I am not saying anything new by calling Alice Munro&amp;rsquo;s stories novelistic. And
 yet, in reading this collection, the first I&amp;rsquo;ve read of her work, I was
 continually surprised at two things. First is how dense in chracterization the
@@ -577,11 +879,994 @@ character.&lt;/p&gt;
     </item>
     
     <item>
+      <title>A Toy Halide Autoscheduler</title>
+      <link>/blog/halide-autoscheduler/</link>
+      <pubDate>Wed, 18 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/halide-autoscheduler/</guid>
+      <description>&lt;p&gt;&lt;em&gt;This post was written for the Cornell CS 6120 Fall 2019 class blog with
+Gabriela Correa Calinao and Ryan Doenges.
+See the original version &lt;a href=&#34;https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/halide-autoscheduler/&#34;&gt;here&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://halide-lang.org/&#34;&gt;Halide&lt;/a&gt; is a domain-specific language embedded in C++ for writing code
+that processes images and, more generally, arrays.
+The main innovation of Halide is that it separates &lt;em&gt;algorithm&lt;/em&gt; &amp;mdash; the actual
+function being computed &amp;ndash; from &lt;em&gt;schedule&lt;/em&gt; &amp;mdash; the decisions regarding when
+to perform computations and when to store intermediate results.
+This allows developers to write the function that their image pipelines
+implement once and then performance-tune the implementation by swapping out
+schedules &amp;mdash; different schedules can be used for different platforms while
+not modifying function code.&lt;/p&gt;
+&lt;p&gt;Writing an efficient schedule for Halide functions requires expertise in
+performance tuning.
+To alleviate this, in this project we create a toy autoscheduler for Halide
+that attempts to automatically generate an efficient schedule
+for Halide functions.
+(Note that Halide has an autoscheduler built-in: see &lt;a href=&#34;https://halide-lang.org/papers/autoscheduler2019.html&#34;&gt;this paper&lt;/a&gt;
+for more information.)&lt;/p&gt;
+&lt;p&gt;Our autoscheduler is implemented in Python 2.7 and can be found at
+&lt;a href=&#34;https://github.com/rolph-recto/cs6120-autoscheduler&#34;&gt;this repository&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;design-overview&#34;&gt;Design Overview&lt;/h2&gt;
+&lt;p&gt;The following presentation of schedules as trees manipulated by
+schedule transformers closely follows Chapter 7 of Jonathan Ragan-Kelley&amp;rsquo;s
+&lt;a href=&#34;https://people.csail.mit.edu/jrk/jrkthesis.pdf&#34;&gt;thesis&lt;/a&gt;.
+The images below are from that document.&lt;/p&gt;
+&lt;p&gt;In order to search for schedule, we represent them as &lt;em&gt;schedule trees&lt;/em&gt;,
+wherein the ancestry relationships between nodes represent ordering information.
+Schedule trees have the following kinds of nodes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Root nodes&lt;/strong&gt; represent the top of the schedule tree.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Loop nodes&lt;/strong&gt; represent the traversal of how the function is computed
+along a given dimension.
+Loop nodes are associated with a function and a variable (dimension).
+Since functions are assumed two-dimensional, by default functions have
+two variables: &lt;em&gt;x&lt;/em&gt; and &lt;em&gt;y&lt;/em&gt;.
+Loop nodes also contain information such as whether the loop is run
+sequentially, run in parallel, or vectorized.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Storage nodes&lt;/strong&gt; represent storage for intermediate results to be used later.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Compute nodes&lt;/strong&gt; are the leaves of the schedule tree, and they represent
+computation being performed.
+Compute nodes can have other compute nodes as children to represent
+functions that are inlined instead of loaded from intermediate storage.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Schedule trees are considered &lt;em&gt;well-formed&lt;/em&gt; if they satisfy the
+following criteria:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The ancestry path from a function&amp;rsquo;s compute node to the root node contains
+all the loop nodes and the storage node
+(if the function is not the output&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;)
+for that function.
+Intuitively, this means that the traversal of how the function is computed
+is completely defined, and storage for the function&amp;rsquo;s results is available.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If a function calls another function and the callee is not inlined,
+the compute node for the callee must occur before the compute node of the
+caller in a depth-first traversal.
+Intuitively, this ensures that the callee&amp;rsquo;s results are stored before
+the caller is computed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For any function we can define the &lt;em&gt;default schedule&lt;/em&gt;, which traverses
+the output function in row-major order and inlines all called functions,
+like so:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;default.png&#34; alt=&#34;default schedule&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We can give a semantics for schedule trees as nested loops.
+Consider the schedule below for three functions, &lt;em&gt;in&lt;/em&gt;, &lt;em&gt;bx&lt;/em&gt;, and &lt;em&gt;by&lt;/em&gt;, where
+&lt;em&gt;by&lt;/em&gt; calls &lt;em&gt;bx&lt;/em&gt; and &lt;em&gt;bx&lt;/em&gt; calls &lt;em&gt;in&lt;/em&gt;.
+The schedule tree on the left represents the nested loop on the right.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;semantics.png&#34; alt=&#34;schedule semantics&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;schedule-transformers&#34;&gt;Schedule Transformers&lt;/h3&gt;
+&lt;p&gt;We define transformers over schedule trees.
+We use these to traverse the search space of schedules.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Split&lt;/strong&gt; - split a function&amp;rsquo;s variable into two.
+For example, we can split a function&amp;rsquo;s &lt;code&gt;x&lt;/code&gt; variable into &lt;code&gt;x_inner&lt;/code&gt;
+and &lt;code&gt;x_outer&lt;/code&gt;.
+This allows &lt;em&gt;tiered&lt;/em&gt; traversal of a function&amp;rsquo;s extent along one dimension.
+For example, splitting the &lt;code&gt;x&lt;/code&gt; variable changes this loop:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;for x in [1..16]:
+  a[x] = ...
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;into:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;for x_outer in [1..4]:
+  for x_inner in [1..4]:
+    a[(x_outer*4)+x_inner] = ...
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Combined with &lt;em&gt;reorder&lt;/em&gt;, &lt;em&gt;split&lt;/em&gt; can represent schedules that &lt;em&gt;tile&lt;/em&gt;
+computations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Change Loop Type&lt;/strong&gt; - change how the loop will be traversed; by default the
+loop type is &lt;code&gt;sequential&lt;/code&gt;, but it could also be &lt;code&gt;parallel&lt;/code&gt;, &lt;code&gt;unrolled&lt;/code&gt;,
+or &lt;code&gt;vectorized&lt;/code&gt;.
+For simplicity our implementation only supports &lt;code&gt;sequential&lt;/code&gt; and &lt;code&gt;vectorized&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Reorder&lt;/strong&gt; - switch loop nodes for the same function.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Hoist / lower compute&lt;/strong&gt; - change the granularity in which intermediate
+results are computed.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Hoist / lower storage&lt;/strong&gt; - change the granularity in which storage for
+intermediate results is allocated.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Inline / deinline&lt;/strong&gt; - inline functions into callers (don&amp;rsquo;t store their results
+in intermediate storage) or deinline function out of callers.
+Intuitively, inlining functions trades off smaller memory usage for
+redundant computations, while de-inlining trades off higher memory usage
+for fewer redundant computations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Below are some diagrams to give intuition to how these scheduler transformers
+work.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;reorder.png&#34; alt=&#34;reorder&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;hoist-compute.png&#34; alt=&#34;hoist compute&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;lower-compute.png&#34; alt=&#34;lower compute&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;lower-compute.png&#34; alt=&#34;hoist storage&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;inline.png&#34; alt=&#34;inline&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;deinline.png&#34; alt=&#34;deinline&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;bounds-inference&#34;&gt;Bounds Inference&lt;/h3&gt;
+&lt;p&gt;Now that we have a representation for schedules and a set of
+schedule transformers, we are close to arriving at a search algorithm
+for finding efficient schedules.
+The last component that we need is a notion of &lt;em&gt;cost&lt;/em&gt; for schedules.
+In order to provide a cost model for schedules, we need to determine the
+number of iterations performed by loops in the schedule.
+This determines the number of times instructions inside the body of loops
+will be executed, as well as the size of intermediate storage to be
+allocated.
+We determine this by computing the extent in which functions will be computed.
+For the output function, we assume that the extent is given by a call to the
+&lt;code&gt;realize&lt;/code&gt; function.
+For called functions that are not inlined, the extent is the dimensions of
+the function that will be stored as intermediate results.
+Because storage will be reused depending on the granularity
+with which intermediate results are stored, the extent of called functions
+does not necessarily coincide with the total extent over which the function
+will be computed (e.g., the called function might be computed on
+a per-scanline basis).&lt;/p&gt;
+&lt;p&gt;For example, consider the simple pipeline below that has one producer (&lt;code&gt;g&lt;/code&gt;)
+and one consumer (&lt;code&gt;f&lt;/code&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;g(x, y) = x * y&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;f(x, y) = g(x, y) + g(x+1, y+1)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Given that &lt;code&gt;f&lt;/code&gt; is realized in a 512x512 box and a schedule where &lt;code&gt;g&lt;/code&gt; is
+computed in total before computing &lt;code&gt;f&lt;/code&gt;, the extent of &lt;code&gt;g&lt;/code&gt; is 513x513.&lt;/p&gt;
+&lt;p&gt;Computing the extent in which functions will be computed is hard in general,
+but since Halide makes the simplifying assumption that all extents are
+rectangular (as opposed to, say, polytopes in the polyhedral model),
+there is a simple method for doing this:
+we only need to check the maximum and minimum points of the caller functions
+and check the arguments to the callee.
+Note that we also assume that function arguments are drawn from a grammar
+of &amp;ldquo;simple&amp;rdquo; arithmetic expressions consisting only of &lt;code&gt;+&lt;/code&gt;, &lt;code&gt;-&lt;/code&gt;, &lt;code&gt;*&lt;/code&gt;, &lt;code&gt;/&lt;/code&gt;,
+variables and constants.&lt;/p&gt;
+&lt;p&gt;In the example above, the extent of &lt;code&gt;f&lt;/code&gt; is defined by the box bounded by
+&lt;code&gt;(1,1)&lt;/code&gt; and &lt;code&gt;(512, 512)&lt;/code&gt;.
+The arguments to &lt;code&gt;g&lt;/code&gt; at these points are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;at &lt;code&gt;(1,1)&lt;/code&gt;: &lt;code&gt;(1,1), (2,2)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;at &lt;code&gt;(512,512)&lt;/code&gt;: &lt;code&gt;(512,512), (513,513)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Thus we can determine the extent of &lt;code&gt;g&lt;/code&gt; to be 513x513.&lt;/p&gt;
+&lt;p&gt;We encode these caller-callee relationships into logical formulas and
+use the &lt;a href=&#34;https://github.com/Z3Prover/z3&#34;&gt;Z3&lt;/a&gt; SMT solver to a retrieve model that contains concrete values
+for the arguments.&lt;/p&gt;
+&lt;h3 id=&#34;search-algorithm-for-schedules&#34;&gt;Search Algorithm for Schedules&lt;/h3&gt;
+&lt;p&gt;Once loop sizes have been inferred, we have enough information to determine
+important execution features of the schedule, such as how much memory
+it will allocate and how many operations it will perform.
+The &lt;em&gt;cost&lt;/em&gt; of the schedule is then a weighted sum of these data points.&lt;/p&gt;
+&lt;p&gt;By default our implementation groups execution features into the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;mem&lt;/em&gt; - amount of memory allocated&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;loads&lt;/em&gt; - number of intermediate results loaded from storage&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;stores&lt;/em&gt; - number of intermediate results stored&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;arithmetic operations&lt;/em&gt; - number of &lt;code&gt;+&lt;/code&gt;, &lt;code&gt;-&lt;/code&gt;, &lt;code&gt;*&lt;/code&gt; and &lt;code&gt;/&lt;/code&gt; operations performed&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;mathematical operations&lt;/em&gt; - number of &lt;code&gt;sin&lt;/code&gt;, &lt;code&gt;cos&lt;/code&gt;, &lt;code&gt;tan&lt;/code&gt;, &lt;code&gt;sqrt&lt;/code&gt; operations
+performed&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Each of these groups has a weight that determines the importance of these
+features with respect to the schedule&amp;rsquo;s cost (see &lt;strong&gt;Evaluation&lt;/strong&gt; below).&lt;/p&gt;
+&lt;p&gt;Now that we can give a notion of cost to schedules, we can search for efficient
+schedules.
+We use beam search as our search algorithm, with the default schedule as
+the starting node.
+We describe the concrete parameters used for search below in &lt;strong&gt;Evaluation&lt;/strong&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;conversion-to-halide&#34;&gt;Conversion to Halide&lt;/h3&gt;
+&lt;p&gt;Once we have a candidate schedule tree, we convert it into Halide.
+We do this by checking the ancestry path from compute nodes:
+this path determines whether a function&amp;rsquo;s variables are split,
+the traversal order for computing the function, and, for called functions,
+the granularity at which the function is stored and computed.&lt;/p&gt;
+&lt;p&gt;Consider the schedule above for the functions &lt;code&gt;bx&lt;/code&gt;, &lt;code&gt;by&lt;/code&gt;, and &lt;code&gt;in&lt;/code&gt;.
+Converted into Halide code, the schedule looks like the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;by.reorder(y, x);
+
+bx.store_root();
+bx.compute_at(by, y);
+bx.reorder(y, x);
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;evaluation&#34;&gt;Evaluation&lt;/h2&gt;
+&lt;p&gt;We evaluate the performance of the autoscheduler over three benchmarks.
+We do this by comparing the performance of the autoscheduled run
+(OPT configuration) vs. the run with the default schedule (DEF configuration).
+We measure runtime and memory usage using &lt;code&gt;gprof&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For the experiments, we set the weights for execution features as follows:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Group&lt;/th&gt;
+&lt;th&gt;Weight&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;mem&lt;/td&gt;
+&lt;td&gt;0.1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;loads&lt;/td&gt;
+&lt;td&gt;0.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;stores&lt;/td&gt;
+&lt;td&gt;0.5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;arith ops&lt;/td&gt;
+&lt;td&gt;1.0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;math ops&lt;/td&gt;
+&lt;td&gt;10.0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We run beam search with a depth of 10 and beam width of 300.&lt;/p&gt;
+&lt;p&gt;For all benchmarks, the output functions are realized across an extent of
+2048x2048.
+The results below are averaged across three runs.&lt;/p&gt;
+&lt;h3 id=&#34;benchmark-1&#34;&gt;Benchmark 1&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;g(x,y) = sqrt(cos(x) + sin(y));
+f(x,y) = g(x + 1,y) + g(x,y) + g(x + 1,y + 1) + g(x,y + 1);
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Function&lt;/th&gt;
+&lt;th&gt;Runtime (ms)&lt;/th&gt;
+&lt;th&gt;Peak heap usage (bytes)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;f (DEF)&lt;/td&gt;
+&lt;td&gt;87.72&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;f (OPT)&lt;/td&gt;
+&lt;td&gt;13.48&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;g (DEF)&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;g (OPT)&lt;/td&gt;
+&lt;td&gt;172.70&lt;/td&gt;
+&lt;td&gt;32874&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;benchmark-2&#34;&gt;Benchmark 2&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;blur_x(x,y) = input(x - 1,y) + input(x,y) + input(x + 1,y) / 3;
+blur_y(x,y) = blur_x(x - 1,y) + blur_x(x,y) + blur_x(x + 1,y) / 3;
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Function&lt;/th&gt;
+&lt;th&gt;Runtime (ms)&lt;/th&gt;
+&lt;th&gt;Peak heap usage (bytes)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;blur_y (DEF)&lt;/td&gt;
+&lt;td&gt;12.70&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;blur_y (OPT)&lt;/td&gt;
+&lt;td&gt;19.02&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;blur_x (DEF)&lt;/td&gt;
+&lt;td&gt;N/A&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;blur_x (OPT)&lt;/td&gt;
+&lt;td&gt;16.16&lt;/td&gt;
+&lt;td&gt;16400&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;benchmark-3&#34;&gt;Benchmark 3&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;f(x,y) = x + y;
+&lt;/code&gt;&lt;/pre&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Function&lt;/th&gt;
+&lt;th&gt;Runtime (ms)&lt;/th&gt;
+&lt;th&gt;Peak heap usage (bytes)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;f (DEF)&lt;/td&gt;
+&lt;td&gt;11.85&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;f (OPT)&lt;/td&gt;
+&lt;td&gt;12.18&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;discussion&#34;&gt;Discussion&lt;/h3&gt;
+&lt;p&gt;Note that for the DEF configuration, only the output functions have runtimes
+associated with them since all called functions are inlined.&lt;/p&gt;
+&lt;p&gt;The autoscheduler performs rather poorly relative to the default schedule.
+While it successfully makes space-runtime tradeoffs (e.g., &lt;code&gt;f&lt;/code&gt; in Benchmark 1),
+allowing the computation of a function to run much faster by saving
+intermediate results, it runs more slowly and uses more memory than the
+default schedule across all benchmarks.&lt;/p&gt;
+&lt;p&gt;We believe the poor performance of the autoscheduler has two main causes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Wrong feature weights.&lt;/strong&gt; The feature weights for the cost model
+are chosen by fiat; if these were learned instead given a set of
+training data, then more the weights can probably better capture the
+execution profile of schedules.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Missing execution features&lt;/strong&gt;. There are some execution features not
+captured in the current cost model that probably has a significant effect
+on performance.
+Most importantly, the cost model does not reason about locality.
+Because of this, the autoscheduler sometimes generates schedules with
+loop order that has poor locality
+(e.g., a function being traversed in column-major order instead
+of row-major order).
+It is not clear how to quantify locality in the cost model, but it is an
+obvious extension to the cost model.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;By convention the output function does not have a storage
+node in the schedule tree since it is assumed that storage for the output
+has already been allocated and thus there is no decision to be made about
+the granularity with which to allocate it. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Compiler Validation via Equivalence Modulo Inputs</title>
+      <link>/blog/equivalence-modulo-inputs/</link>
+      <pubDate>Mon, 02 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/equivalence-modulo-inputs/</guid>
+      <description>&lt;p&gt;&lt;em&gt;This post was written for the Cornell CS 6120 Fall 2019 class blog with
+Greg Yauney. See the original version &lt;a href=&#34;https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/equivalence-modulo-inputs/&#34;&gt;here&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Imagine you, a clever person who wants her C programs to run faster,
+sat down, thought very hard, and developed a new compiler optimization.
+Say you implement it as a transformation pass in LLVM so that other people
+can take advantage of your cleverness to make their programs run faster as well.
+You run your optimization pass over a few benchmarks and see that it does
+indeed make some programs run faster.
+But a question nags you: how do you know that your optimization is correct?
+That is, how do you know that your optimization doesn&amp;rsquo;t change the semantics
+of the input program?&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Equivalence Modulo Inputs&lt;/em&gt; (henceforth EMI), a testing technique introduced
+by Le &amp;amp; al. in a &lt;a href=&#34;https://dl.acm.org/citation.cfm?id=2594334&#34;&gt;PLDI 2014 paper&lt;/a&gt;, allows our compiler hacker
+above to test her optimization rigorously without much effort.
+EMI is especially effective at finding &lt;em&gt;miscompilation&lt;/em&gt; bugs,
+wherein compilers produce wrong code, which is much more pernicious than
+&lt;em&gt;compiler crashes&lt;/em&gt;, bugs where the compiler terminates abnormally.
+This allows EMI to test the optimization phase of compilers much more rigorously
+than prior work such as &lt;a href=&#34;https://dl.acm.org/citation.cfm?id=1993532&#34;&gt;Csmith&lt;/a&gt;, which finds fewer miscompilations than
+compiler crashes.&lt;/p&gt;
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;EMI is a form of &lt;a href=&#34;https://www.cs.swarthmore.edu/~bylvisa1/cs97/f13/Papers/DifferentialTestingForSoftware.pdf&#34;&gt;differential testing&lt;/a&gt;, the widely applicable idea that if
+multiple systems presumed to be equivalent produce different outputs on the same
+input, then there is a bug in at least one of the systems.&lt;/p&gt;
+&lt;p&gt;Csmith also differentially tests compilers by generating random test cases,
+leading to 281 bug reports for GCC and LLVM by the time it was published.
+Whereas Csmith compares output from multiple compilers on the same input
+program, EMI compares output from different programs compiled by the same
+compiler.&lt;/p&gt;
+&lt;p&gt;Explicitly wanting to avoid Csmith&amp;rsquo;s painstaking approach to restricting random
+program generation with aggressive safety analysis, Le &amp;amp; al. design their
+implementation of EMI around generating equivalent variants of valid seed
+programs, as we will see below. The EMI and Csmith approaches are not
+oppositional; in fact, Le &amp;amp; al. incorporate Csmith into their workflow. The vast
+majority (all but four) of bugs identified by EMI were found with EMI variants
+of random programs generated by Csmith.&lt;/p&gt;
+&lt;h2 id=&#34;some-definitions&#34;&gt;Some definitions&lt;/h2&gt;
+&lt;p&gt;Let us now formally define EMI and show how we can use it as a condition
+to determine whether a compiler is buggy.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Equivalence modulo inputs (EMI)&lt;/strong&gt;.
+Given an input set $I$ and a program $P$, a program $Q$ is an EMI-variant of
+$P$ (read: $P$ and $Q$ are EMI) relative to $I$ if $P$ and $Q$ have
+the same denotations (&amp;ldquo;mean the same thing&amp;rdquo;) over all inputs in $I$.
+Formally, for all $i$ in $I$,
+$[\![ P ]\!](i) = [\![ Q ]\!](i)$.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It is immediately clear that EMI is a relaxation of semantic equivalence,
+wherein $P$ and $Q$ have the same denotations for all possible inputs.&lt;/p&gt;
+&lt;p&gt;For example, the following two programs are semantically equivalent
+(and thus EMI for any input set):&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;$\lambda x. (x + x)$ and $\lambda x. (2 * x)$&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The following two programs are &lt;em&gt;not&lt;/em&gt; semantically equivalent yet EMI over
+input set {0}:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;$\lambda x. x$ and $\lambda x. 0$&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now that we have a formal definition of EMI, how can we use it as a condition
+to check whether a compiler is buggy or not?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;EMI-validity&lt;/strong&gt;. Given an input set $I$, a compiler $C$ is &lt;em&gt;EMI-valid&lt;/em&gt;
+relative to $I$ if for any program $P$ and EMI-variant $Q$,
+it is the case that $C(P)(i) = C(Q)(i)$ for all $i$ in input set $I$.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;If a compiler is not EMI-valid, then we consider it buggy.&lt;/strong&gt;
+But the inverse is not true: if a compiler &lt;em&gt;is&lt;/em&gt; EMI-valid, it can
+still be buggy!
+Consider the degenerate compiler that maps all source programs to the same
+target program.
+The compiler is EMI-valid for any input set, but it is obviously buggy.
+Thus EMI-validity is a conservative overapproximation for compiler correctness.&lt;/p&gt;
+&lt;p&gt;Why is this useful? Couldn&amp;rsquo;t we just define validity for a compiler over
+&lt;em&gt;semantic equivalence&lt;/em&gt;, not just its relaxed counterpart in EMI?
+(You can imagine defining EMI-validity where the input set is all possible
+inputs.)
+EMI solves two hard practical problems in differential testing of compilers:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;How do we generate &amp;ldquo;equivalent&amp;rdquo; variants of input programs?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;How do we check that the compiler&amp;rsquo;s output programs are &amp;ldquo;equivalent&amp;rdquo;?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Using the more stringent condition of semantic equivalence makes solving
+these practical problems hard—indeed, in the general case
+(2) is undecidable by a &lt;a href=&#34;https://en.wikipedia.org/wiki/Rice%27s_theorem&#34;&gt;famous result in computability theory&lt;/a&gt;.
+But the more relaxed condition of EMI makes these tractable.
+As we&amp;rsquo;ll seen with the implementation of Orion below, there is
+an efficient procedure for generating EMI-variants from seed programs,
+thus solving (1).
+We determine that output programs are &amp;ldquo;equivalent&amp;rdquo; if they are EMI,
+which, since we&amp;rsquo;re only checking equivalence over a particular set of
+inputs, gives an efficient procedure for (2).&lt;/p&gt;
+&lt;h2 id=&#34;emi-in-practice-orion&#34;&gt;EMI in Practice: Orion&lt;/h2&gt;
+&lt;p&gt;Le &amp;amp; al. realize the promise of Equivalence Modulo Inputs by implementing Orion,
+a bug-finding tool for C compilers.
+Given a seed program and an input set, it generates EMI-variants of the seed
+program and then checks if a compiler configuration is EMI-valid with respect
+to these.&lt;/p&gt;
+&lt;p&gt;To generate EMI-variants, Orion uses code coverage information provided
+by tools such as &lt;code&gt;gcov&lt;/code&gt; to modify unexecuted parts of the seed program.
+Intuitively, this procedure generates EMI-variants of the seed program
+since unexecuted statements should not affect the output of the compiled program.&lt;/p&gt;
+&lt;p&gt;Specifically, Orion probabilistically deletes unexecuted statements of
+seed programs to generate EMI-variants.
+The authors consider other mutation strategies as part of future work,
+but as we&amp;rsquo;ll see in the evaluation section below, the simple strategy of
+deleting statements works well in practice.&lt;/p&gt;
+&lt;p&gt;Orion&amp;rsquo;s EMI-variant generation algorithm is sketched below in &lt;code&gt;gen_variant&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;prune_visit&lt;/span&gt;(prog, statement, coverage_set):
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# probabilistically delete unexecuted statement&lt;/span&gt;
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;if&lt;/span&gt; statement &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;not&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; coverage_set &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;and&lt;/span&gt; flip_coin(statement):
+    prog&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;delete(statement)
+
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# otherwise, traverse its children&lt;/span&gt;
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;else&lt;/span&gt;:
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; child &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; statement&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;children:
+      prune_visit(prog, child, coverage_set)
+
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;gen_variant&lt;/span&gt;(prog, coverage_set):
+  emi_variant &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; clone(prog)
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; statement &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; emi_variant:
+    prune_visit(emi_variant, statement, coverage_set)
+
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; emi_variant
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;gen_variant&lt;/code&gt; takes as input a seed program and the coverage set—the
+set of all statements executed for some input in the input set.
+It clones the program into &lt;code&gt;emi_variant&lt;/code&gt; and then uses &lt;code&gt;prune_visit&lt;/code&gt; to
+probabilistically delete unexecuted statements.&lt;/p&gt;
+&lt;p&gt;With its EMI-variant generation algorithm outlined, we can now sketch
+the algorithm by which Orion validates C compilers.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Python&#34; data-lang=&#34;Python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;validate&lt;/span&gt;(compiler, prog, input_set):
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# compile with no optimizations&lt;/span&gt;
+  out_prog &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; compiler&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;compile(prog, NO_OPTIMIZATION)
+
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# generate reference output&lt;/span&gt;
+  in_out_set &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; [(i, out_prog&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;execute(i)) &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; input_set]
+
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# get coverage info&lt;/span&gt;
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# a statement is considered covered if it was executed&lt;/span&gt;
+  &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# by the program on any input&lt;/span&gt;
+  coverage_set &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#008000&#34;&gt;set&lt;/span&gt;()
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; input_set:
+    coverage_set &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; union(coverage_set, coverage(prog, i))
+
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#008000&#34;&gt;range&lt;/span&gt;(MAX_ITER):
+    emi_variant &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; gen_variant(prog, coverage_set)
+
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; config &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; compiler&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;configurations:
+      out_emi_variant &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; compiler&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;compile(emi_variant, config)
+
+      &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# check if compiled EMI variant is equivalent over all inputs&lt;/span&gt;
+      &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; i, o &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; in_out_set:
+        &lt;span style=&#34;color:#408080;font-style:italic&#34;&gt;# compiler is not EMI-valid!&lt;/span&gt;
+        emi_o &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; out_emi_variant&lt;span style=&#34;color:#666&#34;&gt;.&lt;/span&gt;execute(i)
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;if&lt;/span&gt; emi_ o &lt;span style=&#34;color:#666&#34;&gt;!=&lt;/span&gt; o:
+          report_bug(compiler, config, prog, emi_variant, i, o, emi_o)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;validate&lt;/code&gt; takes as input a compiler (&lt;code&gt;compiler&lt;/code&gt;), a seed program (&lt;code&gt;prog&lt;/code&gt;),
+and an input set (&lt;code&gt;input_set&lt;/code&gt;).
+First, &lt;code&gt;validate&lt;/code&gt; compiles &lt;code&gt;prog&lt;/code&gt; with &lt;code&gt;compiler&lt;/code&gt; using no optimizations,
+the output of which (&lt;code&gt;out_prog&lt;/code&gt;) is then used to generate a reference set
+of outputs for &lt;code&gt;input_set&lt;/code&gt;.
+Next, it uses a code coverage tool (&lt;code&gt;coverage&lt;/code&gt;) to determine the set of
+executed statements over all inputs in &lt;code&gt;input_set&lt;/code&gt;.
+In its &amp;ldquo;main loop,&amp;rdquo; &lt;code&gt;validate&lt;/code&gt; generates an EMI-variant of &lt;code&gt;prog&lt;/code&gt; using
+the computed coverage information by calling &lt;code&gt;gen_variant&lt;/code&gt;.
+For every relevant compiler configuration, it then compiles the EMI-variant
+and runs the output program over all inputs in &lt;code&gt;input_set&lt;/code&gt; to check that it
+returns the same output as recorded in the reference set.
+If not, we flag the current compiler configuration as having a bug
+(&lt;code&gt;report_bug&lt;/code&gt;).
+&lt;code&gt;validate&lt;/code&gt; repeats this main loop for some number of iterations (&lt;code&gt;MAX_ITER&lt;/code&gt;)
+to find more bugs using different EMI-variants.&lt;/p&gt;
+&lt;p&gt;The authors note that the implementation effort for Orion is much less
+burdensome than other bug-finding tools such as Csmith:
+whereas Csmith is about 30K-40K lines of C++, Orion is only about 500 lines
+of shell scripts and 1K lines of C++.&lt;/p&gt;
+&lt;h2 id=&#34;evaluation&#34;&gt;Evaluation&lt;/h2&gt;
+&lt;p&gt;In order to evaluate EMI—even in its concrete implementation
+Orion—several questions must be answered:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;What compilers (and compiler configurations) will be tested?&lt;/em&gt;&lt;br&gt;
+&lt;br&gt;
+The authors test GCC and LLVM, popular open-source compilers with transparent
+bug tracking. The latest development builds of the compilers were tested on an
+x86_64 machine, targeting both 32- and 64-bit machines. Because the goal is to
+find miscompilations arising from optimizations, the common optimization
+configurations were all tested: &lt;code&gt;-O0&lt;/code&gt;, &lt;code&gt;-O1&lt;/code&gt;, &lt;code&gt;-Os&lt;/code&gt;, &lt;code&gt;-O2&lt;/code&gt;, &lt;code&gt;-O3&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;What seed programs will be profiled and pruned?&lt;/em&gt;&lt;br&gt;
+&lt;br&gt;
+Some seed programs were taken from the GCC, LLVM, and &lt;a href=&#34;https://github.com/kframework/c-semantics&#34;&gt;KCC&lt;/a&gt; regression test
+suites. The authors report attempting to use tests from open-source projects,
+but were unable to reduce and interpret the resulting bugs.&lt;br&gt;
+&lt;br&gt;
+The bulk of the bugs were found by starting from randomly generated Csmith
+programs, likely because each consisted of, on average, thousands of lines of
+code with a high proportion of unexecuted lines.&lt;br&gt;
+&lt;br&gt;
+Though the compiler test programs were verified to be correct by experts,
+there was no one verifying that the random Csmith programs produced correct
+output. Only equivalence (preserved by the pruning process) is necessary to
+ensure EMI variants are able to detect bugs, greatly increasing the pool of seed
+programs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;What parameters will guide the pruning process?&lt;/em&gt;&lt;br&gt;
+&lt;br&gt;
+Each seed program had a random number of variants generated, with an expectation
+of eight variants. The two random parameters that control the likelihood of a
+given statement getting pruned were independently reset to a uniform new value
+between 0 and 1 after each pruning.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;What will be done with bugs once any have been found?&lt;/em&gt;&lt;br&gt;
+&lt;br&gt;
+The authors used a combination of &lt;a href=&#34;https://dl.acm.org/citation.cfm?id=2254104&#34;&gt;C-reduce&lt;/a&gt; and &lt;a href=&#34;http://delta.tigris.org/&#34;&gt;Berkeley Delta&lt;/a&gt; to shrink the size
+of EMI programs that generated different outputs. They attempted to reject
+programs that triggered undefined behavior by using compiler warnings, static
+analysis, and &lt;a href=&#34;http://compcert.inria.fr&#34;&gt;CompCert&lt;/a&gt;. The final step was reporting the bugs using the
+compilers&#39; transparent bug-tracking tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;With this context, on to the headline result:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Orion found 147 confirmed, unique bugs in GCC and LLVM over the course of
+eleven months in 2013.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Le &amp;amp; al. evaluate these bugs in a twofold way: 1) quantitative description of
+components affected by bugs, and 2) qualitative evaluation of about ten
+generated programs.&lt;/p&gt;
+&lt;h4 id=&#34;quantitative-description&#34;&gt;Quantitative description&lt;/h4&gt;
+&lt;p&gt;A major strength of the evaluation is its integration with the bug reporting
+workflows for GCC and LLVM. While the authors go perhaps too far in asserting,
+&amp;ldquo;First, most of our reported bugs have been confirmed and fixed by developers,
+illustrating their relevance and importance (as it often takes substantial
+effort to fix a miscompilation),&amp;rdquo; the fact that 182 of the 195 total reported
+bugs (with 35 of these getting marked duplicate) were confirmed by outside
+experts to really exist is evidence that EMI is a viable bug-finding strategy.&lt;/p&gt;
+&lt;p&gt;95 of the confirmed bugs were miscompilations, lending credence to the authors&#39;
+initial claim that Orion is able to target miscompilations more easily than
+Csmith alone can. The most bugs were found in the development trunks of both GCC
+and LLVM. More bugs were also found in increasing levels of optimization, with
+the most under &lt;code&gt;-O3&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The authors also found performance bugs through comparing compilers to each
+other, in a differential testing scenario similar to that used by Csmith. 19 of
+the 147 confirmed bugs were performance issues.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s important to note that these were only the bugs that were found by Orion.
+Because Orion specifically targeted optimization phases, it is understandable
+that GCC Tree Optimization and RTL optimization were the components with the
+most discovered bugs (LLVM developers did not classify the reported bugs). These
+components did not necessarily have more bugs than others, nor were these the
+only possible bugs.&lt;/p&gt;
+&lt;p&gt;The authors do not make an attempt to evaluate the search space that Orion
+explored in producing these reported bugs. Nor do they explicitly determine the
+proportion of the generated variants that led to identified bugs. They only
+report that they didn&amp;rsquo;t record how many seed programs they started with or how
+many variants they generated (merely estimating &amp;ldquo;millions to tens of millions&amp;rdquo;).
+They also do not report (and likely did not record) the Csmith configurations or
+Orion&amp;rsquo;s dynamic pruning parameters.&lt;/p&gt;
+&lt;h4 id=&#34;qualitative-examples&#34;&gt;Qualitative examples&lt;/h4&gt;
+&lt;p&gt;The confirmed bugs are said to span compiler segfaults, internal compiler
+errors, performance problems, and wrong code generation. The authors present and
+interpret a handful of the bugs that were confirmed and fixed by compiler
+developers. We highlight just two of those for a flavor of the generated
+programs. Note that the authors only show the reduced code they reported to
+compiler developers; they show neither the non-reduced versions nor the EMI
+variants.&lt;/p&gt;
+&lt;p&gt;The following example led to a segfault when compiled with GCC due to a wrong
+offset computation in an optimization pass called &amp;ldquo;predictive commoning,&amp;rdquo; a form
+of common subexpression elimination:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#b00040&#34;&gt;int&lt;/span&gt; b, f, d[&lt;span style=&#34;color:#666&#34;&gt;5&lt;/span&gt;][&lt;span style=&#34;color:#666&#34;&gt;2&lt;/span&gt;];
+&lt;span style=&#34;color:#b00040&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;int&lt;/span&gt; c;
+&lt;span style=&#34;color:#b00040&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;main&lt;/span&gt;() {
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; (c &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;0&lt;/span&gt;; c &lt;span style=&#34;color:#666&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;2&lt;/span&gt;; c&lt;span style=&#34;color:#666&#34;&gt;++&lt;/span&gt;)
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;if&lt;/span&gt; (d[b &lt;span style=&#34;color:#666&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;3&lt;/span&gt;][c] &lt;span style=&#34;color:#666&#34;&gt;&amp;amp;&lt;/span&gt; d[b &lt;span style=&#34;color:#666&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;4&lt;/span&gt;][c])
+      &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;if&lt;/span&gt; (f)
+        &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;break&lt;/span&gt;;
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;0&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Clang incorrectly vectorized the following code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;color:#b00040&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;main&lt;/span&gt;() {
+  &lt;span style=&#34;color:#b00040&#34;&gt;int&lt;/span&gt; a &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;1&lt;/span&gt;;
+  &lt;span style=&#34;color:#b00040&#34;&gt;char&lt;/span&gt; b &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;0&lt;/span&gt;;
+  &lt;span style=&#34;color:#a0a000&#34;&gt;lbl&lt;/span&gt;:
+    a &lt;span style=&#34;color:#666&#34;&gt;&amp;amp;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;4&lt;/span&gt;;
+    b&lt;span style=&#34;color:#666&#34;&gt;--&lt;/span&gt;;
+    &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;if&lt;/span&gt; (b) &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;goto&lt;/span&gt; lbl;
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;return&lt;/span&gt; a;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;current-statistics&#34;&gt;Current statistics&lt;/h4&gt;
+&lt;p&gt;The website for the &lt;a href=&#34;https://web.cs.ucdavis.edu/~su/emi-project/&#34;&gt;EMI project&lt;/a&gt; shows the number of bugs found and fixed
+by tools using the EMI methodology.
+It shows an astronomical number of bugs found in GCC and LLVM,
+and the usefulness of the technique for compilers for other languages
+like Scala.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Compiler&lt;/th&gt;
+&lt;th&gt;Bugs reported&lt;/th&gt;
+&lt;th&gt;Bugs fixed&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GCC/LLVM&lt;/td&gt;
+&lt;td&gt;1,602&lt;/td&gt;
+&lt;td&gt;1,007&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ICC&lt;/td&gt;
+&lt;td&gt;35&lt;/td&gt;
+&lt;td&gt;?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;CompCert&lt;/td&gt;
+&lt;td&gt;31&lt;/td&gt;
+&lt;td&gt;27&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;scala/dotty&lt;/td&gt;
+&lt;td&gt;42&lt;/td&gt;
+&lt;td&gt;17&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;discussion&#34;&gt;Discussion&lt;/h2&gt;
+&lt;p&gt;The remaining examples in the paper cover problems with jump-threading logic,
+global value numbering, inlining, vectorization, and performance. Because the
+authors analyze only a few cherry-picked examples, a question remains: Are these
+eight examples representative of all of the other bugs?&lt;/p&gt;
+&lt;p&gt;Additionally, the authors claim: &amp;ldquo;EMI variants generated from existing code, say
+via Orion, are likely programs that people actually write.&amp;rdquo;
+Is this true, especially when random programs are used as seeds?
+Is this even true of the two examples discussed above?&lt;/p&gt;
+&lt;p&gt;The results indicate that the kind of seed programs heavily influence the number
+of bugs that are discovered. Randomly-generated Csmith seed programs revealed
+far more bugs than those taken from compiler test suites and open-source project
+tests. This suggests that EMI should be used in conjunction with an existing
+fuzzer. Do other fuzzers provide amenable seed programs?&lt;/p&gt;
+&lt;p&gt;Finally, the authors tout EMI as a general validation technique that can be
+use to differentially test applications such as compilers for other languages.
+Do you think this methodology will be as useful for other applications as it
+is for testing C compilers?&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>LLVM Loop Autovectorization</title>
+      <link>/blog/llvm-autovec/</link>
+      <pubDate>Wed, 13 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/llvm-autovec/</guid>
+      <description>&lt;p&gt;&lt;em&gt;This post was written for the Cornell CS 6120 Fall 2019 class blog with
+Gabriela Correa Calinao and Ryan Doenges.
+See the original version &lt;a href=&#34;https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/llvm-autovec/&#34;&gt;here&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;We can use SIMD support in modern processors to optimize programs.
+Specifically, a compiler can automatically detect when loops can be
+&lt;em&gt;autovectorized&lt;/em&gt; so that multiple iterations of the loop can be performed
+at once.
+We implement an autovectorizer pass for LLVM that performs this optimization
+for LLVM IR.
+LLVM natively supports vector instructions already, so the pass was implemented
+with relatively few lines of code by taking advantage of LLVM&amp;rsquo;s existing
+infrastructure.&lt;/p&gt;
+&lt;p&gt;The repository can be found &lt;a href=&#34;https://github.com/rolph-recto/cs6120-autovec&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;design-overview&#34;&gt;Design Overview&lt;/h2&gt;
+&lt;p&gt;We implemented our vectorizer as a transformation pass in LLVM.
+We overrode the &lt;code&gt;LoopPass&lt;/code&gt; base class, which provides a &lt;code&gt;runOnLoop&lt;/code&gt; method
+that child classes can override, running on all the natural loops found
+for a particular method.&lt;/p&gt;
+&lt;p&gt;Our vectorizer pass comes in two stages.
+First, it checks whether a loop can be vectorized at all.
+Then, it vectorizes instructions in the loop and updates the loop stride to
+match the vector size.&lt;/p&gt;
+&lt;p&gt;We deem a loop vectorizable if it satisfies the following criteria:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The loop is in canonical form: it has an inductive variable (read: a unique
+variable that enters the loop at 0 and increments by 1 per iteration)
+and it has a single block from which the loop exits.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The loop bound is a constant and is divisible by the vector size.
+We determine the loop bound by checking the condition on which the unique
+exiting block in the loop exits.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The loop has no cross-iteration dependencies.
+Vectorization assumes that adjacent loop iterations can be parallelized,
+which is not true if the iterations have dependencies on each other.
+To check that cross-iteration dependencies do not exist,
+our vectorizer checks that all array accesses are indexed either by the
+inductive variable or loop-invariant data.
+It also checks that operands for all operations in the loop either are
+(1) vectorizable, (2) loop-invariant, or (3) the induction variable.
+Branches in the loop are checked to see if their condition, if they have one,
+is loop-invariant.
+This ensures that the loop does not vary in control flow between adjacent
+iterations.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once we have deemed a loop vectorizable, we vectorize instructions by changing
+the types of instructions into their vectorized counterparts.
+This is possible because vector types in LLVM are first-class and are treated
+like other types like &lt;code&gt;int&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For &lt;code&gt;store&lt;/code&gt;s, &lt;code&gt;load&lt;/code&gt;s, and operation instructions (e.g., &lt;code&gt;add&lt;/code&gt;, &lt;code&gt;mul&lt;/code&gt;, &lt;code&gt;icmp&lt;/code&gt;),
+we replace the operands with their vectorized counterparts.
+For constant operands, these are vectorized in place; otherwise, we create
+a vectorized version of the operand immediately after its definition site
+using &lt;code&gt;insertelement&lt;/code&gt; instructions, and then replace uses of the operand
+with its new vectorized definition.
+There are two possible cases for operands:
+(1) the operand is loop-invariant, in which case the vector contains &lt;code&gt;n&lt;/code&gt; copies
+of the original operand given where &lt;code&gt;n&lt;/code&gt; is the vector size;
+or (2) the operand is the inductive variable, in which case
+(assuming the inductive variable is &lt;code&gt;i&lt;/code&gt;) the vector is of the form
+&lt;code&gt;&amp;lt;i, i+1, ..., i+(n-1)&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For &lt;code&gt;getelementptr&lt;/code&gt; instructions, there are only two possible cases given
+our vectorization conditions above:
+(1) the base pointer is indexed by loop-invariant data, in which case
+the vectorizer does nothing;
+or (2) the base pointer is indexed in at least one position by the
+inductive variable, in which case we immediately &lt;code&gt;bitcast&lt;/code&gt; the result of the GEP
+into a vector type.
+For example, if the GEP returns &lt;code&gt;uint8_t*&lt;/code&gt;, we bitcast the resulting pointer
+into vector type &lt;code&gt;&amp;lt;n x uint8_t&amp;gt;*&lt;/code&gt;, where &lt;code&gt;n&lt;/code&gt; is the vector size.
+We then replace all the uses of the GEP result with its &lt;code&gt;bitcast&lt;/code&gt;ed counterpart.
+Thus &lt;code&gt;load&lt;/code&gt;s from the pointer load not just data from the array index, but
+its adjacent indices as well, thus loading a vector from memory locations
+and not just a single datum.
+&lt;code&gt;store&lt;/code&gt;s using GEP results can also write vectors to memory in this way.&lt;/p&gt;
+&lt;p&gt;Finally, once all instructions are vectorized, we find the unique instruction
+that increments the inductive variable and change its stride to match the
+vector size.
+(Given our vectorization check, we can assume the inductive variable is a
+&lt;code&gt;PHINode&lt;/code&gt; with two incoming definitions: a constant &lt;code&gt;0&lt;/code&gt; and an addition
+instruction that increments the inductive variable.
+This is how we find the inductive variable&amp;rsquo;s unique update instruction.)&lt;/p&gt;
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+&lt;p&gt;To show our vectorizer in action, consider the following example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-C&#34; data-lang=&#34;C&#34;&gt;  int64_t a[&lt;span style=&#34;color:#666&#34;&gt;100&lt;/span&gt;];
+  &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; (int64_t i &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#666&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;100&lt;/span&gt;; i&lt;span style=&#34;color:#666&#34;&gt;++&lt;/span&gt;) {
+    a[i] &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; i;
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This C code compiled to LLVM IR&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; looks like:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;entry:
+  %a = alloca [100 x i64], align 16
+  br label %for.cond
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %i.0 = phi i64 [ 0, %entry ], [ %inc, %for.inc ]
+  %cmp = icmp slt i64 %i.0, 100
+  br i1 %cmp, label %for.body, label %for.end
+
+for.body:                                         ; preds = %for.cond
+  %arrayidx = getelementptr [i64]* %a, i64 0, i64 %i.0
+  store i64 %i.0, i64* %arrayidx, align 8
+  br label %for.inc
+
+for.inc:                                          ; preds = %for.body
+  %inc = add nsw i64 %i.0, 1
+  br label %for.cond
+
+for.end:                                          ; preds = %for.cond
+  ret i32 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Running our vectorization pass, we get the following:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;entry:
+  %a = alloca [100 x i64], align 16
+  br label %for.cond
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %i.0 = phi i64 [ 0, %entry ], [ %inc, %for.inc ]
+  %0 = insertelement &amp;lt;4 x i64&amp;gt; zeroinitializer, i64 %i.0, i64 0
+  %1 = insertelement &amp;lt;4 x i64&amp;gt; %0, i64 %i.0, i64 1
+  %2 = insertelement &amp;lt;4 x i64&amp;gt; %1, i64 %i.0, i64 2
+  %3 = insertelement &amp;lt;4 x i64&amp;gt; %2, i64 %i.0, i64 3
+  %4 = add &amp;lt;4 x i64&amp;gt; %3, &amp;lt;i64 0, i64 1, i64 2, i64 3&amp;gt;
+  %cmp = icmp slt i64 %i.0, 100
+  br i1 %cmp, label %for.body, label %for.end
+
+for.body:                                         ; preds = %for.cond
+  %arrayidx = getelementptr [i64]* %a, i64 0, i64 %i.0
+  %5 = bitcast i64* %arrayidx to &amp;lt;4 x i64&amp;gt;*
+  store &amp;lt;4 x i64&amp;gt; %4, &amp;lt;4 x i64&amp;gt;* %5, align 8
+  br label %for.inc
+
+for.inc:                                          ; preds = %for.body
+  %inc = add nsw i64 %i.0, 4
+  br label %for.cond
+
+for.end:                                          ; preds = %for.cond
+  ret i32 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The vectorizer changes the loop so that each new iteration performs 4 iterations
+of the original loop.
+The GEP in the &lt;code&gt;for.body&lt;/code&gt; block computes the base address for a 4-vector;
+the subsequent &lt;code&gt;store&lt;/code&gt; into &lt;code&gt;%arrayidx&lt;/code&gt; then uses the vectorized version
+of the inductive variable &lt;code&gt;%i.0&lt;/code&gt; computed in &lt;code&gt;for.cond&lt;/code&gt; (&lt;code&gt;%4&lt;/code&gt;)
+to write into memory the next 4 values of &lt;code&gt;%i.0&lt;/code&gt; at once.&lt;/p&gt;
+&lt;h2 id=&#34;evaluation&#34;&gt;Evaluation&lt;/h2&gt;
+&lt;p&gt;We evaluated our autovectorizer across a range of small benchmarks containing
+loops.
+We ran experiments on a ThinkPad T410 with an Intel Core i7-620M processor and
+8GB of RAM.
+We constructed our benchmarks so that all loops can be vectorized according
+to the rather stringent vectorization conditions, which disallows indexing
+arrays with anything other than the inductive variable or loop-invariant data.&lt;/p&gt;
+&lt;p&gt;The results below are measured across three runs.
+Note that DEF is the configuration without any optimizations (&lt;code&gt;-O0&lt;/code&gt;),
+while OPT is the configuration with only our autovectorizer enabled.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Benchmark&lt;/th&gt;
+&lt;th&gt;DEF runtime (ms)&lt;/th&gt;
+&lt;th&gt;OPT runtime (ms)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;test1&lt;/td&gt;
+&lt;td&gt;26.00&lt;/td&gt;
+&lt;td&gt;13.00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;test2&lt;/td&gt;
+&lt;td&gt;25.00&lt;/td&gt;
+&lt;td&gt;22.67&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;test3&lt;/td&gt;
+&lt;td&gt;19.00&lt;/td&gt;
+&lt;td&gt;15.33&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;test4&lt;/td&gt;
+&lt;td&gt;25.33&lt;/td&gt;
+&lt;td&gt;15.00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;test5&lt;/td&gt;
+&lt;td&gt;10.00&lt;/td&gt;
+&lt;td&gt;11.00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Across the benchmarks, either OPT outperforms DEF handily
+(as in &lt;code&gt;test1&lt;/code&gt; and &lt;code&gt;test4&lt;/code&gt;), or it runs about the same time
+as its DEF counterpart.
+This is the behavior we expected.&lt;/p&gt;
+&lt;p&gt;It is not immediately clear what makes &lt;code&gt;test1&lt;/code&gt; and &lt;code&gt;test4&lt;/code&gt; different from the
+other testcases.
+They are the only testcases with both of the following features:
+division expressions and a single, non-nested loop.
+The rest of the testcases either have multiple loops, nested loops, or no
+division expressions.
+More investigation is needed to determine the exact reason why the other
+vectorized testcases do not run noticeable faster than their
+non-vectorized counterparts.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;The IR generated has been transformed into SSA form using the
+&lt;code&gt;mem2reg&lt;/code&gt; pass. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Submission by Michel Houllebecq</title>
-      <link>http://rolph-recto.github.io/review/submission/</link>
+      <link>/review/submission/</link>
       <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/submission/</guid>
+      <guid>/review/submission/</guid>
       <description>&lt;p&gt;I read this as a satire on the etiolation and ennui of the French (European?)
 political and intellectual classes. Something about it is distasteful to me
 though&amp;mdash;partly because it seems Houellebecq is being half-serious about what
@@ -613,10 +1898,10 @@ letter so the future might as well belong to Islam instead.&lt;/p&gt;
     
     <item>
       <title>The Happiness Hypothesis by Jonathan Haidt</title>
-      <link>http://rolph-recto.github.io/review/happiness-hypothesis/</link>
+      <link>/review/happiness-hypothesis/</link>
       <pubDate>Sun, 23 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/happiness-hypothesis/</guid>
+      <guid>/review/happiness-hypothesis/</guid>
       <description>&lt;p&gt;I find the consilience between the revival of virtue ethics in moral philosophy
 and positive and moral psychology (as Haidt depicts it here) interesting. They
 converge on the belief that moral philosophy as it has developed for the last
@@ -638,10 +1923,10 @@ about how to live one&amp;rsquo;s life.&lt;/p&gt;
     
     <item>
       <title>The Great Divorce by C. S. Lewis</title>
-      <link>http://rolph-recto.github.io/review/the-great-divorce/</link>
+      <link>/review/the-great-divorce/</link>
       <pubDate>Sat, 08 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-great-divorce/</guid>
+      <guid>/review/the-great-divorce/</guid>
       <description>&lt;p&gt;This is Lewis&amp;rsquo;s vision of the afterlife, and it is definitely the best depiction
 I&amp;rsquo;ve come across. Hell is a town that stretches out for millions of miles,
 encompassing the horizon, sparsely populated because its residents want to be
@@ -691,10 +1976,10 @@ beautiful, and, importantly to me, attainable only by surrender of the Self.&lt;
     
     <item>
       <title>The Trial by Franz Kafka</title>
-      <link>http://rolph-recto.github.io/review/the-trial/</link>
+      <link>/review/the-trial/</link>
       <pubDate>Fri, 07 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-trial/</guid>
+      <guid>/review/the-trial/</guid>
       <description>&lt;p&gt;I think when people describe something as &amp;ldquo;kafkaesque&amp;rdquo;, they really are refering
 to this book. I remember reading The Metamorphosis in high school and not quite
 seeing the fit between the use of the adjective and the story: Gregor Samsa&amp;rsquo;s
@@ -731,10 +2016,10 @@ precursor to the magical realists.&lt;/p&gt;
     
     <item>
       <title>The World Goes On by László Krasznahorkai</title>
-      <link>http://rolph-recto.github.io/review/the-world-goes-on/</link>
+      <link>/review/the-world-goes-on/</link>
       <pubDate>Thu, 22 Nov 2018 01:40:51 -0500</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-world-goes-on/</guid>
+      <guid>/review/the-world-goes-on/</guid>
       <description>&lt;p&gt;Reading the stories in this book make me feel that Laszlo Krasznahorkai is some
 sort of blood brother of mine, that his thoughts are my thoughts, that the
 vantage point from which he sees the world is very near mine. These are stories
@@ -755,10 +2040,10 @@ regular fiction imposes on it.&lt;/p&gt;
     
     <item>
       <title>Bad Blood by John Carreyrou</title>
-      <link>http://rolph-recto.github.io/review/bad-blood/</link>
+      <link>/review/bad-blood/</link>
       <pubDate>Wed, 22 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/bad-blood/</guid>
+      <guid>/review/bad-blood/</guid>
       <description>&lt;p&gt;This book reads like a thriller&amp;mdash;which if you think about is kind of amazing,
 since it&amp;rsquo;s about a startup with fake blood testing technology. There&amp;rsquo;s not sex
 and murder in it (and the Elizabeth Holmes and Sunny Balwani romance
@@ -777,10 +2062,10 @@ charisma. She must&amp;rsquo;ve been a hell of a schmoozer.&lt;/p&gt;
     
     <item>
       <title>Homage to Catalonia by George Orwell</title>
-      <link>http://rolph-recto.github.io/review/homage-to-catalonia/</link>
+      <link>/review/homage-to-catalonia/</link>
       <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/homage-to-catalonia/</guid>
+      <guid>/review/homage-to-catalonia/</guid>
       <description>&lt;p&gt;Probably my favorite of his books. There&amp;rsquo;s an easygoing charm with his writing
 here that is absent with his more political writing. He&amp;rsquo;s much more in the mode
 of observing here than in driving a political point home&amp;mdash;which makes sense,
@@ -832,10 +2117,10 @@ out of the political wilderness.&lt;/p&gt;
     
     <item>
       <title>Lightning Rods by Helen DeWitt</title>
-      <link>http://rolph-recto.github.io/review/lightning-rods/</link>
+      <link>/review/lightning-rods/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/lightning-rods/</guid>
+      <guid>/review/lightning-rods/</guid>
       <description>&lt;p&gt;This is a technically perfect book. It&amp;rsquo;s as if Swift took &amp;ldquo;A Modest Proposal&amp;rdquo;
 and instead of just &lt;em&gt;proposing&lt;/em&gt; eating staving Irish babies, he wrote a novel
 about a guy who actually starts a company doing it. What&amp;rsquo;s even more terrifying
@@ -879,10 +2164,10 @@ book is a reminder of that fact.&lt;/p&gt;
     
     <item>
       <title>Abolition of Man by C. S. Lewis</title>
-      <link>http://rolph-recto.github.io/review/abolition-of-man/</link>
+      <link>/review/abolition-of-man/</link>
       <pubDate>Fri, 06 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/abolition-of-man/</guid>
+      <guid>/review/abolition-of-man/</guid>
       <description>&lt;p&gt;This is a spirited defense of traditional values (the &amp;ldquo;Tao&amp;rdquo;, as Lewis calls it)
 and a criticism of a certain way of seeing the progress of science. The last
 lecture especially, where he describes man&amp;rsquo;s absolute conquest of nature as the
@@ -909,10 +2194,10 @@ The sooner we understand this, the sooner we might save ourselves.&lt;/p&gt;
     
     <item>
       <title>Wise Blood by Flannery O&#39;Connor</title>
-      <link>http://rolph-recto.github.io/review/wise-blood/</link>
+      <link>/review/wise-blood/</link>
       <pubDate>Tue, 03 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/wise-blood/</guid>
+      <guid>/review/wise-blood/</guid>
       <description>&lt;p&gt;It was a bit slow and meandering in the beginning, but by the end it gathers
 momentum and it&amp;rsquo;s really funny in a dark way. &lt;em&gt;Wise Blood&lt;/em&gt; reads like Kafka but
 O&amp;rsquo;Connor goes further and makes a moral judgment on her characters instead of
@@ -940,10 +2225,10 @@ understanding?&lt;/p&gt;
     
     <item>
       <title>Consider the Lobster and Both Flesh and Not by David Foster Wallace</title>
-      <link>http://rolph-recto.github.io/review/consider-the-lobster-both-flesh-and-not/</link>
+      <link>/review/consider-the-lobster-both-flesh-and-not/</link>
       <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/consider-the-lobster-both-flesh-and-not/</guid>
+      <guid>/review/consider-the-lobster-both-flesh-and-not/</guid>
       <description>&lt;h2 id=&#34;consider-the-lobster&#34;&gt;Consider the Lobster&lt;/h2&gt;
 &lt;p&gt;An aside on DFW: I did not care for &lt;em&gt;Broom of the System&lt;/em&gt; at all, because I
 thought its thoroughgoing pomo-ness was nothing more than a ploy for DFW to
@@ -1015,10 +2300,10 @@ I can&amp;rsquo;t countenance.&lt;/p&gt;
     
     <item>
       <title>Embedding and Extending Go in Haskell</title>
-      <link>http://rolph-recto.github.io/blog/go-in-haskell/</link>
+      <link>/blog/go-in-haskell/</link>
       <pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/go-in-haskell/</guid>
+      <guid>/blog/go-in-haskell/</guid>
       <description>&lt;p&gt;Here&amp;rsquo;s a fun question: what would Go look like embedded inside of Haskell?&lt;/p&gt;
 &lt;p&gt;By &amp;ldquo;Go&amp;rdquo; here I don&amp;rsquo;t mean the full language itself but some kind of core
 calculus with the features that people really like about Go: namely, its
@@ -1567,7 +2852,7 @@ value. Now instead of a single key into a runtime map, instead it will be a
 &lt;em&gt;pair&lt;/em&gt; of keys: one key will be used to push values into the map, and the other
 key will be used to get values from it.&lt;/p&gt;
 &lt;p&gt;Some diagrams might help with the explanation.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The diagram above should be pretty self-explanatory. For this to work properly
 the &lt;code&gt;source&lt;/code&gt; function needs to be passed the &lt;code&gt;inchan&lt;/code&gt; channel and the &lt;code&gt;sink&lt;/code&gt;
 channel needs to be passed the &lt;code&gt;outchan&lt;/code&gt; channel. &lt;code&gt;chan_map&lt;/code&gt; currently returns
@@ -1577,7 +2862,7 @@ when a goroutine pushes a value to it, the goroutine is really pushing a value
 to &lt;code&gt;inchan&lt;/code&gt;; when a goroutine extracts a value from it, the goroutine is really
 extracting a value out of &lt;code&gt;outchan&lt;/code&gt;. So under the hood the same thing is
 happening, but the interface to the user is a bit nicer. Like so:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s see how this change looks like in code.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Haskell&#34; data-lang=&#34;Haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Int&lt;/span&gt;
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;GoChan&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;, &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;) 
@@ -1741,10 +3026,10 @@ as calls to &lt;code&gt;P()&lt;/code&gt; and &lt;code&gt;V()&lt;/code&gt; to cha
     
     <item>
       <title>Between the World and Me by Ta-Nehisi Coates</title>
-      <link>http://rolph-recto.github.io/review/between-the-world-and-me/</link>
+      <link>/review/between-the-world-and-me/</link>
       <pubDate>Mon, 23 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/between-the-world-and-me/</guid>
+      <guid>/review/between-the-world-and-me/</guid>
       <description>&lt;p&gt;An impressionistic, personal take on What It Means To Be Black in America Today.
 Coates is clearly has an incredible gift as a writer, and actually I think
 that&amp;rsquo;s part of the problem. This is not a book of sociological facts but rather
@@ -1786,10 +3071,10 @@ Aware.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
     
     <item>
       <title>The Lonely City by Olivia Laing</title>
-      <link>http://rolph-recto.github.io/review/the-lonely-city/</link>
+      <link>/review/the-lonely-city/</link>
       <pubDate>Mon, 01 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-lonely-city/</guid>
+      <guid>/review/the-lonely-city/</guid>
       <description>&lt;p&gt;A lovely and lyrical little book. A testament to all the myriad ways one can
 feel sadness and longing &amp;ndash; whether in silence (Hopper) or sexual longing and
 political anger (Wojnorowicz) or escaping the vicissitudes of body and others
@@ -1821,10 +3106,10 @@ all around you) rather than human transactions.&lt;/p&gt;
     
     <item>
       <title>Anti-Intellectualism in American Life by Richard Hofstadter</title>
-      <link>http://rolph-recto.github.io/review/anti-intellectualism-in-american-life/</link>
+      <link>/review/anti-intellectualism-in-american-life/</link>
       <pubDate>Sat, 01 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/anti-intellectualism-in-american-life/</guid>
+      <guid>/review/anti-intellectualism-in-american-life/</guid>
       <description>&lt;p&gt;From reading Hofstadter&amp;rsquo;s Anti-Intellectualism in American Life, there&amp;rsquo;s a
 pretty unmistakable relationship between democratic sentiment and
 anti-intellectualism. In pretty much all social conflicts he presents in the
@@ -1896,10 +3181,10 @@ tragic sense that they&amp;rsquo;re right but perpetually misunderstood or unhea
     
     <item>
       <title>Implementing call/cc</title>
-      <link>http://rolph-recto.github.io/blog/implementing-callcc/</link>
+      <link>/blog/implementing-callcc/</link>
       <pubDate>Mon, 26 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/implementing-callcc/</guid>
+      <guid>/blog/implementing-callcc/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and
 the next feature on my todo list is first-class continuations.
 &lt;code&gt;call/cc&lt;/code&gt; always seemed mysterious to me, and since this is PL, the best way to
@@ -2322,10 +3607,10 @@ reader! &lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34
     
     <item>
       <title>Basic Economics by Thomas Sowell</title>
-      <link>http://rolph-recto.github.io/review/basic-economics/</link>
+      <link>/review/basic-economics/</link>
       <pubDate>Sun, 18 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/basic-economics/</guid>
+      <guid>/review/basic-economics/</guid>
       <description>&lt;p&gt;I picked up this book because I don&amp;rsquo;t know much about economics and wanted to
 read something other than a textbook as an introduction to the field. (I also
 liked the old Firing Line episode with Sowell as a guest.) I thought the book
@@ -2346,10 +3631,10 @@ the political fence.&lt;/p&gt;
     
     <item>
       <title>The Selfish Gene by Richard Dawkins</title>
-      <link>http://rolph-recto.github.io/review/selfish-gene/</link>
+      <link>/review/selfish-gene/</link>
       <pubDate>Sun, 18 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/selfish-gene/</guid>
+      <guid>/review/selfish-gene/</guid>
       <description>&lt;p&gt;A fantastic survey of evolutionary biology. It reminds me a bit like reading a
 math book: it starts off with axioms and definitions (replicators) and then
 follows through chains of reasoning to arrive at novel explanations of
@@ -2386,10 +3671,10 @@ truly entailed.&lt;/p&gt;
     
     <item>
       <title>Simulating Random Walks with the List Monad</title>
-      <link>http://rolph-recto.github.io/blog/simulating-random-walks/</link>
+      <link>/blog/simulating-random-walks/</link>
       <pubDate>Thu, 07 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/simulating-random-walks/</guid>
+      <guid>/blog/simulating-random-walks/</guid>
       <description>&lt;p&gt;The List monad is usually used to model nondeterministic computations: it
 allows you to describe taking a choice from a set of possibilities and then
 merge the outcomes from each possibility together. In this post I&amp;rsquo;ll show
@@ -2476,7 +3761,7 @@ pile at 0 gets split in half; the halves are moved to the left and right,
 so there is a pile at -1 of height 0.5 and a pile at 1 of height 0.5.
 The animation below visualizes how the &amp;ldquo;pile of sand&amp;rdquo; gets spread from 0
 to neighboring states as time goes by.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://rolph-recto.github.io/img/random-walk.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/random-walk.gif&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;However, don&amp;rsquo;t let the analogy confuse you: the piles of sand represent the
 &lt;em&gt;probabilities&lt;/em&gt; of being at particular states. There can be many piles of
 sand at any given timestep, since there can be many states for which there
@@ -2633,10 +3918,10 @@ commonly for processes with finite state spaces, the stochastic matrix P. &lt;a 
     
     <item>
       <title>Hello World, Meet Blog</title>
-      <link>http://rolph-recto.github.io/blog/hello-world/</link>
+      <link>/blog/hello-world/</link>
       <pubDate>Wed, 06 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/blog/hello-world/</guid>
+      <guid>/blog/hello-world/</guid>
       <description>&lt;p&gt;So I finally got a blog published. Apparently if you&amp;rsquo;re a computer science
 major it&amp;rsquo;s now somewhat requisite to maintain a blog or website, so alas
 I cave in to peer pressure. But anyway, for me the main impetus for having
@@ -2651,10 +3936,10 @@ whatever computer science topic I&amp;rsquo;m usually interested in at the momen
     
     <item>
       <title>What Computers Can&#39;t Do by Hubert Dreyfus</title>
-      <link>http://rolph-recto.github.io/review/what-computers-cant-do/</link>
+      <link>/review/what-computers-cant-do/</link>
       <pubDate>Sat, 02 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/what-computers-cant-do/</guid>
+      <guid>/review/what-computers-cant-do/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve finally gotten around to reading this famous book, and I have to say
 that its fame is quite merited. This is one of the best examples I&amp;rsquo;ve come
 across of philosophy interacting with its neighboring scientific disciplines.
@@ -2729,10 +4014,10 @@ where he constrasts Watson with the more embodied approach by the
     
     <item>
       <title>Mind and Cosmos by Thomas Nagel</title>
-      <link>http://rolph-recto.github.io/review/mind-and-cosmos/</link>
+      <link>/review/mind-and-cosmos/</link>
       <pubDate>Sat, 03 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/mind-and-cosmos/</guid>
+      <guid>/review/mind-and-cosmos/</guid>
       <description>&lt;p&gt;The subtitle of this book is fighting words, but gladly the pitch of Nagel&amp;rsquo;s
 writing is not at all antagonistic, even if it is incredibly cavalier. His main
 point is that the existence of three distinct phenomena&amp;mdash;consciousness,
@@ -2788,10 +4073,10 @@ to his points, however. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backre
     
     <item>
       <title>Consciousness Explained by Daniel Dennett</title>
-      <link>http://rolph-recto.github.io/review/consciousness-explained/</link>
+      <link>/review/consciousness-explained/</link>
       <pubDate>Tue, 11 Aug 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/consciousness-explained/</guid>
+      <guid>/review/consciousness-explained/</guid>
       <description>&lt;p&gt;It is easy to see why this is considered an important book. Dennett synthesizes
 and moves fluidly through a vast scientific literature to come up with a broad
 theory of consciousness. Though he is overreliant on neologisms and metaphors,
@@ -2825,10 +4110,10 @@ dazzling book anyway.&lt;/p&gt;
     
     <item>
       <title>The Blank Slate by Steven Pinker</title>
-      <link>http://rolph-recto.github.io/review/blank-slate/</link>
+      <link>/review/blank-slate/</link>
       <pubDate>Fri, 24 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/blank-slate/</guid>
+      <guid>/review/blank-slate/</guid>
       <description>&lt;p&gt;This is a great popular science book. Pinker is a lucid writer with a style
 that is always engaging. As far as the content, this is a fantastic synthesis
 of a large number of works within cognitive science, especially evolutionary
@@ -2871,10 +4156,10 @@ seriously what he is criticizing.&lt;/p&gt;
     
     <item>
       <title>Personal</title>
-      <link>http://rolph-recto.github.io/personal/</link>
+      <link>/personal/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/personal/</guid>
+      <guid>/personal/</guid>
       <description>&lt;h2 id=&#34;things-on-the-internet-that-i-like&#34;&gt;Things on the internet that I like&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.newyorker.com/books/flash-fiction/i-dont-need-anything-from-here&#34;&gt;I Don&amp;rsquo;t Need Anything From Here&lt;/a&gt; by László Krasznahorkai&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://slatestarcodex.com/2014/07/30/meditations-on-moloch&#34;&gt;Meditations on Moloch&lt;/a&gt; by Scott Alexander&lt;/p&gt;
@@ -2899,7 +4184,7 @@ especially those of &lt;a href=&#34;http://www.whatisitliketobeaphilosopher.com/
 &lt;a href=&#34;http://www.whatisitliketobeaphilosopher.com/#/david-chalmers/&#34;&gt;David Chalmers&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.spacejam.com/archive/spacejam/movie/jam.htm&#34;&gt;Space Jam website&lt;/a&gt;, unchanged since 1996&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;Here&amp;rsquo;s some &lt;a href=&#34;http://rolph-recto.github.io/review&#34;&gt;book reviews&lt;/a&gt; I&amp;rsquo;ve written.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s some &lt;a href=&#34;/review&#34;&gt;book reviews&lt;/a&gt; I&amp;rsquo;ve written.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;em&gt;Are you sure your name is not misspelled? I could&amp;rsquo;ve sworn it had an &amp;lsquo;a&amp;rsquo; in
 it.&lt;/em&gt;&lt;/p&gt;

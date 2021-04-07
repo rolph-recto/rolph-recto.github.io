@@ -2,21 +2,97 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Reviews on Rolph Recto</title>
-    <link>http://rolph-recto.github.io/review/</link>
+    <link>/review/</link>
     <description>Rolph Recto (Reviews)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 23 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 24 Feb 2021 00:00:00 +0000</lastBuildDate>
     
-    <atom:link href="http://rolph-recto.github.io/review/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="/review/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>The Dialectic of Sex by Shulamith Firestone</title>
+      <link>/review/dialectic-of-sex/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/review/dialectic-of-sex/</guid>
+      <description>&lt;p&gt;In the intro she paints a view of radical feminism as a continuation and the
+fulfillment of socialism, as Marx and Engels failed to consider sex difference
+as the &amp;ldquo;tapeworm of exploitation,&amp;rdquo; more primordial than class struggle itself.
+But most of the book is more indebted to Freud than Marx and Engels; only the
+last chapter really fleshed out the vision of radical feminism she paints in the
+beginning.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m allergic to Freud being used to explain group psychology. The chapter on
+racism, where she analogizes Black psychology to the Oedipus complex and Electra
+complex, is particularly egregious in this. She uncomfortably veers into very
+bad stereotypes in the service of group psychologizing!&lt;/p&gt;
+&lt;p&gt;She also has very outre views about child sexuality. I understand that it is of
+a piece with her stance on family abolition, but it is very weird to read a
+radical feminist and not a libertarian talk positively about pedophilia. Her
+vision of transient &amp;ldquo;households&amp;rdquo; where the child can leave at any time (but,
+amusingly, the adults are bound to temporary contracts) just seems like
+something that&amp;rsquo;s not really well thought out. For someone who is very incisive
+about the way love, marriage, and family oppress women and children, it does not
+seem like she has thought at all how to avoid oppression with her utopian vision
+of what personal life would look like.&lt;/p&gt;
+&lt;p&gt;I liked her discussion of sexuality being unnaturally constrained to
+heterosexual intercourse. She advocates for a re-enchantment or an eroticization
+of the world by releasing society from this constraint, so that all relations
+will be suffused with sexuality. This is an interesting take but I wished she
+described it in more detail.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Debt: The First 5000 Years by David Graeber</title>
+      <link>/review/debt-the-first-5000-years/</link>
+      <pubDate>Sat, 13 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/review/debt-the-first-5000-years/</guid>
+      <description>&lt;p&gt;This book is really interesting. Unfortunately, it is also quite a mess. There&amp;rsquo;s
+a thesis buried in it somewhere, but Graeber never makes it clear. Here&amp;rsquo;s a stab
+at it:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The origins of money can be traced to violence: war and slavery. In both cases
+the &amp;ldquo;context&amp;rdquo; of a thing is removed, which exactly is the thing that makes it
+fungible. There are some societies where women where seemingly treated like
+currency (what Graeber calls human economies), but the important difference
+between these and a &amp;ldquo;real&amp;rdquo; economy that trades in money is that it is only in
+extraordinary circumstances (e.g. in conflicts with unknown, faraway tribes)
+that items are seen to be commensurate with human &amp;ldquo;property&amp;rdquo; and thus
+exchangeable for it. Human economies usually only traded women for women.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Historically, societies oscillated between virtual money (credit) and actual
+money depending on circumstances. During the Axial Age, there was a shift
+towards actual money because of the prevalence of war and the need of states
+to pay soldiers. Coin money is useful as payment because it is &amp;ldquo;contextless&amp;rdquo;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The standard economic picture of development from barter to money to credit is
+exactly backwards; most human societies have only credit, and then in certain
+circumstances (outlined above) transitioned to use money. Barter, where people
+performed &amp;ldquo;spot trades&amp;rdquo; with no expectation of trading again in the future, is
+a recent development that only makes sense from early modernity (?) on. What
+people usually call &amp;ldquo;barter&amp;rdquo; they really mean credit&amp;mdash;you give something to
+your neighbor today, with the expectation that he will be able to return the
+favor some time in the future. What he will give to you will be roughly
+commensurate, but never exact as in monetary compensation. Thus everyone is in
+a little bit of debt to each other all the time&amp;mdash;exactly opposite of the
+economics picture.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>A Libertarian Walks Into a Bear by Matthew Honglitz-Hetling</title>
-      <link>http://rolph-recto.github.io/review/a-libertarian-walks-into-a-bear/</link>
+      <link>/review/a-libertarian-walks-into-a-bear/</link>
       <pubDate>Wed, 23 Dec 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/a-libertarian-walks-into-a-bear/</guid>
+      <guid>/review/a-libertarian-walks-into-a-bear/</guid>
       <description>&lt;p&gt;A funny, Bill-Bryson-esque look into a small town in New Hampshire. The humor
 mostly works, but I got the sense that Honglitz-Hetling was self-consciously
 hamming up the text to force a laugh, which somewhat detracts from the actual
@@ -50,10 +126,10 @@ state of nature is also populated by quite a few bears.&lt;/p&gt;
     
     <item>
       <title>A Childrens Bible by Lydia Millet</title>
-      <link>http://rolph-recto.github.io/review/childrens-bible/</link>
+      <link>/review/childrens-bible/</link>
       <pubDate>Mon, 30 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/childrens-bible/</guid>
+      <guid>/review/childrens-bible/</guid>
       <description>&lt;p&gt;A poignant&amp;mdash;and funny!&amp;mdash;allegory of sorts about climate change. The main
 conceit of the book is that the children, full of gumption and resolve, switches
 roles with their parents, who are despondent and lazy, more preoccupied with sex
@@ -65,10 +141,10 @@ the will to fix things while we still have some time.&lt;/p&gt;
     
     <item>
       <title>The Known World by Edward P. Jones</title>
-      <link>http://rolph-recto.github.io/review/the-known-world/</link>
+      <link>/review/the-known-world/</link>
       <pubDate>Sat, 28 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-known-world/</guid>
+      <guid>/review/the-known-world/</guid>
       <description>&lt;p&gt;Amazing book&amp;mdash;probably the best use of the &amp;ldquo;God&amp;rsquo;s-eye&amp;rdquo; narrator I&amp;rsquo;ve read. The
 story zips back and forth through time, as if the narrator sees all of history
 all at once, rather like the Tralfamadorians of &lt;em&gt;Slaughterhouse-Five&lt;/em&gt;. One
@@ -94,10 +170,10 @@ So, in owning Moses, she sees herself as white.&lt;/p&gt;
     
     <item>
       <title>Jack by Marilynne Robinson</title>
-      <link>http://rolph-recto.github.io/review/jack/</link>
+      <link>/review/jack/</link>
       <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/jack/</guid>
+      <guid>/review/jack/</guid>
       <description>&lt;p&gt;This book didn&amp;rsquo;t hit me as hard as the other books in the Gilead series. I think
 it&amp;rsquo;s because it&amp;rsquo;s more abstract, less concerned with Jack&amp;rsquo;s immediate
 surroundings and more concerned about the workings of his inner despair. So
@@ -121,10 +197,10 @@ Della&amp;rsquo;s presence does he become someone we want to read about.&lt;/p&g
     
     <item>
       <title>Dune by Frank Herbert</title>
-      <link>http://rolph-recto.github.io/review/dune/</link>
+      <link>/review/dune/</link>
       <pubDate>Sun, 27 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/dune/</guid>
+      <guid>/review/dune/</guid>
       <description>&lt;p&gt;Dune has incredibly memorable world-building. It&amp;rsquo;s clear that Herbert put a lot
 of time in building the mythology and the setting of Arrakis, and the result is
 a lived-in world rich in detail. The only problem is that he can&amp;rsquo;t really write!
@@ -137,10 +213,10 @@ Let&amp;rsquo;s introduce concepts (&lt;em&gt;jihad&lt;/em&gt;) without really f
     
     <item>
       <title>The Moviegoer by Walker Percy</title>
-      <link>http://rolph-recto.github.io/review/the-moviegoer/</link>
+      <link>/review/the-moviegoer/</link>
       <pubDate>Thu, 10 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-moviegoer/</guid>
+      <guid>/review/the-moviegoer/</guid>
       <description>&lt;p&gt;A meandering book that doesn&amp;rsquo;t really have a plot, but what a pleasure to read.
 I was expecting a &amp;ldquo;come to Jesus&amp;rdquo; moment for Binx, but the closest he got was
 Aunt Emily&amp;rsquo;s dressing down of him after coming back from Chicago. Even that is
@@ -151,10 +227,10 @@ for Binx if he actually grew spiritually as a person, but alas no.&lt;/p&gt;
     
     <item>
       <title>Silence by Shūsaku Endō</title>
-      <link>http://rolph-recto.github.io/review/silence/</link>
+      <link>/review/silence/</link>
       <pubDate>Sat, 29 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/silence/</guid>
+      <guid>/review/silence/</guid>
       <description>&lt;p&gt;A powerful book about faith. The central issue of the book&amp;mdash;whether Rodrigues&amp;rsquo;s
 apostatizing is an act of weakness or an act of love for those being tortured in
 the pit&amp;mdash;is not answered, and is kept ambiguous. It&amp;rsquo;s not clear to me at all!
@@ -180,10 +256,10 @@ for nothing.&lt;/p&gt;
     
     <item>
       <title>Orthodoxy by G. K. Chesterton</title>
-      <link>http://rolph-recto.github.io/review/orthodoxy/</link>
+      <link>/review/orthodoxy/</link>
       <pubDate>Wed, 26 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/orthodoxy/</guid>
+      <guid>/review/orthodoxy/</guid>
       <description>&lt;p&gt;Reading this reminds me quite a bit of C. S. Lewis, though Chesterton is much
 more charming. Both are fun to read, but there&amp;rsquo;s always a whiff of sophistical
 reasoning that prevents me from, say, actually converting. To be fair to
@@ -206,10 +282,10 @@ kind of materialism.&lt;/p&gt;
     
     <item>
       <title>Why Liberalism Failed by Patrick Deneen</title>
-      <link>http://rolph-recto.github.io/review/why-liberalism-failed/</link>
+      <link>/review/why-liberalism-failed/</link>
       <pubDate>Tue, 25 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/why-liberalism-failed/</guid>
+      <guid>/review/why-liberalism-failed/</guid>
       <description>&lt;p&gt;This was a great read and a good synthesis of a lot of conservative critiques
 that I have been hearing recently. I especially found that idea that the two
 great manifestations of liberalism&amp;mdash;the state and the market&amp;mdash;are mutually
@@ -242,10 +318,10 @@ public vision of the Good and work towards that.&lt;/p&gt;
     
     <item>
       <title>Cult of Smart by Freddie deBoer</title>
-      <link>http://rolph-recto.github.io/review/cult-of-smart/</link>
+      <link>/review/cult-of-smart/</link>
       <pubDate>Thu, 20 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/cult-of-smart/</guid>
+      <guid>/review/cult-of-smart/</guid>
       <description>&lt;p&gt;I think Freddie&amp;rsquo;s main thesis is incontestible. However, at points I don&amp;rsquo;t think
 he fully engages (&amp;ldquo;steelmans&amp;rdquo;) the orthodox position he&amp;rsquo;s trying to push
 against. For example, in discussing elite colleges, the more sophisticated
@@ -264,11 +340,11 @@ it tenously to a greater political project to have its fullest expression.&lt;/p
     
     <item>
       <title>Catch and Kill by Ronan Farrow</title>
-      <link>http://rolph-recto.github.io/review/catch-and-kill/</link>
+      <link>/review/catch-and-kill/</link>
       <pubDate>Tue, 11 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/catch-and-kill/</guid>
-      <description>&lt;p&gt;This reminds of me of &lt;a href=&#34;http://rolph-recto.github.io/review/bad-blood&#34;&gt;Bad Blood&lt;/a&gt; in that they&amp;rsquo;re both
+      <guid>/review/catch-and-kill/</guid>
+      <description>&lt;p&gt;This reminds of me of &lt;a href=&#34;/review/bad-blood&#34;&gt;Bad Blood&lt;/a&gt; in that they&amp;rsquo;re both
 thrillers about real scandals, but I liked this book less. It started to get
 repetitive and Farrow&amp;rsquo;s prose is a bit clunky. He doesn&amp;rsquo;t often pull back from
 the details and explain the broader picture. The thriller elements (e.g., being
@@ -289,10 +365,10 @@ or morose.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
     
     <item>
       <title>Philosophy and Real Politics by Raymond Geuss</title>
-      <link>http://rolph-recto.github.io/review/philosophy-and-real-politics/</link>
+      <link>/review/philosophy-and-real-politics/</link>
       <pubDate>Sat, 01 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/philosophy-and-real-politics/</guid>
+      <guid>/review/philosophy-and-real-politics/</guid>
       <description>&lt;p&gt;The main critical thrust of this book is the familiar rejoinder that analytic
 philosophy is ahistorical&amp;mdash;both in the sense that it does not take seriously
 the historical developments of ideas, but also it assumes that its subjects of
@@ -317,10 +393,10 @@ principles.&lt;/p&gt;
     
     <item>
       <title>The Power by Naomi Alderman</title>
-      <link>http://rolph-recto.github.io/review/the-power/</link>
+      <link>/review/the-power/</link>
       <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-power/</guid>
+      <guid>/review/the-power/</guid>
       <description>&lt;p&gt;I have some problems with the execution, but the central narrative conceit is
 fascinating: given the chance to wield power like men, women will inevitably
 be as cruel and cold and calculating in its use as men. The matriarchy will
@@ -368,10 +444,10 @@ execution sometimes left me wanting.&lt;/p&gt;
     
     <item>
       <title>Eileen by Ottessa Moshfegh</title>
-      <link>http://rolph-recto.github.io/review/eileen/</link>
+      <link>/review/eileen/</link>
       <pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/eileen/</guid>
+      <guid>/review/eileen/</guid>
       <description>&lt;p&gt;This is the third book I&amp;rsquo;ve read from Ottessa Moshfegh, and I have to say that
 its charms haven&amp;rsquo;t worn off. I suppose Eileen can be characterized as a &amp;ldquo;female
 incel,&amp;rdquo; but the importance difference between her and a stereotypical incels is
@@ -400,10 +476,10 @@ time believing that she would actually tie Mrs. Polk up.&lt;/p&gt;
     
     <item>
       <title>Love of a Good Woman by Alice Munro</title>
-      <link>http://rolph-recto.github.io/review/love-of-a-good-woman/</link>
+      <link>/review/love-of-a-good-woman/</link>
       <pubDate>Fri, 31 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/love-of-a-good-woman/</guid>
+      <guid>/review/love-of-a-good-woman/</guid>
       <description>&lt;p&gt;I am not saying anything new by calling Alice Munro&amp;rsquo;s stories novelistic. And
 yet, in reading this collection, the first I&amp;rsquo;ve read of her work, I was
 continually surprised at two things. First is how dense in chracterization the
@@ -425,10 +501,10 @@ character.&lt;/p&gt;
     
     <item>
       <title>Submission by Michel Houllebecq</title>
-      <link>http://rolph-recto.github.io/review/submission/</link>
+      <link>/review/submission/</link>
       <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/submission/</guid>
+      <guid>/review/submission/</guid>
       <description>&lt;p&gt;I read this as a satire on the etiolation and ennui of the French (European?)
 political and intellectual classes. Something about it is distasteful to me
 though&amp;mdash;partly because it seems Houellebecq is being half-serious about what
@@ -460,10 +536,10 @@ letter so the future might as well belong to Islam instead.&lt;/p&gt;
     
     <item>
       <title>The Happiness Hypothesis by Jonathan Haidt</title>
-      <link>http://rolph-recto.github.io/review/happiness-hypothesis/</link>
+      <link>/review/happiness-hypothesis/</link>
       <pubDate>Sun, 23 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/happiness-hypothesis/</guid>
+      <guid>/review/happiness-hypothesis/</guid>
       <description>&lt;p&gt;I find the consilience between the revival of virtue ethics in moral philosophy
 and positive and moral psychology (as Haidt depicts it here) interesting. They
 converge on the belief that moral philosophy as it has developed for the last
@@ -485,10 +561,10 @@ about how to live one&amp;rsquo;s life.&lt;/p&gt;
     
     <item>
       <title>The Great Divorce by C. S. Lewis</title>
-      <link>http://rolph-recto.github.io/review/the-great-divorce/</link>
+      <link>/review/the-great-divorce/</link>
       <pubDate>Sat, 08 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-great-divorce/</guid>
+      <guid>/review/the-great-divorce/</guid>
       <description>&lt;p&gt;This is Lewis&amp;rsquo;s vision of the afterlife, and it is definitely the best depiction
 I&amp;rsquo;ve come across. Hell is a town that stretches out for millions of miles,
 encompassing the horizon, sparsely populated because its residents want to be
@@ -538,10 +614,10 @@ beautiful, and, importantly to me, attainable only by surrender of the Self.&lt;
     
     <item>
       <title>The Trial by Franz Kafka</title>
-      <link>http://rolph-recto.github.io/review/the-trial/</link>
+      <link>/review/the-trial/</link>
       <pubDate>Fri, 07 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-trial/</guid>
+      <guid>/review/the-trial/</guid>
       <description>&lt;p&gt;I think when people describe something as &amp;ldquo;kafkaesque&amp;rdquo;, they really are refering
 to this book. I remember reading The Metamorphosis in high school and not quite
 seeing the fit between the use of the adjective and the story: Gregor Samsa&amp;rsquo;s
@@ -578,10 +654,10 @@ precursor to the magical realists.&lt;/p&gt;
     
     <item>
       <title>The World Goes On by László Krasznahorkai</title>
-      <link>http://rolph-recto.github.io/review/the-world-goes-on/</link>
+      <link>/review/the-world-goes-on/</link>
       <pubDate>Thu, 22 Nov 2018 01:40:51 -0500</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-world-goes-on/</guid>
+      <guid>/review/the-world-goes-on/</guid>
       <description>&lt;p&gt;Reading the stories in this book make me feel that Laszlo Krasznahorkai is some
 sort of blood brother of mine, that his thoughts are my thoughts, that the
 vantage point from which he sees the world is very near mine. These are stories
@@ -602,10 +678,10 @@ regular fiction imposes on it.&lt;/p&gt;
     
     <item>
       <title>Bad Blood by John Carreyrou</title>
-      <link>http://rolph-recto.github.io/review/bad-blood/</link>
+      <link>/review/bad-blood/</link>
       <pubDate>Wed, 22 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/bad-blood/</guid>
+      <guid>/review/bad-blood/</guid>
       <description>&lt;p&gt;This book reads like a thriller&amp;mdash;which if you think about is kind of amazing,
 since it&amp;rsquo;s about a startup with fake blood testing technology. There&amp;rsquo;s not sex
 and murder in it (and the Elizabeth Holmes and Sunny Balwani romance
@@ -624,10 +700,10 @@ charisma. She must&amp;rsquo;ve been a hell of a schmoozer.&lt;/p&gt;
     
     <item>
       <title>Homage to Catalonia by George Orwell</title>
-      <link>http://rolph-recto.github.io/review/homage-to-catalonia/</link>
+      <link>/review/homage-to-catalonia/</link>
       <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/homage-to-catalonia/</guid>
+      <guid>/review/homage-to-catalonia/</guid>
       <description>&lt;p&gt;Probably my favorite of his books. There&amp;rsquo;s an easygoing charm with his writing
 here that is absent with his more political writing. He&amp;rsquo;s much more in the mode
 of observing here than in driving a political point home&amp;mdash;which makes sense,
@@ -679,10 +755,10 @@ out of the political wilderness.&lt;/p&gt;
     
     <item>
       <title>Lightning Rods by Helen DeWitt</title>
-      <link>http://rolph-recto.github.io/review/lightning-rods/</link>
+      <link>/review/lightning-rods/</link>
       <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/lightning-rods/</guid>
+      <guid>/review/lightning-rods/</guid>
       <description>&lt;p&gt;This is a technically perfect book. It&amp;rsquo;s as if Swift took &amp;ldquo;A Modest Proposal&amp;rdquo;
 and instead of just &lt;em&gt;proposing&lt;/em&gt; eating staving Irish babies, he wrote a novel
 about a guy who actually starts a company doing it. What&amp;rsquo;s even more terrifying
@@ -726,10 +802,10 @@ book is a reminder of that fact.&lt;/p&gt;
     
     <item>
       <title>Abolition of Man by C. S. Lewis</title>
-      <link>http://rolph-recto.github.io/review/abolition-of-man/</link>
+      <link>/review/abolition-of-man/</link>
       <pubDate>Fri, 06 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/abolition-of-man/</guid>
+      <guid>/review/abolition-of-man/</guid>
       <description>&lt;p&gt;This is a spirited defense of traditional values (the &amp;ldquo;Tao&amp;rdquo;, as Lewis calls it)
 and a criticism of a certain way of seeing the progress of science. The last
 lecture especially, where he describes man&amp;rsquo;s absolute conquest of nature as the
@@ -756,10 +832,10 @@ The sooner we understand this, the sooner we might save ourselves.&lt;/p&gt;
     
     <item>
       <title>Wise Blood by Flannery O&#39;Connor</title>
-      <link>http://rolph-recto.github.io/review/wise-blood/</link>
+      <link>/review/wise-blood/</link>
       <pubDate>Tue, 03 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/wise-blood/</guid>
+      <guid>/review/wise-blood/</guid>
       <description>&lt;p&gt;It was a bit slow and meandering in the beginning, but by the end it gathers
 momentum and it&amp;rsquo;s really funny in a dark way. &lt;em&gt;Wise Blood&lt;/em&gt; reads like Kafka but
 O&amp;rsquo;Connor goes further and makes a moral judgment on her characters instead of
@@ -787,10 +863,10 @@ understanding?&lt;/p&gt;
     
     <item>
       <title>Consider the Lobster and Both Flesh and Not by David Foster Wallace</title>
-      <link>http://rolph-recto.github.io/review/consider-the-lobster-both-flesh-and-not/</link>
+      <link>/review/consider-the-lobster-both-flesh-and-not/</link>
       <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/consider-the-lobster-both-flesh-and-not/</guid>
+      <guid>/review/consider-the-lobster-both-flesh-and-not/</guid>
       <description>&lt;h2 id=&#34;consider-the-lobster&#34;&gt;Consider the Lobster&lt;/h2&gt;
 &lt;p&gt;An aside on DFW: I did not care for &lt;em&gt;Broom of the System&lt;/em&gt; at all, because I
 thought its thoroughgoing pomo-ness was nothing more than a ploy for DFW to
@@ -862,10 +938,10 @@ I can&amp;rsquo;t countenance.&lt;/p&gt;
     
     <item>
       <title>Between the World and Me by Ta-Nehisi Coates</title>
-      <link>http://rolph-recto.github.io/review/between-the-world-and-me/</link>
+      <link>/review/between-the-world-and-me/</link>
       <pubDate>Mon, 23 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/between-the-world-and-me/</guid>
+      <guid>/review/between-the-world-and-me/</guid>
       <description>&lt;p&gt;An impressionistic, personal take on What It Means To Be Black in America Today.
 Coates is clearly has an incredible gift as a writer, and actually I think
 that&amp;rsquo;s part of the problem. This is not a book of sociological facts but rather
@@ -907,10 +983,10 @@ Aware.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
     
     <item>
       <title>The Lonely City by Olivia Laing</title>
-      <link>http://rolph-recto.github.io/review/the-lonely-city/</link>
+      <link>/review/the-lonely-city/</link>
       <pubDate>Mon, 01 May 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/the-lonely-city/</guid>
+      <guid>/review/the-lonely-city/</guid>
       <description>&lt;p&gt;A lovely and lyrical little book. A testament to all the myriad ways one can
 feel sadness and longing &amp;ndash; whether in silence (Hopper) or sexual longing and
 political anger (Wojnorowicz) or escaping the vicissitudes of body and others
@@ -942,10 +1018,10 @@ all around you) rather than human transactions.&lt;/p&gt;
     
     <item>
       <title>Anti-Intellectualism in American Life by Richard Hofstadter</title>
-      <link>http://rolph-recto.github.io/review/anti-intellectualism-in-american-life/</link>
+      <link>/review/anti-intellectualism-in-american-life/</link>
       <pubDate>Sat, 01 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/anti-intellectualism-in-american-life/</guid>
+      <guid>/review/anti-intellectualism-in-american-life/</guid>
       <description>&lt;p&gt;From reading Hofstadter&amp;rsquo;s Anti-Intellectualism in American Life, there&amp;rsquo;s a
 pretty unmistakable relationship between democratic sentiment and
 anti-intellectualism. In pretty much all social conflicts he presents in the
@@ -1017,10 +1093,10 @@ tragic sense that they&amp;rsquo;re right but perpetually misunderstood or unhea
     
     <item>
       <title>Basic Economics by Thomas Sowell</title>
-      <link>http://rolph-recto.github.io/review/basic-economics/</link>
+      <link>/review/basic-economics/</link>
       <pubDate>Sun, 18 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/basic-economics/</guid>
+      <guid>/review/basic-economics/</guid>
       <description>&lt;p&gt;I picked up this book because I don&amp;rsquo;t know much about economics and wanted to
 read something other than a textbook as an introduction to the field. (I also
 liked the old Firing Line episode with Sowell as a guest.) I thought the book
@@ -1041,10 +1117,10 @@ the political fence.&lt;/p&gt;
     
     <item>
       <title>The Selfish Gene by Richard Dawkins</title>
-      <link>http://rolph-recto.github.io/review/selfish-gene/</link>
+      <link>/review/selfish-gene/</link>
       <pubDate>Sun, 18 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/selfish-gene/</guid>
+      <guid>/review/selfish-gene/</guid>
       <description>&lt;p&gt;A fantastic survey of evolutionary biology. It reminds me a bit like reading a
 math book: it starts off with axioms and definitions (replicators) and then
 follows through chains of reasoning to arrive at novel explanations of
@@ -1081,10 +1157,10 @@ truly entailed.&lt;/p&gt;
     
     <item>
       <title>What Computers Can&#39;t Do by Hubert Dreyfus</title>
-      <link>http://rolph-recto.github.io/review/what-computers-cant-do/</link>
+      <link>/review/what-computers-cant-do/</link>
       <pubDate>Sat, 02 Jan 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/what-computers-cant-do/</guid>
+      <guid>/review/what-computers-cant-do/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve finally gotten around to reading this famous book, and I have to say
 that its fame is quite merited. This is one of the best examples I&amp;rsquo;ve come
 across of philosophy interacting with its neighboring scientific disciplines.
@@ -1159,10 +1235,10 @@ where he constrasts Watson with the more embodied approach by the
     
     <item>
       <title>Mind and Cosmos by Thomas Nagel</title>
-      <link>http://rolph-recto.github.io/review/mind-and-cosmos/</link>
+      <link>/review/mind-and-cosmos/</link>
       <pubDate>Sat, 03 Oct 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/mind-and-cosmos/</guid>
+      <guid>/review/mind-and-cosmos/</guid>
       <description>&lt;p&gt;The subtitle of this book is fighting words, but gladly the pitch of Nagel&amp;rsquo;s
 writing is not at all antagonistic, even if it is incredibly cavalier. His main
 point is that the existence of three distinct phenomena&amp;mdash;consciousness,
@@ -1218,10 +1294,10 @@ to his points, however. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backre
     
     <item>
       <title>Consciousness Explained by Daniel Dennett</title>
-      <link>http://rolph-recto.github.io/review/consciousness-explained/</link>
+      <link>/review/consciousness-explained/</link>
       <pubDate>Tue, 11 Aug 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/consciousness-explained/</guid>
+      <guid>/review/consciousness-explained/</guid>
       <description>&lt;p&gt;It is easy to see why this is considered an important book. Dennett synthesizes
 and moves fluidly through a vast scientific literature to come up with a broad
 theory of consciousness. Though he is overreliant on neologisms and metaphors,
@@ -1255,10 +1331,10 @@ dazzling book anyway.&lt;/p&gt;
     
     <item>
       <title>The Blank Slate by Steven Pinker</title>
-      <link>http://rolph-recto.github.io/review/blank-slate/</link>
+      <link>/review/blank-slate/</link>
       <pubDate>Fri, 24 Jul 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://rolph-recto.github.io/review/blank-slate/</guid>
+      <guid>/review/blank-slate/</guid>
       <description>&lt;p&gt;This is a great popular science book. Pinker is a lucid writer with a style
 that is always engaging. As far as the content, this is a fantastic synthesis
 of a large number of works within cognitive science, especially evolutionary
