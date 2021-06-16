@@ -78,7 +78,7 @@ one either believes them blindly, as a pure act of faith, or not at all.&lt;/p&g
 &lt;h2 id=&#34;but-theyre-not-meant-to-be&#34;&gt;&amp;hellip;but they&amp;rsquo;re not meant to be&lt;/h2&gt;
 &lt;p&gt;So why bother with verifying programs? Here I think is where the paper&amp;rsquo;s
 argument goes off the rails.
-The authors&#39; mistake is to notice that mathematical proofs and program
+The authors&amp;rsquo; mistake is to notice that mathematical proofs and program
 verifications have the same form&amp;mdash;that of logical reasoning&amp;mdash;and from that
 conclude that they must have the same function&amp;mdash;to provide intuition as part
 of a social process whereby a community establishes the correctness of a
@@ -997,7 +997,7 @@ The authors used a combination of &lt;a href=&#34;https://dl.acm.org/citation.cf
 of EMI programs that generated different outputs. They attempted to reject
 programs that triggered undefined behavior by using compiler warnings, static
 analysis, and &lt;a href=&#34;http://compcert.inria.fr&#34;&gt;CompCert&lt;/a&gt;. The final step was reporting the bugs using the
-compilers&#39; transparent bug-tracking tools.&lt;/p&gt;
+compilers&amp;rsquo; transparent bug-tracking tools.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;With this context, on to the headline result:&lt;/p&gt;
@@ -1014,7 +1014,7 @@ illustrating their relevance and importance (as it often takes substantial
 effort to fix a miscompilation),&amp;rdquo; the fact that 182 of the 195 total reported
 bugs (with 35 of these getting marked duplicate) were confirmed by outside
 experts to really exist is evidence that EMI is a viable bug-finding strategy.&lt;/p&gt;
-&lt;p&gt;95 of the confirmed bugs were miscompilations, lending credence to the authors&#39;
+&lt;p&gt;95 of the confirmed bugs were miscompilations, lending credence to the authors&amp;rsquo;
 initial claim that Orion is able to target miscompilations more easily than
 Csmith alone can. The most bugs were found in the development trunks of both GCC
 and LLVM. More bugs were also found in increasing levels of optimization, with
