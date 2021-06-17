@@ -150,14 +150,14 @@ of verification&amp;rsquo;s role in software development.&lt;/p&gt;
 &lt;hr&gt;
 &lt;ol&gt;
 &lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;The formalist dream might be deferred, but perhaps &lt;a href=&#34;https://leanprover-community.github.io/&#34;&gt;not forever&lt;/a&gt;! &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The formalist dream might be deferred, but perhaps &lt;a href=&#34;https://leanprover-community.github.io/&#34;&gt;not forever&lt;/a&gt;!&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;A proof assistant satisfies the &amp;ldquo;de Bruijn criterion&amp;rdquo; if the language
 its proof terms are written in is sufficiently simple that its type checker
 can be understood to be correct or even reimplemented.
 See the &amp;ldquo;Easy-to-Check Kernel Proof Language&amp;rdquo; section of the introduction
-to &lt;a href=&#34;http://adam.chlipala.net/cpdt/html/Intro.html&#34;&gt;CPDT&lt;/a&gt;. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+to &lt;a href=&#34;http://adam.chlipala.net/cpdt/html/Intro.html&#34;&gt;CPDT&lt;/a&gt;.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -269,7 +269,7 @@ online—as all online chatter should be.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;As Robert Frost once wrote: &amp;ldquo;As tweet begets more tweets / So
-Eden sank in grief&amp;rdquo; &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+Eden sank in grief&amp;rdquo;&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -357,7 +357,7 @@ extensive detail about the erasure of black people in the play. This is most
 notable in the almost complete absence of slave characters, save for an
 oblique reference to Sally Hemings. Even when slavery is mentioned, it mostly
 serves to highlight the anti-slavery efforts of white characters, or as a
-cudgel against southern landowners, as in Hamilton&amp;rsquo;s repartees to Jefferson. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+cudgel against southern landowners, as in Hamilton&amp;rsquo;s repartees to Jefferson.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -759,7 +759,7 @@ obvious extension to the cost model.&lt;/p&gt;
 &lt;p&gt;By convention the output function does not have a storage
 node in the schedule tree since it is assumed that storage for the output
 has already been allocated and thus there is no decision to be made about
-the granularity with which to allocate it. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+the granularity with which to allocate it.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -1340,7 +1340,7 @@ non-vectorized counterparts.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;The IR generated has been transformed into SSA form using the
-&lt;code&gt;mem2reg&lt;/code&gt; pass. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;code&gt;mem2reg&lt;/code&gt; pass.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -1747,7 +1747,7 @@ the runtime state and run the interpreter:&lt;/p&gt;
 &lt;span style=&#34;color:#b00040&#34;&gt;GoInt&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;10&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Works as expected!&lt;/p&gt;
 &lt;p&gt;How about something more complicated? Here&amp;rsquo;s a
-&lt;a href=&#34;https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes&#34;&gt;sieve of Eratosthenes&lt;/a&gt;&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes&#34;&gt;sieve of Eratosthenes&lt;/a&gt;!&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Haskell&#34; data-lang=&#34;Haskell&#34;&gt;&lt;span style=&#34;color:#00f&#34;&gt;source&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;::&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Int&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;GoChan&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;GoProgram&lt;/span&gt; &lt;span style=&#34;color:#008000&#34;&gt;()&lt;/span&gt;
 &lt;span style=&#34;color:#00f&#34;&gt;source&lt;/span&gt; max c &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;do&lt;/span&gt;
   forM_ [&lt;span style=&#34;color:#666&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#666&#34;&gt;..&lt;/span&gt;max] &lt;span style=&#34;color:#666&#34;&gt;$&lt;/span&gt; &lt;span style=&#34;color:#00f&#34;&gt;\&lt;/span&gt;i &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;do&lt;/span&gt;
@@ -1901,7 +1901,7 @@ value. Now instead of a single key into a runtime map, instead it will be a
 &lt;em&gt;pair&lt;/em&gt; of keys: one key will be used to push values into the map, and the other
 key will be used to get values from it.&lt;/p&gt;
 &lt;p&gt;Some diagrams might help with the explanation.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/chan-regular.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-regular.svg&#34; alt=&#34;Regular channel&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The diagram above should be pretty self-explanatory. For this to work properly
 the &lt;code&gt;source&lt;/code&gt; function needs to be passed the &lt;code&gt;inchan&lt;/code&gt; channel and the &lt;code&gt;sink&lt;/code&gt;
 channel needs to be passed the &lt;code&gt;outchan&lt;/code&gt; channel. &lt;code&gt;chan_map&lt;/code&gt; currently returns
@@ -1911,7 +1911,7 @@ when a goroutine pushes a value to it, the goroutine is really pushing a value
 to &lt;code&gt;inchan&lt;/code&gt;; when a goroutine extracts a value from it, the goroutine is really
 extracting a value out of &lt;code&gt;outchan&lt;/code&gt;. So under the hood the same thing is
 happening, but the interface to the user is a bit nicer. Like so:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/chan-composition.svg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/chan-composition.svg&#34; alt=&#34;Channel composition&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s see how this change looks like in code.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-Haskell&#34; data-lang=&#34;Haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Int&lt;/span&gt;
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;GoChan&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;, &lt;span style=&#34;color:#b00040&#34;&gt;ChanPort&lt;/span&gt;) 
@@ -2057,7 +2057,7 @@ Until next time!&lt;/p&gt;
 &lt;p&gt;&amp;ldquo;Free&amp;rdquo; as in beer (gratis). I&amp;rsquo;m a little fuzzy on the category theory
 details, but I think free monads are also free, as in speech (libre).
 &lt;a href=&#34;https://stackoverflow.com/questions/13352205/what-are-free-monads&#34;&gt;Here&lt;/a&gt; is
-a discussion on StackOverflow to whet your appetite. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+a discussion on StackOverflow to whet your appetite.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;NB: I originally encountered this implementation of the sieve in a class
@@ -2066,7 +2066,7 @@ for a project that involved implementing a threading library in C.  The
 original C code had to manually manage channels using semaphores. The HaskGo
 version is a lot simpler, since the semaphores are managed by the runtime: you
 can see calls to &lt;code&gt;addToWaitQueue&lt;/code&gt; and &lt;code&gt;wakeFromWaitQueue&lt;/code&gt; in the interpreter
-as calls to &lt;code&gt;P()&lt;/code&gt; and &lt;code&gt;V()&lt;/code&gt; to channel semaphores. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+as calls to &lt;code&gt;P()&lt;/code&gt; and &lt;code&gt;V()&lt;/code&gt; to channel semaphores.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -2426,7 +2426,7 @@ object language continuation by applying a variable expression to the function,
 so that it returns an expression with a free variable &lt;code&gt;Var (-1)&lt;/code&gt;. By &lt;em&gt;free&lt;/em&gt; I
 mean free in the object language; also, we&amp;rsquo;re going to punt on issues with
 capture for now. We then wrap this expression into a &lt;code&gt;Cont&lt;/code&gt; to bind the
-variable, and we&amp;rsquo;re done&lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+variable, and we&amp;rsquo;re done!&lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;p&gt;We can now evaluate the body, in whose environment the variable &lt;code&gt;k&lt;/code&gt; will be
 mapped to the reified continuation. Note that syntactically &lt;code&gt;call/cc&lt;/code&gt; takes in
 two arguments: the name of the variable and the body expression to be evaluated
@@ -2478,21 +2478,21 @@ instead uses class methods to manipulate contexts of a computation.&lt;/p&gt;
 &lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;While I&amp;rsquo;ve got a decent idea of how to implement this feature now, the
 interpreter is still a bit of a mess. It turns out first-class continuations
-are a big feature that touches pretty much every part of an interpreter! &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+are a big feature that touches pretty much every part of an interpreter!&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;You could also think of this expression-with-a-hole as a function from
-expressions to expressions: this fact will be important later. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+expressions to expressions: this fact will be important later.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id=&#34;fn:3&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;Notice that this language is eagerly evaluated. &lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Notice that this language is eagerly evaluated.&amp;#160;&lt;a href=&#34;#fnref:3&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id=&#34;fn:4&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;You might think, as I originally did, that the interpreter should clear
 the stack when &lt;code&gt;call/cc&lt;/code&gt; is called. A quick test in Racket disabused me of that
 misconception: &lt;code&gt;(+ 2 (call/cc (lambda (k) 2)))&lt;/code&gt; evaluates to 4, not 2.
 Explanation for why this answers our question is left as an exercise for the
-reader! &lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+reader!&amp;#160;&lt;a href=&#34;#fnref:4&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
@@ -2735,11 +2735,11 @@ and implement your own!&lt;/p&gt;
 &lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;There are other processes such as Brownian motion, which has a continuous
 state space and runs on continuous time, that can be called random walks, but
-we&amp;rsquo;ll punt on those and focus on these simpler examples. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+we&amp;rsquo;ll punt on those and focus on these simpler examples.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
 &lt;p&gt;This is usually described either as a probability formula or, more
-commonly for processes with finite state spaces, the stochastic matrix P. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+commonly for processes with finite state spaces, the stochastic matrix P.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
