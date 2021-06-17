@@ -57,9 +57,10 @@
 <meta property="og:title" content="Implementing call/cc" />
 <meta property="og:description" content="I&rsquo;ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations. call/cc always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code. Before diving in to implement this for Lisp, I thought it would be a good exercise to implement an interpreter for a toy language." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/blog/implementing-callcc/" />
-<meta property="article:published_time" content="2016-12-26T00:00:00+00:00" />
-<meta property="article:modified_time" content="2016-12-26T00:00:00+00:00" />
+<meta property="og:url" content="/blog/implementing-callcc/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2016-12-26T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2016-12-26T00:00:00&#43;00:00" />
+
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Implementing call/cc"/>
@@ -499,7 +500,7 @@ object language continuation by applying a variable expression to the function,
 so that it returns an expression with a free variable <code>Var (-1)</code>. By <em>free</em> I
 mean free in the object language; also, we&rsquo;re going to punt on issues with
 capture for now. We then wrap this expression into a <code>Cont</code> to bind the
-variable, and we&rsquo;re done<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
+variable, and we&rsquo;re done!<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup></p>
 <p>We can now evaluate the body, in whose environment the variable <code>k</code> will be
 mapped to the reified continuation. Note that syntactically <code>call/cc</code> takes in
 two arguments: the name of the variable and the body expression to be evaluated
@@ -551,21 +552,21 @@ instead uses class methods to manipulate contexts of a computation.</p>
 <li id="fn:1" role="doc-endnote">
 <p>While I&rsquo;ve got a decent idea of how to implement this feature now, the
 interpreter is still a bit of a mess. It turns out first-class continuations
-are a big feature that touches pretty much every part of an interpreter! <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+are a big feature that touches pretty much every part of an interpreter!&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
 <p>You could also think of this expression-with-a-hole as a function from
-expressions to expressions: this fact will be important later. <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+expressions to expressions: this fact will be important later.&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Notice that this language is eagerly evaluated. <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Notice that this language is eagerly evaluated.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
 <p>You might think, as I originally did, that the interpreter should clear
 the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that
 misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2.
 Explanation for why this answers our question is left as an exercise for the
-reader! <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+reader!&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
