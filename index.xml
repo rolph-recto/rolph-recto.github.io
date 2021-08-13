@@ -6,10 +6,114 @@
     <description>Rolph Recto</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Jul 2021 21:06:54 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 12 Aug 2021 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>What are Security Conditions?</title>
+      <link>/blog/what-are-security-conditions/</link>
+      <pubDate>Thu, 12 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/what-are-security-conditions/</guid>
+      <description>&lt;p&gt;I had a research meeting with my &lt;a href=&#34;https://www.cs.cornell.edu/andru/&#34;&gt;advisor&lt;/a&gt; a while ago where I was
+describing a new security condition and trying to justify why we should care
+that programs enforce it. I had an example program that is clearly insecure that
+my condition deems to be so, but I was despairing because I also thought of
+another program that to me is clearly insecure but my condition admits as
+secure.&lt;/p&gt;
+&lt;p&gt;My advisor was more sanguine than I was about the situation. &amp;ldquo;If someone wrote
+the second program, they should have just written a better one,&amp;rdquo; he said.
+A glib and funny response, yes&amp;mdash;but I think I got what he meant, and it
+got me thinking about what security conditions really are.&lt;/p&gt;
+&lt;p&gt;The usual move in language-based security is to define a security condition and
+then show that an enforcement mechanism, usually a type system, defends it. In
+turn, the standard pitch we give about type systems to developers&amp;mdash;the
+grand bargain offered by programming languages research, if you will&amp;mdash;is a
+trade-off between expressiveness and guaranteed properties. We tell developers:
+&lt;em&gt;write your program so that it satisfies these conditions, and we can guarantee
+these properties about your program&lt;/em&gt;. This, it turns out, is a very good
+bargain in practice.&lt;/p&gt;
+&lt;p&gt;So you might imagine that, applied to security-typed languages, the trade-off
+for expressiveness and the annotation burden of writing security labels
+throughout your program is a guarantee that your program is secure. After all,
+isn&amp;rsquo;t that what a security conditions intuitively is: a definition of what it
+means for a program to be secure? So how can my advisor think that it is okay
+for a program to be clearly insecure while still satisfying my security
+condition?&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start with noninterference, the standard security condition defended by
+most security-typed languages. Roughly (and this is &lt;em&gt;quite&lt;/em&gt; rough; there are
+many, many variants), a program satisfies noninterference if changing the secret
+inputs to a program does not change its public outputs. This is supposed to
+capture the fact that secret data do not influence (do not flow to) public data.
+That sounds like in the ballpark of what we mean by security (for
+confidentiality, anyway)&amp;mdash;it guarantees that &lt;em&gt;no&lt;/em&gt; information about secrets is
+encoded in public data.&lt;/p&gt;
+&lt;p&gt;The problem is that noninterference is a very exacting condition. In a
+sealed-bid auction, for example, parties must construct their bids without any
+information about other bids, but the auctioneer must necessarily reveal some
+information about all bids to all parties to declare the winner (e.g. Bob is not
+supposed to know Alice&amp;rsquo;s bid, but if the auctioneer declares Alice the winner
+then Bob knows at least that Alice&amp;rsquo;s bid is greater than his). This
+immediately violates noninterference. Almost every real program you would want
+to write is like this: they involve intentional information release, or
+declassification. The literature on language-based security has focused largely
+on noninterference, but I think this is an artefact of how cleanly it can be
+formalized than its actual usefulness.&lt;/p&gt;
+&lt;p&gt;So this means we have to look beyond noninterference and define a security
+condition that both allows for intentional information release and
+captures our intuitive notion of &amp;ldquo;security.&amp;rdquo; Whereas noninterference comes close
+to this intuition (&amp;ldquo;no secret information is encoded in public information&amp;rdquo;),
+our intuitions for &amp;ldquo;security that allows for intentional information release&amp;rdquo;
+fail us because &lt;em&gt;insecurity is characterized by information release&lt;/em&gt;. What we
+are really asking for, then, is a security condition that demarcates between
+unintentional and intentional information release&amp;mdash;we reject programs that
+do the former, and accept programs that do the latter.&lt;/p&gt;
+&lt;p&gt;You might guess at this point that searching for a security condition that
+neatly divides between intentional and unintentional information release is a
+fool&amp;rsquo;s errand. But we still want &lt;em&gt;some&lt;/em&gt; security condition. At this point, then,
+we must revisit what a security condition is. If it is not defining security,
+then what is it doing?&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the punchline: &lt;em&gt;security conditions, particularly those that allow for
+intentional information release, are necessary conditions on secure programs.&lt;/em&gt;
+Under this reading, a security condition at best can codify general principles
+that negatively define intentional information release. That is, it can
+characterize what information release &lt;em&gt;isn&amp;rsquo;t&lt;/em&gt; intentional&amp;mdash;it cannot positively
+define what information release &lt;em&gt;is&lt;/em&gt; intentional.&lt;/p&gt;
+&lt;p&gt;For example, the security condition of &lt;a href=&#34;https://www.cs.cornell.edu/andru/papers/csfw01.pdf&#34;&gt;robust declassification&lt;/a&gt; states that
+the principals to whom you are releasing information should not be
+able to influence the decision to declassify nor the value to be declassified.
+So if you have a program where Bob can influence whether Alice declassifies
+data to him, robust declassification would reject this program, under the
+assumption that you never intend to give Bob such power&amp;mdash;the program
+you wrote must have a bug. On the other hand, if you have a program where Bob
+can&amp;rsquo;t influence whether Alice declassifies data to him, it satisfies robust
+declassification but this is no guarantee that the program is secure.
+Maybe in the program Alice sends Bob her SSN instead of her birth date!&lt;/p&gt;
+&lt;p&gt;This is interesting because this means that security conditions are designed to
+be complete but unsound for capturing intentional information release. They aim
+to guarantee that all programs with intentional information release are
+accepted, but not that all accepted programs have intentional information
+release. This is the opposite of type systems, which are usually sound but
+incomplete: they can guarantee that all well-typed programs satisfy the relevant
+property, but not that all programs that satisfy the relevant property can be
+well-typed.&lt;/p&gt;
+&lt;p&gt;You might wonder why this is the case. I think it&amp;rsquo;s because negatively defining
+what information release is unintentional is much easier than positively
+defining what information release is intentional. To do the latter, you just
+need to capture common mistakes regarding information release to prevent
+programmers from making such mistakes. It&amp;rsquo;s not clear to me how you would even
+attempt to do the latter.&lt;/p&gt;
+&lt;p&gt;Of course, my advisor is well aware that security conditions are just necessary
+conditions, hence his reaction to my conundrum. The game in language-based
+security is to identify common patterns of insecurity in programs and then
+define security conditions that eliminate them. We&amp;rsquo;ll never reach a &amp;ldquo;true&amp;rdquo;
+definition of security&amp;mdash;that way lies human intention and thus all the
+messiness of life&amp;mdash;but the hope is that we eliminate enough security bugs to
+gain assurance in the software that we build.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Red Plenty by Francis Spufford</title>
