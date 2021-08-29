@@ -6,10 +6,103 @@
     <description>Rolph Recto (Blog)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 12 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 29 Aug 2021 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>What Are Security Conditions? - An Addendum on Noninterference</title>
+      <link>/blog/what-are-security-conditions-addendum/</link>
+      <pubDate>Sun, 29 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/what-are-security-conditions-addendum/</guid>
+      <description>&lt;p&gt;In &lt;a href=&#34;/blog/what-are-security-conditions&#34;&gt;my last blog post&lt;/a&gt;, I argued that noninterference is an
+inadequate security condition because many, if not most, secure programs
+have intentional information release. A thought that I did not entertain is
+whether noninterference can accurate classify programs with no intentional
+information release. Is noninterference a necessary and sufficient condition
+for such programs?&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s approach this question with a concrete example. Here is a bog standard
+definition of noninterference for sequential programs:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Let $P$ be a program and $M_1$ and $M_2$ be memories that have equivalent
+public values. Let running $P$ with $M_1$ as its initial memory arrive
+at final memory $M_1^\prime$ and running $P$ with $M_2$ as its initial memory
+arrive at final memory $M_2^\prime$. Then $P$ satisfies noninterference
+when $M_1^\prime$ and $M_2^\prime$ have equivalent public values.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For a program to satisfy this definition, it must not leak the secret values
+in its initial memory. But we can easily imagine programs that satisfy the
+definition that still leak these secrets. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;while (secret &amp;lt; 0) {
+  secret--;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The program doesn&amp;rsquo;t read or write public values, so obviously any two runs that
+start with the same public values will end with the same public values as well.
+This means that the program satisfies noninterference as stated above. At the
+same time there&amp;rsquo;s a clear way that the program leaks information: the execution
+time of the program directly correlates with the value of &lt;code&gt;secret&lt;/code&gt;. Thus if the
+adversary can measure the execution time, it can glean the value of &lt;code&gt;secret&lt;/code&gt;!&lt;/p&gt;
+&lt;p&gt;The program above is a classic example of an external timing channel, a
+particularly pernicious kind of side channel. The upshot is that noninterference
+as stated above is not a sufficient condition for secure programs with no
+intentional information release. The definition is, however, still
+necessary&amp;mdash;all secure programs with no intentional information release should
+satisfy it.&lt;/p&gt;
+&lt;p&gt;Can you patch the definition so it does not admit programs with timing channels?
+Here&amp;rsquo;s the pessimistic take. Definitions of noninterference are usually given
+over the operational semantics of a program. But the operational semantics of a
+program is nothing but a model of a program&amp;rsquo;s execution in an actual machine.
+We can imagine an operational semantics with an additional &amp;ldquo;counter&amp;rdquo; component
+that gets incremented at every step, and a revision of noninterference that
+demands that two runs of a program not only have public-equivalent memories but
+equal counters at termination. This might work&amp;mdash;but now you have to assume that
+all steps take the same amount of time, which ignores things such as cache
+effects and the &lt;a href=&#34;https://ranjitjhala.github.io/static/subnormal.pdf&#34;&gt;inherent variability&lt;/a&gt; between
+instruction execution times.&lt;/p&gt;
+&lt;p&gt;In other words, it might lead to a better model, but it is a model nonetheless,
+and thus abstracts out some implementation details. But side effects are all
+about leaking information through implementation details! So unless we have a
+&lt;a href=&#34;https://kwarc.info/teaching/TDM/Borges.pdf&#34;&gt;Borgesian&lt;/a&gt; model as exact as the program executing in a
+real machine, we can&amp;rsquo;t be sure that a definition of noninterference has ruled
+out all possible leaks through side channels.&lt;/p&gt;
+&lt;p&gt;This leads us to the conclusion that there are at least two sources of
+incompleteness for security conditions&amp;mdash;that is, why programs satisfying
+such conditions are not necessarily secure:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Inability to exactly capture intentional information release&lt;/li&gt;
+&lt;li&gt;Inability to capture all possible side channels through which information can
+be leaked&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s zoom out to the bigger picture. Assume that any intentional information
+release you would want to have in a secure program can be captured approximately
+as a &amp;ldquo;relaxed&amp;rdquo; security condition (i.e. a security condition that, unlike
+noninterference, allows for intentional information release). Then we can
+visualize the space of programs as follows.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/secure-programs.png&#34; alt=&#34;Sets of secure programs and programs satisfying security conditions&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s go down the sets from largest to smallest.
+The first set is the set of programs that satisfy relaxed security
+conditions&amp;mdash;i.e., given the set of relaxed security conditions $SC$ and set of
+programs $P_{c}$ that satisfy a particular relaxed security condition $c$, then
+the largest set is $\bigcap_{c \in SC} P_c$. The second set is the set
+of all secure programs, including those with intentional information release.
+The third set is the set of programs satisfying some definition
+of noninterference. Finally, the fourth set is the set of secure programs
+with no intentional information release.&lt;/p&gt;
+&lt;p&gt;The second and fourth sets classifying secure programs are &amp;ldquo;fuzzy&amp;rdquo;, in that we
+have no formal way of characterizing such sets the way we do for the first and
+third sets, which classify programs that satisfy some security conditions.  Two
+of the big research programs in language-based security is to more and more
+accurately characterize the second and fourth sets by way of the first and third
+sets. As we get better and better at characterizing intentional information
+release, the first set gets smaller and approaches the second set. As our
+operational models get better and better at capturing side channels that can
+leak information in programs, the third set gets smaller and approaches the
+fourth set. I doubt that the first and second sets and the third and fourth sets
+respectively will ever coincide, but it is fruitful research nonetheless to try.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>What are Security Conditions?</title>

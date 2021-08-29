@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+
+<html lang="en-us" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>What Are Security Conditions? - An Addendum on Noninterference - Rolph Recto</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.6155b6d8eded05b985178f56a637943b3e7fcfccc913d9c656bbebce7c91cc6b.css" integrity="sha256-YVW22O3tBbmFF49WpjeUOz5/z8zJE9nGVrvrznyRzGs=">
+    
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.09382ffff49667a131a6f82e8d8c82cc72b481648b4deb145d780a4ce2255896.css" integrity="sha256-CTgv//SWZ6ExpvgujYyCzHK0gWSLTesUXXgKTOIlWJY=">
+    
+
+
+
+
+
+<meta property="og:title" content="What Are Security Conditions? - An Addendum on Noninterference" />
+<meta property="og:description" content="In my last blog post, I argued that noninterference is an inadequate security condition because many, if not most, secure programs have intentional information release. A thought that I did not entertain is whether noninterference can accurate classify programs with no intentional information release. Is noninterference a necessary and sufficient condition for such programs?
+Let&rsquo;s approach this question with a concrete example. Here is a bog standard definition of noninterference for sequential programs:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blog/what-are-security-conditions-addendum/" />
+<meta property="article:published_time" content="2021-08-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-08-29T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="What Are Security Conditions? - An Addendum on Noninterference"/>
+<meta name="twitter:description" content="In my last blog post, I argued that noninterference is an inadequate security condition because many, if not most, secure programs have intentional information release. A thought that I did not entertain is whether noninterference can accurate classify programs with no intentional information release. Is noninterference a necessary and sufficient condition for such programs?
+Let&rsquo;s approach this question with a concrete example. Here is a bog standard definition of noninterference for sequential programs:"/>
+
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">Rolph Recto</a>
+</h1>
+
+    <nav>
+        
+        
+        <a class="" href="/" title="">home</a>
+        
+        <a class="" href="/personal/" title="">personal</a>
+        
+        <a class="" href="/blog/" title="">blog</a>
+        
+    </nav>
+
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">What Are Security Conditions? - An Addendum on Noninterference</h1>
+        </header>
+        
+
+    
+
+
+<div class="post-info">
+    
+      Aug 29, 2021
+    
+    
+    
+      &nbsp; - &nbsp;
+      
+          <a href="/tags/cs">#cs</a> &nbsp;
+      
+          <a href="/tags/security">#security</a> &nbsp;
+      
+    
+</div>
+
+        <div class="content">
+            <p>In <a href="/blog/what-are-security-conditions">my last blog post</a>, I argued that noninterference is an
+inadequate security condition because many, if not most, secure programs
+have intentional information release. A thought that I did not entertain is
+whether noninterference can accurate classify programs with no intentional
+information release. Is noninterference a necessary and sufficient condition
+for such programs?</p>
+<p>Let&rsquo;s approach this question with a concrete example. Here is a bog standard
+definition of noninterference for sequential programs:</p>
+<blockquote>
+<p>Let $P$ be a program and $M_1$ and $M_2$ be memories that have equivalent
+public values. Let running $P$ with $M_1$ as its initial memory arrive
+at final memory $M_1^\prime$ and running $P$ with $M_2$ as its initial memory
+arrive at final memory $M_2^\prime$. Then $P$ satisfies noninterference
+when $M_1^\prime$ and $M_2^\prime$ have equivalent public values.</p>
+</blockquote>
+<p>For a program to satisfy this definition, it must not leak the secret values
+in its initial memory. But we can easily imagine programs that satisfy the
+definition that still leak these secrets. For example:</p>
+<pre><code>while (secret &lt; 0) {
+  secret--;
+}
+</code></pre><p>The program doesn&rsquo;t read or write public values, so obviously any two runs that
+start with the same public values will end with the same public values as well.
+This means that the program satisfies noninterference as stated above. At the
+same time there&rsquo;s a clear way that the program leaks information: the execution
+time of the program directly correlates with the value of <code>secret</code>. Thus if the
+adversary can measure the execution time, it can glean the value of <code>secret</code>!</p>
+<p>The program above is a classic example of an external timing channel, a
+particularly pernicious kind of side channel. The upshot is that noninterference
+as stated above is not a sufficient condition for secure programs with no
+intentional information release. The definition is, however, still
+necessary&mdash;all secure programs with no intentional information release should
+satisfy it.</p>
+<p>Can you patch the definition so it does not admit programs with timing channels?
+Here&rsquo;s the pessimistic take. Definitions of noninterference are usually given
+over the operational semantics of a program. But the operational semantics of a
+program is nothing but a model of a program&rsquo;s execution in an actual machine.
+We can imagine an operational semantics with an additional &ldquo;counter&rdquo; component
+that gets incremented at every step, and a revision of noninterference that
+demands that two runs of a program not only have public-equivalent memories but
+equal counters at termination. This might work&mdash;but now you have to assume that
+all steps take the same amount of time, which ignores things such as cache
+effects and the <a href="https://ranjitjhala.github.io/static/subnormal.pdf">inherent variability</a> between
+instruction execution times.</p>
+<p>In other words, it might lead to a better model, but it is a model nonetheless,
+and thus abstracts out some implementation details. But side effects are all
+about leaking information through implementation details! So unless we have a
+<a href="https://kwarc.info/teaching/TDM/Borges.pdf">Borgesian</a> model as exact as the program executing in a
+real machine, we can&rsquo;t be sure that a definition of noninterference has ruled
+out all possible leaks through side channels.</p>
+<p>This leads us to the conclusion that there are at least two sources of
+incompleteness for security conditions&mdash;that is, why programs satisfying
+such conditions are not necessarily secure:</p>
+<ul>
+<li>Inability to exactly capture intentional information release</li>
+<li>Inability to capture all possible side channels through which information can
+be leaked</li>
+</ul>
+<p>Let&rsquo;s zoom out to the bigger picture. Assume that any intentional information
+release you would want to have in a secure program can be captured approximately
+as a &ldquo;relaxed&rdquo; security condition (i.e. a security condition that, unlike
+noninterference, allows for intentional information release). Then we can
+visualize the space of programs as follows.</p>
+<p><img src="/img/secure-programs.png" alt="Sets of secure programs and programs satisfying security conditions"></p>
+<p>Let&rsquo;s go down the sets from largest to smallest.
+The first set is the set of programs that satisfy relaxed security
+conditions&mdash;i.e., given the set of relaxed security conditions $SC$ and set of
+programs $P_{c}$ that satisfy a particular relaxed security condition $c$, then
+the largest set is $\bigcap_{c \in SC} P_c$. The second set is the set
+of all secure programs, including those with intentional information release.
+The third set is the set of programs satisfying some definition
+of noninterference. Finally, the fourth set is the set of secure programs
+with no intentional information release.</p>
+<p>The second and fourth sets classifying secure programs are &ldquo;fuzzy&rdquo;, in that we
+have no formal way of characterizing such sets the way we do for the first and
+third sets, which classify programs that satisfy some security conditions.  Two
+of the big research programs in language-based security is to more and more
+accurately characterize the second and fourth sets by way of the first and third
+sets. As we get better and better at characterizing intentional information
+release, the first set gets smaller and approaches the second set. As our
+operational models get better and better at capturing side channels that can
+leak information in programs, the third set gets smaller and approaches the
+fourth set. I doubt that the first and second sets and the third and fourth sets
+respectively will ever coincide, but it is fruitful research nonetheless to try.</p>
+
+        </div>
+    </article>
+
+    
+
+    <hr>
+    <center>
+    
+      <p>
+      <a href="/blog/what-are-security-conditions/">&nbsp;&lt;&lt;&nbsp;What are Security Conditions?</a>
+      </p>
+    
+    
+    
+      <p>
+      Back to <a href="/blog/">Blog</a>
+      </p>
+    
+    </center>
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+    <div class="common-footer-bottom">
+        
+        
+
+
+   
+    </div>
+</footer>
+
+        
+    </div>
+</body>
+</html>

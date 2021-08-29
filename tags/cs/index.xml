@@ -6,10 +6,207 @@
     <description>Rolph Recto (cs)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 29 Aug 2021 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="/tags/cs/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>What Are Security Conditions? - An Addendum on Noninterference</title>
+      <link>/blog/what-are-security-conditions-addendum/</link>
+      <pubDate>Sun, 29 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/what-are-security-conditions-addendum/</guid>
+      <description>&lt;p&gt;In &lt;a href=&#34;/blog/what-are-security-conditions&#34;&gt;my last blog post&lt;/a&gt;, I argued that noninterference is an
+inadequate security condition because many, if not most, secure programs
+have intentional information release. A thought that I did not entertain is
+whether noninterference can accurate classify programs with no intentional
+information release. Is noninterference a necessary and sufficient condition
+for such programs?&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s approach this question with a concrete example. Here is a bog standard
+definition of noninterference for sequential programs:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Let $P$ be a program and $M_1$ and $M_2$ be memories that have equivalent
+public values. Let running $P$ with $M_1$ as its initial memory arrive
+at final memory $M_1^\prime$ and running $P$ with $M_2$ as its initial memory
+arrive at final memory $M_2^\prime$. Then $P$ satisfies noninterference
+when $M_1^\prime$ and $M_2^\prime$ have equivalent public values.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For a program to satisfy this definition, it must not leak the secret values
+in its initial memory. But we can easily imagine programs that satisfy the
+definition that still leak these secrets. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;while (secret &amp;lt; 0) {
+  secret--;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The program doesn&amp;rsquo;t read or write public values, so obviously any two runs that
+start with the same public values will end with the same public values as well.
+This means that the program satisfies noninterference as stated above. At the
+same time there&amp;rsquo;s a clear way that the program leaks information: the execution
+time of the program directly correlates with the value of &lt;code&gt;secret&lt;/code&gt;. Thus if the
+adversary can measure the execution time, it can glean the value of &lt;code&gt;secret&lt;/code&gt;!&lt;/p&gt;
+&lt;p&gt;The program above is a classic example of an external timing channel, a
+particularly pernicious kind of side channel. The upshot is that noninterference
+as stated above is not a sufficient condition for secure programs with no
+intentional information release. The definition is, however, still
+necessary&amp;mdash;all secure programs with no intentional information release should
+satisfy it.&lt;/p&gt;
+&lt;p&gt;Can you patch the definition so it does not admit programs with timing channels?
+Here&amp;rsquo;s the pessimistic take. Definitions of noninterference are usually given
+over the operational semantics of a program. But the operational semantics of a
+program is nothing but a model of a program&amp;rsquo;s execution in an actual machine.
+We can imagine an operational semantics with an additional &amp;ldquo;counter&amp;rdquo; component
+that gets incremented at every step, and a revision of noninterference that
+demands that two runs of a program not only have public-equivalent memories but
+equal counters at termination. This might work&amp;mdash;but now you have to assume that
+all steps take the same amount of time, which ignores things such as cache
+effects and the &lt;a href=&#34;https://ranjitjhala.github.io/static/subnormal.pdf&#34;&gt;inherent variability&lt;/a&gt; between
+instruction execution times.&lt;/p&gt;
+&lt;p&gt;In other words, it might lead to a better model, but it is a model nonetheless,
+and thus abstracts out some implementation details. But side effects are all
+about leaking information through implementation details! So unless we have a
+&lt;a href=&#34;https://kwarc.info/teaching/TDM/Borges.pdf&#34;&gt;Borgesian&lt;/a&gt; model as exact as the program executing in a
+real machine, we can&amp;rsquo;t be sure that a definition of noninterference has ruled
+out all possible leaks through side channels.&lt;/p&gt;
+&lt;p&gt;This leads us to the conclusion that there are at least two sources of
+incompleteness for security conditions&amp;mdash;that is, why programs satisfying
+such conditions are not necessarily secure:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Inability to exactly capture intentional information release&lt;/li&gt;
+&lt;li&gt;Inability to capture all possible side channels through which information can
+be leaked&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s zoom out to the bigger picture. Assume that any intentional information
+release you would want to have in a secure program can be captured approximately
+as a &amp;ldquo;relaxed&amp;rdquo; security condition (i.e. a security condition that, unlike
+noninterference, allows for intentional information release). Then we can
+visualize the space of programs as follows.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/secure-programs.png&#34; alt=&#34;Sets of secure programs and programs satisfying security conditions&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s go down the sets from largest to smallest.
+The first set is the set of programs that satisfy relaxed security
+conditions&amp;mdash;i.e., given the set of relaxed security conditions $SC$ and set of
+programs $P_{c}$ that satisfy a particular relaxed security condition $c$, then
+the largest set is $\bigcap_{c \in SC} P_c$. The second set is the set
+of all secure programs, including those with intentional information release.
+The third set is the set of programs satisfying some definition
+of noninterference. Finally, the fourth set is the set of secure programs
+with no intentional information release.&lt;/p&gt;
+&lt;p&gt;The second and fourth sets classifying secure programs are &amp;ldquo;fuzzy&amp;rdquo;, in that we
+have no formal way of characterizing such sets the way we do for the first and
+third sets, which classify programs that satisfy some security conditions.  Two
+of the big research programs in language-based security is to more and more
+accurately characterize the second and fourth sets by way of the first and third
+sets. As we get better and better at characterizing intentional information
+release, the first set gets smaller and approaches the second set. As our
+operational models get better and better at capturing side channels that can
+leak information in programs, the third set gets smaller and approaches the
+fourth set. I doubt that the first and second sets and the third and fourth sets
+respectively will ever coincide, but it is fruitful research nonetheless to try.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>What are Security Conditions?</title>
+      <link>/blog/what-are-security-conditions/</link>
+      <pubDate>Thu, 12 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/what-are-security-conditions/</guid>
+      <description>&lt;p&gt;I had a research meeting with my &lt;a href=&#34;https://www.cs.cornell.edu/andru/&#34;&gt;advisor&lt;/a&gt; a while ago where I was
+describing a new security condition and trying to justify why we should care
+that programs enforce it. I had an example program that is clearly insecure that
+my condition deems to be so, but I was despairing because I also thought of
+another program that to me is clearly insecure but my condition admits as
+secure.&lt;/p&gt;
+&lt;p&gt;My advisor was more sanguine than I was about the situation. &amp;ldquo;If someone wrote
+the second program, they should have just written a better one,&amp;rdquo; he said.
+A glib and funny response, yes&amp;mdash;but I think I got what he meant, and it
+got me thinking about what security conditions really are.&lt;/p&gt;
+&lt;p&gt;The usual move in language-based security is to define a security condition and
+then show that an enforcement mechanism, usually a type system, defends it. In
+turn, the standard pitch we give about type systems to developers&amp;mdash;the
+grand bargain offered by programming languages research, if you will&amp;mdash;is a
+trade-off between expressiveness and guaranteed properties. We tell developers:
+&lt;em&gt;write your program so that it satisfies these conditions, and we can guarantee
+these properties about your program&lt;/em&gt;. This, it turns out, is a very good
+bargain in practice.&lt;/p&gt;
+&lt;p&gt;So you might imagine that, applied to security-typed languages, the trade-off
+for expressiveness and the annotation burden of writing security labels
+throughout your program is a guarantee that your program is secure. After all,
+isn&amp;rsquo;t that what a security conditions intuitively is: a definition of what it
+means for a program to be secure? So how can my advisor think that it is okay
+for a program to be clearly insecure while still satisfying my security
+condition?&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start with noninterference, the standard security condition defended by
+most security-typed languages. Roughly (and this is &lt;em&gt;quite&lt;/em&gt; rough; there are
+many, many variants), a program satisfies noninterference if changing the secret
+inputs to a program does not change its public outputs. This is supposed to
+capture the fact that secret data do not influence (do not flow to) public data.
+That sounds like in the ballpark of what we mean by security (for
+confidentiality, anyway)&amp;mdash;it guarantees that &lt;em&gt;no&lt;/em&gt; information about secrets is
+encoded in public data.&lt;/p&gt;
+&lt;p&gt;The problem is that noninterference is a very exacting condition. In a
+sealed-bid auction, for example, parties must construct their bids without any
+information about other bids, but the auctioneer must necessarily reveal some
+information about all bids to all parties to declare the winner (e.g. Bob is not
+supposed to know Alice&amp;rsquo;s bid, but if the auctioneer declares Alice the winner
+then Bob knows at least that Alice&amp;rsquo;s bid is greater than his). This
+immediately violates noninterference. Almost every real program you would want
+to write is like this: they involve intentional information release, or
+declassification. The literature on language-based security has focused largely
+on noninterference, but I think this is an artefact of how cleanly it can be
+formalized than its actual usefulness.&lt;/p&gt;
+&lt;p&gt;So this means we have to look beyond noninterference and define a security
+condition that both allows for intentional information release and
+captures our intuitive notion of &amp;ldquo;security.&amp;rdquo; Whereas noninterference comes close
+to this intuition (&amp;ldquo;no secret information is encoded in public information&amp;rdquo;),
+our intuitions for &amp;ldquo;security that allows for intentional information release&amp;rdquo;
+fail us because &lt;em&gt;insecurity is characterized by information release&lt;/em&gt;. What we
+are really asking for, then, is a security condition that demarcates between
+unintentional and intentional information release&amp;mdash;we reject programs that
+do the former, and accept programs that do the latter.&lt;/p&gt;
+&lt;p&gt;You might guess at this point that searching for a security condition that
+neatly divides between intentional and unintentional information release is a
+fool&amp;rsquo;s errand. But we still want &lt;em&gt;some&lt;/em&gt; security condition. At this point, then,
+we must revisit what a security condition is. If it is not defining security,
+then what is it doing?&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the punchline: &lt;em&gt;security conditions, particularly those that allow for
+intentional information release, are necessary conditions on secure programs.&lt;/em&gt;
+Under this reading, a security condition at best can codify general principles
+that negatively define intentional information release. That is, it can
+characterize what information release &lt;em&gt;isn&amp;rsquo;t&lt;/em&gt; intentional&amp;mdash;it cannot positively
+define what information release &lt;em&gt;is&lt;/em&gt; intentional.&lt;/p&gt;
+&lt;p&gt;For example, the security condition of &lt;a href=&#34;https://www.cs.cornell.edu/andru/papers/csfw01.pdf&#34;&gt;robust declassification&lt;/a&gt; states that
+the principals to whom you are releasing information should not be
+able to influence the decision to declassify nor the value to be declassified.
+So if you have a program where Bob can influence whether Alice declassifies
+data to him, robust declassification would reject this program, under the
+assumption that you never intend to give Bob such power&amp;mdash;the program
+you wrote must have a bug. On the other hand, if you have a program where Bob
+can&amp;rsquo;t influence whether Alice declassifies data to him, it satisfies robust
+declassification but this is no guarantee that the program is secure.
+Maybe in the program Alice sends Bob her SSN instead of her birth date!&lt;/p&gt;
+&lt;p&gt;This is interesting because this means that security conditions are designed to
+be complete but unsound for capturing intentional information release. They aim
+to guarantee that all programs with intentional information release are
+accepted, but not that all accepted programs have intentional information
+release. This is the opposite of type systems, which are usually sound but
+incomplete: they can guarantee that all well-typed programs satisfy the relevant
+property, but not that all programs that satisfy the relevant property can be
+well-typed.&lt;/p&gt;
+&lt;p&gt;You might wonder why this is the case. I think it&amp;rsquo;s because negatively defining
+what information release is unintentional is much easier than positively
+defining what information release is intentional. To do the latter, you just
+need to capture common mistakes regarding information release to prevent
+programmers from making such mistakes. It&amp;rsquo;s not clear to me how you would even
+attempt to do the latter.&lt;/p&gt;
+&lt;p&gt;Of course, my advisor is well aware that security conditions are just necessary
+conditions, hence his reaction to my conundrum. The game in language-based
+security is to identify common patterns of insecurity in programs and then
+define security conditions that eliminate them. We&amp;rsquo;ll never reach a &amp;ldquo;true&amp;rdquo;
+definition of security&amp;mdash;that way lies human intention and thus all the
+messiness of life&amp;mdash;but the hope is that we eliminate enough security bugs to
+gain assurance in the software that we build.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>On Proofs, Programs, and Houses</title>
