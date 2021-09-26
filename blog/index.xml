@@ -2862,7 +2862,7 @@ any timestep &lt;em&gt;n&lt;/em&gt;:&lt;/p&gt;
 &lt;span style=&#34;color:#00f&#34;&gt;runWalk&lt;/span&gt; n step init &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; foldl&amp;#39; apm init (replicate n step)
   &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;where&lt;/span&gt; apm acc f &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; marginalize (acc &lt;span style=&#34;color:#666&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; f)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that we use the following type synonyms above:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-haskell&#34; data-lang=&#34;haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Distribution&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; [(&lt;span style=&#34;color:#b00040&#34;&gt;State&lt;/span&gt;,&lt;span style=&#34;color:#b00040&#34;&gt;Probability&lt;/span&gt;]
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-haskell&#34; data-lang=&#34;haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Distribution&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; [(&lt;span style=&#34;color:#b00040&#34;&gt;State&lt;/span&gt;,&lt;span style=&#34;color:#b00040&#34;&gt;Probability&lt;/span&gt;)]
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;TransitionRule&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#b00040&#34;&gt;State&lt;/span&gt;, &lt;span style=&#34;color:#b00040&#34;&gt;Probability&lt;/span&gt;) &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Distribution&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Notice that we marginalize at the every step of the fold and we use &lt;code&gt;foldl&#39;&lt;/code&gt;
 instead of &lt;code&gt;foldr&lt;/code&gt;, which evaluates the output of the binary function before
@@ -2885,7 +2885,7 @@ probability of moving along a certain path (of having a certain sequence
 of successes and failures) can be calculated by multiplying the probability
 of moving left or right in sequence. For example, if a path consists of
 left, right, left, then the probability of the process taking this path
-is $(1-p)p(1-p)$. Since in a simple random walk $p = 1/2$, $p = 1/p$ and thus
+is $(1-p)p(1-p)$. Since in a simple random walk $p = 1/2$, $p = 1 - p$ and thus
 the probability of the path is $p^3$. This gives us an even stronger property:
 &lt;em&gt;the possible paths taken by the process for any timestep is uniformly
 distributed&lt;/em&gt;.&lt;/p&gt;

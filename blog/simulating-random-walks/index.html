@@ -314,7 +314,7 @@ any timestep <em>n</em>:</p>
 <span style="color:#00f">runWalk</span> n step init <span style="color:#a2f;font-weight:bold">=</span> foldl&#39; apm init (replicate n step)
   <span style="color:#008000;font-weight:bold">where</span> apm acc f <span style="color:#a2f;font-weight:bold">=</span> marginalize (acc <span style="color:#666">&gt;&gt;=</span> f)
 </code></pre></div><p>Note that we use the following type synonyms above:</p>
-<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-haskell" data-lang="haskell"><span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">Distribution</span> <span style="color:#a2f;font-weight:bold">=</span> [(<span style="color:#b00040">State</span>,<span style="color:#b00040">Probability</span>]
+<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-haskell" data-lang="haskell"><span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">Distribution</span> <span style="color:#a2f;font-weight:bold">=</span> [(<span style="color:#b00040">State</span>,<span style="color:#b00040">Probability</span>)]
 <span style="color:#008000;font-weight:bold">type</span> <span style="color:#b00040">TransitionRule</span> <span style="color:#a2f;font-weight:bold">=</span> (<span style="color:#b00040">State</span>, <span style="color:#b00040">Probability</span>) <span style="color:#a2f;font-weight:bold">-&gt;</span> <span style="color:#b00040">Distribution</span>
 </code></pre></div><p>Notice that we marginalize at the every step of the fold and we use <code>foldl'</code>
 instead of <code>foldr</code>, which evaluates the output of the binary function before
@@ -337,7 +337,7 @@ probability of moving along a certain path (of having a certain sequence
 of successes and failures) can be calculated by multiplying the probability
 of moving left or right in sequence. For example, if a path consists of
 left, right, left, then the probability of the process taking this path
-is $(1-p)p(1-p)$. Since in a simple random walk $p = 1/2$, $p = 1/p$ and thus
+is $(1-p)p(1-p)$. Since in a simple random walk $p = 1/2$, $p = 1 - p$ and thus
 the probability of the path is $p^3$. This gives us an even stronger property:
 <em>the possible paths taken by the process for any timestep is uniformly
 distributed</em>.</p>

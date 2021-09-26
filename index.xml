@@ -6,7 +6,7 @@
     <description>Rolph Recto</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Sep 2021 00:33:56 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 18 Sep 2021 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Beautiful World, Where Are You? by Sally Rooney</title>
       <link>/review/beautiful-world-where-are-you/</link>
-      <pubDate>Sun, 26 Sep 2021 00:33:56 -0400</pubDate>
+      <pubDate>Sat, 18 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>/review/beautiful-world-where-are-you/</guid>
       <description>&lt;p&gt;This is probably my favorite of Rooney&amp;rsquo;s books. As always, it is well-observed
@@ -243,6 +243,84 @@ define security conditions that eliminate them. We&amp;rsquo;ll never reach a &a
 definition of security&amp;mdash;that way lies human intention and thus all the
 messiness of life&amp;mdash;but the hope is that we eliminate enough security bugs to
 gain assurance in the software that we build.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The Alignment Problem by Brian Christian</title>
+      <link>/review/alignment-problem/</link>
+      <pubDate>Tue, 27 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/review/alignment-problem/</guid>
+      <description>&lt;p&gt;A lucid account of modern machine learning research. Christian does a phenomenal
+job giving the historical development of ideas in machine learning, particularly
+in the interaction of the fields with neighboring disciplines. I particularly
+enjoyed the sequence describing the exchange between reinforcement learning and
+neuroscience. That Sutton&amp;rsquo;s idea of temporal-difference learning could model the
+role of dopamine is a great scientific achievement and gives real bones to the
+idea that artificial intelligence can be a &amp;ldquo;transcendental psychology&amp;rdquo; in the
+Kantian sense, studying not how intelligence manifests in humans but rather the
+conditions for the possibility of intelligence.&lt;/p&gt;
+&lt;p&gt;The struggles of learning actions to accomplish explicit goals, and the
+subsequent development of imitation learning and inverse reinforcement learning
+as a response, is really interesting. I think these developments parallel
+earlier developments in cognitive science, namely, embodied and embedded
+cognition: if beliefs and desires aren&amp;rsquo;t just &amp;ldquo;symbols in the head&amp;rdquo; but rather
+are a bit more mushy, then it would make sense that we don&amp;rsquo;t bother representing
+such beliefs and desires explicitly in the AI systems that we build. What does
+it mean to do a backflip? I&amp;rsquo;m not sure, but I know it when I see it; and
+sometimes I can show you directly. That&amp;rsquo;s as much as we can do for a lot of
+concepts, a tantalizing possibility that Christian contemplates:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I tell them that what makes the result feel, to me, not just so impressive but
+so hopeful, is that it’s not such a stretch to imagine replacing the nebulous
+concept of “backflip” with an even more nebulous and ineffable concept, like
+“helpfulness.” Or “kindness.” Or “good” behavior. “Exactly,” says Leike. “And
+that’s the whole point, right?”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Of course, you can take this to be a practical limitation. Maybe it&amp;rsquo;s in
+principle possible to define exactly what we mean, and represent it formally as
+a goal for an RL agent to follow. But I would rather take this as a
+&lt;em&gt;Wittgensteinian&lt;/em&gt; picture of learning, one where definitions of concepts are
+given by their use and thus cannot be disentangled from them. We play language
+games where &amp;ldquo;kindness&amp;rdquo; comes into play, and we mean by &amp;ldquo;kindness&amp;rdquo; is nothing but
+the enumeration of these games (if we can enumerate them at all). So it would
+not be surprising at all that we can&amp;rsquo;t give necessary and sufficient conditions
+for kindness, let alone a formal representation of it; but we sure can give
+examples of being kind, and we can demonstrate it. Under this view, then, to
+teach an RL agent is nothing less than to assimilate it in our &amp;ldquo;forms of life.&amp;rdquo;
+(Given this, efforts to vouch for the &lt;a href=&#34;http://petrl.org/&#34;&gt;ethical treatment of RL agents&lt;/a&gt;
+sound a bit less eggheaded.)&lt;/p&gt;
+&lt;p&gt;This leads me to a more general point: I think it would be very fruitful looked
+into philosophy for insights. The discussion on fairness clearly echoes a lot of
+discussion in moral and political philosophy (and I&amp;rsquo;ve seen more than one
+fairness paper mention and cite &lt;em&gt;A Theory of Justice&lt;/em&gt; and then proceed to not
+engage with its contents at all); the tangle of specifying goals in
+reinforcement learning clearly echoes debates in philosophy of mind. To his
+credit Christian does, particularly with ethics, discuss connections between AI
+and philosophy, but I think there are a lot more connections to be made.&lt;/p&gt;
+&lt;p&gt;As far as the alignment problem itself, I am partial on Christian&amp;rsquo;s take on it:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Even if we—that is, everyone working on AI and ethics, AI and technical
+safety—do our jobs, if we can avoid the obvious dystopia and catastrophes, which
+is far from certain—we still have to overcome the fundamental and possibly
+irresistible progression into a world that increasingly is a formalism. We must
+do this even as, inevitably, we are shaped—in our lives, in our imaginations, in
+our bodies—by those very models. This is the dark side of Rodney Brooks’s famous
+robotics manifesto: “The world is its own best model.” Increasingly, this is
+true, but not in the spirit Brooks meant it. The best model of the world stands
+in for the world itself, and threatens to kill off the real thing. We must take
+great care not to ignore the things that are not easily quantified or do not
+easily admit themselves into our models. The danger, paraphrasing Hannah Arendt,
+is not so much that our models are false but that they might become true.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It&amp;rsquo;s not the existential risk of paperclip maximizers that I&amp;rsquo;m worried about.
+Rather, it is the fact that the world is increasingly becoming hyperreal, where
+the distinction between the world and its representations is increasingly
+becoming blurred. Those who long for the Singularity and uploading our
+consciousness into the internet really are longing for the acceleration of
+hyperreality, which is why I don&amp;rsquo;t understand them. They see this terrible thing
+happening and they want more of it!&lt;/p&gt;
 </description>
     </item>
     
@@ -4211,7 +4289,7 @@ any timestep &lt;em&gt;n&lt;/em&gt;:&lt;/p&gt;
 &lt;span style=&#34;color:#00f&#34;&gt;runWalk&lt;/span&gt; n step init &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; foldl&amp;#39; apm init (replicate n step)
   &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;where&lt;/span&gt; apm acc f &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; marginalize (acc &lt;span style=&#34;color:#666&#34;&gt;&amp;gt;&amp;gt;=&lt;/span&gt; f)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that we use the following type synonyms above:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-haskell&#34; data-lang=&#34;haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Distribution&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; [(&lt;span style=&#34;color:#b00040&#34;&gt;State&lt;/span&gt;,&lt;span style=&#34;color:#b00040&#34;&gt;Probability&lt;/span&gt;]
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-haskell&#34; data-lang=&#34;haskell&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Distribution&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; [(&lt;span style=&#34;color:#b00040&#34;&gt;State&lt;/span&gt;,&lt;span style=&#34;color:#b00040&#34;&gt;Probability&lt;/span&gt;)]
 &lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;TransitionRule&lt;/span&gt; &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#b00040&#34;&gt;State&lt;/span&gt;, &lt;span style=&#34;color:#b00040&#34;&gt;Probability&lt;/span&gt;) &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#b00040&#34;&gt;Distribution&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Notice that we marginalize at the every step of the fold and we use &lt;code&gt;foldl&#39;&lt;/code&gt;
 instead of &lt;code&gt;foldr&lt;/code&gt;, which evaluates the output of the binary function before
@@ -4234,7 +4312,7 @@ probability of moving along a certain path (of having a certain sequence
 of successes and failures) can be calculated by multiplying the probability
 of moving left or right in sequence. For example, if a path consists of
 left, right, left, then the probability of the process taking this path
-is $(1-p)p(1-p)$. Since in a simple random walk $p = 1/2$, $p = 1/p$ and thus
+is $(1-p)p(1-p)$. Since in a simple random walk $p = 1/2$, $p = 1 - p$ and thus
 the probability of the path is $p^3$. This gives us an even stronger property:
 &lt;em&gt;the possible paths taken by the process for any timestep is uniformly
 distributed&lt;/em&gt;.&lt;/p&gt;
