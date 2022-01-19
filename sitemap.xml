@@ -4,17 +4,22 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2021-10-27T00:00:00+00:00</lastmod>
+    <lastmod>2022-01-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/review/crossroads/</loc>
-    <lastmod>2021-10-27T00:00:00+00:00</lastmod>
+    <loc>/review/</loc>
+    <lastmod>2022-01-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/review/</loc>
+    <loc>/review/will-to-change/</loc>
+    <lastmod>2022-01-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/review/crossroads/</loc>
     <lastmod>2021-10-27T00:00:00+00:00</lastmod>
   </url>
   
