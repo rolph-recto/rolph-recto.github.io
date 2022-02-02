@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+
+<html lang="en-us" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Reflections on Coding Code - Rolph Recto</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.6155b6d8eded05b985178f56a637943b3e7fcfccc913d9c656bbebce7c91cc6b.css" integrity="sha256-YVW22O3tBbmFF49WpjeUOz5/z8zJE9nGVrvrznyRzGs=">
+    
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.49a0bbe0617b15782f88f1abd4d398b926f12009aef7c52159bfe2c9a5adb5aa.css" integrity="sha256-SaC74GF7FXgviPGr1NOYuSbxIAmu98UhWb/iyaWttao=">
+    
+
+
+
+
+
+<meta property="og:title" content="Reflections on Coding Code" />
+<meta property="og:description" content="Why do we need compilers?
+ to write code requires a certain amount of ignorance  e.g. anything &ldquo;tedious and error-prone,&rdquo; like memory allocation  what is tedious and error-prone is relative to requirements; manual memory allocation ceases to be tedious and error-prone if performance really matters   is natural language a good interface for writing code?  what is programmer intent?  Anscombe, Intention?        try out Copilot" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blog/reflections-on-coding-code/" />
+<meta property="article:published_time" content="2021-06-30T21:39:20-04:00" />
+<meta property="article:modified_time" content="2021-06-30T21:39:20-04:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Reflections on Coding Code"/>
+<meta name="twitter:description" content="Why do we need compilers?
+ to write code requires a certain amount of ignorance  e.g. anything &ldquo;tedious and error-prone,&rdquo; like memory allocation  what is tedious and error-prone is relative to requirements; manual memory allocation ceases to be tedious and error-prone if performance really matters   is natural language a good interface for writing code?  what is programmer intent?  Anscombe, Intention?        try out Copilot"/>
+
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital@0;1&display=swap" rel="stylesheet">
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">Rolph Recto</a>
+</h1>
+
+    <nav>
+        
+        
+        <a class="" href="/" title="">home</a>
+        
+        <a class="" href="/personal/" title="">personal</a>
+        
+        <a class="" href="/blog/" title="">blog</a>
+        
+    </nav>
+
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title draft">Reflections on Coding Code</h1>
+        </header>
+        
+
+    
+
+
+<div class="post-info">
+    
+      Jun 30, 2021
+    
+    
+    
+</div>
+
+        <div class="content">
+            <p>Why do we need compilers?</p>
+<ul>
+<li>to write code requires a certain amount of ignorance
+<ul>
+<li>e.g. anything &ldquo;tedious and error-prone,&rdquo; like memory allocation
+<ul>
+<li>what is tedious and error-prone is relative to requirements; manual memory
+allocation ceases to be tedious and error-prone if performance really
+matters</li>
+</ul>
+</li>
+<li>is natural language a good interface for writing code?
+<ul>
+<li>what is programmer intent?
+<ul>
+<li>Anscombe, Intention?</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>try out Copilot</p>
+<ul>
+<li><a href="https://twitter.com/eevee/status/1410037309848752128?s=20">https://twitter.com/eevee/status/1410037309848752128?s=20</a></li>
+<li><a href="https://twitter.com/ilyasergey/status/1410215336629047303?s=20">https://twitter.com/ilyasergey/status/1410215336629047303?s=20</a></li>
+<li><a href="https://twitter.com/Skiminok/status/1409961744294838273?s=20">https://twitter.com/Skiminok/status/1409961744294838273?s=20</a></li>
+<li><a href="https://twitter.com/yminsky/status/1410026466818117634?s=20">https://twitter.com/yminsky/status/1410026466818117634?s=20</a></li>
+<li><a href="https://twitter.com/textfiles/status/1410306438061342723?s=20">https://twitter.com/textfiles/status/1410306438061342723?s=20</a></li>
+</ul>
+
+        </div>
+    </article>
+
+    
+
+    <hr>
+    <center>
+    
+      <p>
+      <a href="/blog/rust-the-first-30-years/">&nbsp;&lt;&lt;&nbsp;Rust: The First 30 Years</a>
+      </p>
+    
+    
+      <p>
+      <a href="/blog/crypto-implements-distributed-downgrading/">Cryptography Implements Distributed Downgrading&nbsp;&gt;&gt;</a>
+      </p>
+      
+    
+      <p>
+      Back to <a href="/blog/">Blog</a>
+      </p>
+    
+    </center>
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+    <div class="common-footer-bottom">
+        
+        
+
+
+   
+    </div>
+</footer>
+
+        
+    </div>
+</body>
+</html>

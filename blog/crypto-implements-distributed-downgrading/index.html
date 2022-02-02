@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+
+<html lang="en-us" data-theme="">
+<head>
+    
+        
+<meta charset="utf-8">
+<meta name="HandheldFriendly" content="True">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer-when-downgrade">
+
+<title>Cryptography Implements Distributed Downgrading - Rolph Recto</title>
+<meta name="description" content="">
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/favicon.png">
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.6155b6d8eded05b985178f56a637943b3e7fcfccc913d9c656bbebce7c91cc6b.css" integrity="sha256-YVW22O3tBbmFF49WpjeUOz5/z8zJE9nGVrvrznyRzGs=">
+    
+
+
+
+
+
+    
+
+
+
+
+
+    
+    
+    
+
+    
+        <link rel="stylesheet" href="/css/style.49a0bbe0617b15782f88f1abd4d398b926f12009aef7c52159bfe2c9a5adb5aa.css" integrity="sha256-SaC74GF7FXgviPGr1NOYuSbxIAmu98UhWb/iyaWttao=">
+    
+
+
+
+
+
+<meta property="og:title" content="Cryptography Implements Distributed Downgrading" />
+<meta property="og:description" content="One of the main challenges in ensuring security in the distributed setting is the fact that the machines executing the program only have the partial trust of the principals involved. For example, even if the users of my web application trust me with their private data, they might not confer the same trust to the third-party service that my application calls out to. But say the third-party service really, really needs to use my users&rsquo; private data to compute some result that my application needs." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/blog/crypto-implements-distributed-downgrading/" />
+<meta property="article:published_time" content="2021-07-09T14:58:56-04:00" />
+<meta property="article:modified_time" content="2021-07-09T14:58:56-04:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Cryptography Implements Distributed Downgrading"/>
+<meta name="twitter:description" content="One of the main challenges in ensuring security in the distributed setting is the fact that the machines executing the program only have the partial trust of the principals involved. For example, even if the users of my web application trust me with their private data, they might not confer the same trust to the third-party service that my application calls out to. But say the third-party service really, really needs to use my users&rsquo; private data to compute some result that my application needs."/>
+
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital@0;1&display=swap" rel="stylesheet">
+
+
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to main content</a>
+    <div class="container">
+        <header class="common-header"> 
+            
+                <h1 class="site-title">
+    <a href="/">Rolph Recto</a>
+</h1>
+
+    <nav>
+        
+        
+        <a class="" href="/" title="">home</a>
+        
+        <a class="" href="/personal/" title="">personal</a>
+        
+        <a class="" href="/blog/" title="">blog</a>
+        
+    </nav>
+
+
+            
+        </header>
+        <main id="main" tabindex="-1"> 
+            
+    
+    
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title draft">Cryptography Implements Distributed Downgrading</h1>
+        </header>
+        
+
+    
+
+
+<div class="post-info">
+    
+      Jul 09, 2021
+    
+    
+    
+</div>
+
+        <div class="content">
+            <p>One of the main challenges in ensuring security in the distributed setting is
+the fact that the machines executing the program only have the partial trust
+of the principals involved. For example, even if the users of my web application
+trust me with their private data, they might not confer the same trust to the
+third-party service that my application calls out to. But say the third-party
+service <em>really, really</em> needs to use my users&rsquo; private data to compute
+some result that my application needs. Is there a way to let the service
+compute over my users&rsquo; data without actually revealing it?</p>
+<p>Yes! In the particular case above, we can use homomorphic encryption to allow
+the third-party service and let it perform computations with my users&rsquo; encrypted
+data without revealing the actual values of the data.
+In general, cryptography is one of the most powerful solutions to the problem
+of ensuring security under partial trust.
+However, I must stress here that crypto is a powerful tool for <em>implementing</em>
+security policies, but it says nothing about <em>specifying</em> security policies.</p>
+<p>On the other hand, the</p>
+<p>The key intuition of our <a href="https://dl.acm.org/doi/10.1145/3453483.3454074">PLDI 2021 paper</a> is that the same standard
+machinery that represents security policies</p>
+<hr>
+<p>In my <a href="https://www.cs.cornell.edu/andru/">lab</a>, there has been a longstanding folklore principle about
+ensuring security for distributed programs:
+<em>the use of cryptography is usually required at downgrading boundaries</em>.
+In this post, I&rsquo;m going to explain what this means.</p>
+<p>Recall that downgrading means that we either make information less secret
+(downgrading along the confidentiality axis) or we make information more trusted
+(downgrading along the integrity axis).
+Downgrading is so named because if we take the standard lattice-based model
+for information flow, it is an action that moves information from a security
+label higher in the lattice to a security label lower in the lattice.
+This of course violates the principle that information only &ldquo;flows up&rdquo; the
+lattice&mdash;public information can flow to secret information but never secret to
+public; trusted information can flow to untrusted information but never
+untrusted to trusted.
+Information only &ldquo;flows up&rdquo; the lattice for programs that satisfy
+noninterference; more sophisticated security conditions such as
+<a href="https://www.cs.cornell.edu/~ethan/papers/nmifc.pdf">nonmalleable information flow</a> are needed to ensure that downgrading
+is used securely.</p>
+<p>In practice, noninterference is almost never the security condition
+that you actually want for distributed programs, as downgrading
+is almost always necessary in distributed programs.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>
+For example, a distributed program might want to collect data from many
+different principals and make public (read: declassify) some computed aggregate
+data from this.
+A program might require a machine controlled by one principal to provide some
+input, and then prevent further modification so that other principals can
+trust its value (read: endorse the input).</p>
+<p>The important feature that distinguishes ensuring security for distributed
+programs over other kinds of programs is that the machines
+executing the program can have only the partial trust of principals involved.
+For example, take the classic <a href="https://en.wikipedia.org/wiki/Yao%27s_Millionaires%27_problem">millionaires&rsquo; game</a>: Alice and Bob
+want to determine who is richer but neither wants the other to figure out
+their exact net worth.
+The dilemma, then, is how to perform the comparison when Alice&rsquo;s machine is not
+trusted by Bob with his private data, and vice versa.
+How can we then implement this distributed program?</p>
+<p>If Alice and Bob both trust a machine&mdash;a trusted third-party&mdash;enough to store
+their private data, then the dilemma can be solved, as they just need to pass
+their data over to the trusted third-party to perform the comparison and then
+send back the result to them.
+But the assuming the existence of a trusted third-party is a kind of non-answer,
+because it assumes there&rsquo;s enough trust in the system to</p>
+<p>In the absence of enough trust, we must resort to cryptography to ensure
+security for distributed programs.
+In the case of the millionaires&rsquo; game, the standard solution is to use a
+multiparty computation protocol like Yao&rsquo;s garbled circuits.</p>
+<p>Some downgrades don&rsquo;t require crypto.</p>
+<p>How would can we implement this distributed program?</p>
+<p>Noninterference is the standard security condition defended in language-based
+security, but in practice it&rsquo;s almost never the security condition that you
+really want. This is particularly true in the distributed setting, where
+machines are only partially trusted by principals. To recap: for a program to
+satisfy nonintereference, secret data must not influence public data,
+and untrusted information must not influence trusted data. So for a
+distributed program to satisfy nonintereference, it must be the case that the
+following hold:</p>
+<ul>
+<li>
+<p><em>Only machines that you trust with your private data can operate on it</em>.</p>
+</li>
+<li>
+<p><em>Only machines that you trust with your private data can operate on it</em>.</p>
+</li>
+</ul>
+<p>For a distributed program to
+satisfy noninterence, it means that machines operating on your data must</p>
+<p>Conversely, a program has to treat any user input as forever untrustworthy,
+lest the user is an adversary trying to break in.</p>
+<p>Example: Basically any crypto definition involves some kind of endorsement or
+declassification.</p>
+<ul>
+<li>commitments = endorsement</li>
+<li>MPC, ZKP, HE = declassification fo</li>
+</ul>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>I&rsquo;m going to go out on a limb here and say that
+noninterference is almost useless as a practical security condition. At best,
+proving that a type system defends noninterference tells you that it is
+well-designed and is not surreptitiously leaking information. This is important,
+of course, but almost any program that you actually want to write intentionally
+leaks <em>some</em> information, or has to confer extra trust to <em>some</em> data from
+untrusted sources. The emphasis on noninterference I believe is partly, if not
+mostly, for technical reasons: security conditions that allow for downgrading
+are more complicated. Despite a <a href="https://www.cs.yale.edu/homes/dsc5/papers/sabelfeld-sands-jcs07.pdf">plethora of work</a> that addresses
+this issue, figuring out the right constraints for the safe use of
+downgrading&mdash;particularly for endorsement, as declassification has had the
+lion&rsquo;s share of attention&mdash;remains an open problem. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+        </div>
+    </article>
+
+    
+
+    <hr>
+    <center>
+    
+      <p>
+      <a href="/blog/reflections-on-coding-code/">&nbsp;&lt;&lt;&nbsp;Reflections on Coding Code</a>
+      </p>
+    
+    
+      <p>
+      <a href="/blog/what-are-security-conditions/">What are Security Conditions?&nbsp;&gt;&gt;</a>
+      </p>
+      
+    
+      <p>
+      Back to <a href="/blog/">Blog</a>
+      </p>
+    
+    </center>
+
+    
+
+
+        </main>
+        
+            <footer class="common-footer">
+    
+    
+
+    <div class="common-footer-bottom">
+        
+        
+
+
+   
+    </div>
+</footer>
+
+        
+    </div>
+</body>
+</html>
