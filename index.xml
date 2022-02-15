@@ -6,10 +6,63 @@
     <description>Rolph Recto</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 23 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>God Human Animal Machine by Meghan O&#39;Gieblyn</title>
+      <link>/review/god-human-animal-machine/</link>
+      <pubDate>Mon, 14 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/review/god-human-animal-machine/</guid>
+      <description>&lt;p&gt;A meandering book that explores the connections between technology and
+religion. This was a nice read immediately after Riskin&amp;rsquo;s
+&lt;a href=&#34;/review/the-restless-clock&#34;&gt;The Restless Clock&lt;/a&gt;,
+from which this book quotes liberally, and I think of it as an extension of
+that book&amp;rsquo;s central thesis: the &amp;ldquo;shadow history&amp;rdquo; of a world filled with things
+containing inner agency, counterpoised against the standard post-Cartesian view
+of a passive, mechanistic world, finds expression here in developments in
+philosophy, science, and technology, particularly that of AI. I especially
+liked O&amp;rsquo;Gieblyn&amp;rsquo;s analogy between the &amp;ldquo;nominalist&amp;rdquo; God of Calvin whose nature
+is completely alien to us and the machine learning algorithms that run of our
+modern world, both of whom fail to provide us with explanations for their
+dictates.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The Restless Clock by Jessica Riskin</title>
+      <link>/review/the-restless-clock/</link>
+      <pubDate>Sun, 06 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/review/the-restless-clock/</guid>
+      <description>&lt;p&gt;Riskin&amp;rsquo;s thesis is that since the seventeenth century (read: after Descartes)
+there has been a movement in philosophy and the sciences to banish agency from
+the natural world, and that this movement has theological roots&amp;mdash;particularly,
+in the idea of an intelligent, supernatural designer responsible for the
+apparent design in a nature world that is purely passive and mechanistic. At the
+same time, there has been a subterranean movement, a &amp;ldquo;shadow history&amp;rdquo; that goes
+for the opposite tack and attempts to explain living things by imbuing them with
+a sense of inner agency. The former conception is exemplified by Hobbes, William
+Paley, evolutionary biologist August Weismann, and contemporary
+&amp;ldquo;ultra-Darwinists&amp;rdquo; like as Dawkins and Dennett, while the latter conception is
+exemplified by Leibniz, La Mettrie, and Lamarck. She argues that the shadow
+history of inner agency has been unjustly forgotten, and it is time to bring
+back agency into nature.&lt;/p&gt;
+&lt;p&gt;The book is remarkable for tying a lot of disparate philosophical and scientific
+movements into a single narrative thread, from the early modern period and the
+scientific revolution, through the proto-Romantics, the genesis of evolutionary
+biology, all the way to cybernetics and artificial intelligence. Her historical
+account is so dazzlingly told that it was easy for me to not question whether
+her notion of agency is rather too capacious, allowing her to bucket such
+disparate thinkers into two camps. But I don&amp;rsquo;t think her aim with this book was
+to pin down a philosophically rigorous definition of agency and demonstrate that
+all these people had a specific particular conception in mind that common to
+them.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Slouching Towards Bethlehem by Joan Didion</title>
@@ -4784,13 +4837,13 @@ by Umberto Eco&lt;/p&gt;
 &lt;a href=&#34;https://www.youtube.com/watch?v=S5MOMckrkn8&#34;&gt;&amp;ldquo;Mantra&amp;rdquo; by L&amp;rsquo;infonie&lt;/a&gt;&lt;sup id=&#34;fnref:3&#34;&gt;&lt;a href=&#34;#fn:3&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;,
 &lt;a href=&#34;https://www.youtube.com/watch?v=YGCp4PPaRSg&#34;&gt;Shanghai Film Orchestra&lt;/a&gt;&lt;sup id=&#34;fnref:4&#34;&gt;&lt;a href=&#34;#fn:4&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;,
 &lt;a href=&#34;https://www.youtube.com/watch?v=_FXQ68ZkWVw&#34;&gt;In C Mali&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.cs.cmu.edu/~popl-interviews/interviews.html&#34;&gt;People of Programming Languages&lt;/a&gt;, interviews at POPL 2018&lt;/p&gt;
+&lt;p&gt;[People of Programming Languages][popl], interviews at POPL 2018
+[popl]: &lt;a href=&#34;https://www.cs.cmu.edu/~popl-interviews/interviews.html&#34;&gt;https://www.cs.cmu.edu/~popl-interviews/interviews.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;http://www.whatisitliketobeaphilosopher.com&#34;&gt;What Is Like To Be A Philosopher?&lt;/a&gt; interview series,
 especially those of &lt;a href=&#34;http://www.whatisitliketobeaphilosopher.com/#/agnes-callard/&#34;&gt;Agnes Callard&lt;/a&gt; and
 &lt;a href=&#34;http://www.whatisitliketobeaphilosopher.com/#/david-chalmers/&#34;&gt;David Chalmers&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.spacejam.com/archive/spacejam/movie/jam.htm&#34;&gt;Space Jam website&lt;/a&gt;, unchanged since 1996&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;Here&amp;rsquo;s some &lt;a href=&#34;/review&#34;&gt;book reviews&lt;/a&gt; I&amp;rsquo;ve written.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/review&#34;&gt;Here&amp;rsquo;s&lt;/a&gt; some things that I wrote about books that I have read.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;em&gt;Are you sure your name is not misspelled? I could&amp;rsquo;ve sworn it had an &amp;lsquo;a&amp;rsquo; in
 it.&lt;/em&gt;&lt;/p&gt;
