@@ -47,7 +47,7 @@
     
 
     
-        <link rel="stylesheet" href="/css/style.49a0bbe0617b15782f88f1abd4d398b926f12009aef7c52159bfe2c9a5adb5aa.css" integrity="sha256-SaC74GF7FXgviPGr1NOYuSbxIAmu98UhWb/iyaWttao=">
+        <link rel="stylesheet" href="/css/style.de3cfe34104ef8bfa080cdef14a5ed58c0c9d9337fa868340f80a4d2fbc803f7.css" integrity="sha256-3jz&#43;NBBO&#43;L&#43;ggM3vFKXtWMDJ2TN/qGg0D4Ck0vvIA/c=">
     
 
 
@@ -55,9 +55,10 @@
 
 
 <meta property="og:title" content="Out of the Loop!" />
-<meta property="og:description" content="Sometimes, loops do more work than they really have to. Take for example, the snippet of code below:
+<meta property="og:description" content="This post was written for the Cornell CS 6120 Fall 2019 class blog with Gabriela Correa Calinao. See the original version here.
+Sometimes, loops do more work than they really have to. Take for example, the snippet of code below:
 for i in range(10): x = 3 y = y &#43; x print(y) where what we really want is
-x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly sets x = 3 for every iteration when this constant assignment only necessary to do once. This problem scales with larger programs—so how can we remove redundant calculations?" />
+x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly sets x = 3 for every iteration when this constant assignment only necessary to do once." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/blog/loop-invariant-code-motion/" />
 <meta property="article:published_time" content="2019-10-19T00:00:00+00:00" />
@@ -65,9 +66,10 @@ x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly s
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Out of the Loop!"/>
-<meta name="twitter:description" content="Sometimes, loops do more work than they really have to. Take for example, the snippet of code below:
+<meta name="twitter:description" content="This post was written for the Cornell CS 6120 Fall 2019 class blog with Gabriela Correa Calinao. See the original version here.
+Sometimes, loops do more work than they really have to. Take for example, the snippet of code below:
 for i in range(10): x = 3 y = y &#43; x print(y) where what we really want is
-x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly sets x = 3 for every iteration when this constant assignment only necessary to do once. This problem scales with larger programs—so how can we remove redundant calculations?"/>
+x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly sets x = 3 for every iteration when this constant assignment only necessary to do once."/>
 
 
 
@@ -100,7 +102,7 @@ x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly s
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital@0;1&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital@0;1&display=swap" rel="stylesheet">
 
 
     
@@ -134,7 +136,7 @@ x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly s
     
     <article class="post">
         <header class="post-header">
-            <h1 class="post-title draft">Out of the Loop!</h1>
+            <h1 class="post-title">Out of the Loop!</h1>
         </header>
         
 
@@ -150,7 +152,9 @@ x = 3 for i in range(10): y = y &#43; x print(y) The first snippet redundantly s
 </div>
 
         <div class="content">
-            <p>Sometimes, loops do more work than they really <em>have</em> to. Take for example, the
+            <p><em>This post was written for the Cornell CS 6120 Fall 2019 class blog with
+Gabriela Correa Calinao. See the original version <a href="https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/loop-invariant-code-motion/">here</a></em>.</p>
+<p>Sometimes, loops do more work than they really <em>have</em> to. Take for example, the
 snippet of code below:</p>
 <div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-python" data-lang="python"><span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> <span style="color:#008000">range</span>(<span style="color:#666">10</span>):
     x <span style="color:#666">=</span> <span style="color:#666">3</span>
@@ -179,12 +183,12 @@ jump targets accordingly.  After post-processing, we have our new instruction
 list!</p>
 <p><img src="plan.jpeg" alt="plan"></p>
 <p>Skip to the end to optimize your very own Bril program!</p>
-<h1 id="loop">Loop</h1>
+<h2 id="loop">Loop</h2>
 <p>All loops considered here are <strong>natural loops</strong>—that is, a cycle with one entry
 and a <strong>back-edge</strong>. Back-edges are defined as an edge $A \longrightarrow B$ for
 tail $A$ and head $B$, such that $B$ dominates $A$.  Natural loops are then
 defined as the smallest set of vertices $L$ with $A,B \in L$ such that for each
-vertex $v \in L$ we have $v=B$ or PREDS($v$)$\subseteq L$.</p>
+vertex $v \in L$ we have $v=B$ or $\textup{PREDS}(v) \subseteq L$.</p>
 <p>In essence, a back-edge is what brings us from the tail of the loop $A$ to the
 beginning $B$.  The cycle surrounding this backedge is our loop, where the
 entrypoint is the start of the cycle.  If the loop has only one entry, it is a
@@ -199,14 +203,15 @@ accomplish this, we make use of control flow graphs from <code>cfg.py</code> and
 trees from <code>dom.py</code> within our three functions. Back-edges are identified with
 <code>get_backedges</code>, and <code>loopsy</code> finds the natural loop associated with an input
 back-edge.</p>
-<h3 id="detecting-loop-invariants-an-instruction-within-a-natural-loop-is-marked">Detecting loop invariants An instruction within a natural loop is marked</h3>
-<p>loop invariant if its arguments are defined outside of the natural loop.
+<h3 id="detecting-loop-invariants">Detecting loop invariants</h3>
+<p>An instruction within a natural loop is marked
+loop invariant if its arguments are defined outside of the natural loop.
 Alternately, if the instruction’s arguments are defined once—and that definition
 is loop invariant—then the instruction may be marked as loop invariant. Our goal
 is to find these loop invariants so that we may mark them as movable.
 Iteratively checking these two conditions, we converge on a list of invariant
 instructions.</p>
-<h1 id="motion">Motion</h1>
+<h2 id="motion">Motion</h2>
 <h3 id="hoisting-instructions">Hoisting instructions</h3>
 <p>Once we have determined which instructions are loop invariant, we check if we
 can actually hoist those instructions out of the loop. The following conditions
@@ -246,7 +251,7 @@ of dead code eliminations as a bonus! ☠️</p>
 <p>When we have an order for basic blocks we concatenate them to create a new list
 of instructions. Further post-processing to remove empty preheaders is then
 executed. Finally we have our new instruction list!</p>
-<h1 id="evaluation">Evaluation</h1>
+<h2 id="evaluation">Evaluation</h2>
 <p>We evaluated our optimization on a suite of benchmarks by instrumenting the Bril
 interpreter to count the number of instructions it executes. Our optimization
 are evaluated this way, as opposed to comparing execution times. This avoids
@@ -400,7 +405,7 @@ versions had explicit jumps.</p>
 does nothing. We also find that our optimization successfully hoists loop
 invariant code out of loops. Thus, the interpreter executes fewer instructions
 in this case.</p>
-<h1 id="try-it">Try it!</h1>
+<h2 id="try-it">Try it!</h2>
 <p>Our optimizer is implemented in <code>examples/loop.py</code>. This program takes in a Bril
 program in JSON format in standard input, and returns an optimized Bril program
 in standard output.</p>

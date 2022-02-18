@@ -204,6 +204,11 @@
   </url>
   
   <url>
+    <loc>/review/strangers-drowning/</loc>
+    <lastmod>2019-12-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/halide-autoscheduler/</loc>
     <lastmod>2019-12-18T00:00:00+00:00</lastmod>
   </url>
@@ -216,6 +221,11 @@
   <url>
     <loc>/blog/llvm-autovec/</loc>
     <lastmod>2019-11-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/loop-invariant-code-motion/</loc>
+    <lastmod>2019-10-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>

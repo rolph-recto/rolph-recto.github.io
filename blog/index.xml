@@ -1545,6 +1545,274 @@ non-vectorized counterparts.&lt;/p&gt;
     </item>
     
     <item>
+      <title>Out of the Loop!</title>
+      <link>/blog/loop-invariant-code-motion/</link>
+      <pubDate>Sat, 19 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/loop-invariant-code-motion/</guid>
+      <description>&lt;p&gt;&lt;em&gt;This post was written for the Cornell CS 6120 Fall 2019 class blog with
+Gabriela Correa Calinao. See the original version &lt;a href=&#34;https://www.cs.cornell.edu/courses/cs6120/2019fa/blog/loop-invariant-code-motion/&#34;&gt;here&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Sometimes, loops do more work than they really &lt;em&gt;have&lt;/em&gt; to. Take for example, the
+snippet of code below:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#008000&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#666&#34;&gt;10&lt;/span&gt;):
+    x &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;3&lt;/span&gt;
+    y &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; y &lt;span style=&#34;color:#666&#34;&gt;+&lt;/span&gt; x
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;print&lt;/span&gt;(y)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;where what we really want is&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;;-moz-tab-size:2;-o-tab-size:2;tab-size:2&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;x &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#666&#34;&gt;3&lt;/span&gt;
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#a2f;font-weight:bold&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#008000&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#666&#34;&gt;10&lt;/span&gt;):
+    y &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; y &lt;span style=&#34;color:#666&#34;&gt;+&lt;/span&gt; x
+&lt;span style=&#34;color:#008000;font-weight:bold&#34;&gt;print&lt;/span&gt;(y)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The first snippet redundantly sets &lt;code&gt;x = 3&lt;/code&gt; for &lt;em&gt;every iteration&lt;/em&gt; when this
+constant assignment only necessary to do once. This problem scales with larger
+programs—so how can we remove redundant calculations?&lt;/p&gt;
+&lt;p&gt;Loop Invariant Code Motion hoists what doesn&amp;rsquo;t need to be in the loop (invariant
+code) out of the loop. This optimization cuts down the number of instructions
+executed, by ensuring unnecessary repetition is avoided. Our implementation
+first identifies movable components, then iteratively moves them.&lt;/p&gt;
+&lt;p&gt;The flow of information in our project follows the following visual outline.
+First we identify natural loops using some existing tools, control flow graphs
+and dominator trees, which we slightly debugged. These tools were also used to
+implement reaching definitions. These both then allow us to detect loop
+invariant instructions to potentially hoist.&lt;/p&gt;
+&lt;p&gt;Once these instructions are identified, we check if these instructions can be
+hoisted.  We move hoisted instructions into a preheader basic block and rename
+jump targets accordingly.  After post-processing, we have our new instruction
+list!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;plan.jpeg&#34; alt=&#34;plan&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Skip to the end to optimize your very own Bril program!&lt;/p&gt;
+&lt;h2 id=&#34;loop&#34;&gt;Loop&lt;/h2&gt;
+&lt;p&gt;All loops considered here are &lt;strong&gt;natural loops&lt;/strong&gt;—that is, a cycle with one entry
+and a &lt;strong&gt;back-edge&lt;/strong&gt;. Back-edges are defined as an edge $A \longrightarrow B$ for
+tail $A$ and head $B$, such that $B$ dominates $A$.  Natural loops are then
+defined as the smallest set of vertices $L$ with $A,B \in L$ such that for each
+vertex $v \in L$ we have $v=B$ or $\textup{PREDS}(v) \subseteq L$.&lt;/p&gt;
+&lt;p&gt;In essence, a back-edge is what brings us from the tail of the loop $A$ to the
+beginning $B$.  The cycle surrounding this backedge is our loop, where the
+entrypoint is the start of the cycle.  If the loop has only one entry, it is a
+natural loop. Below is an illustration of a natural loop and its back-edge. The
+natural loop is highlighted, with a labeled back-edge.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;natloop.jpeg&#34; alt=&#34;natural loop&#34;&gt;&lt;/p&gt;
+&lt;p&gt;In the case that an edge connected &lt;em&gt;entry&lt;/em&gt; and &lt;em&gt;body&lt;/em&gt;, this would no longer be a
+natural loop.&lt;/p&gt;
+&lt;h3 id=&#34;detecting-natural-loops&#34;&gt;Detecting Natural Loops&lt;/h3&gt;
+&lt;p&gt;To find the loop invariant code, first we must detect all natural loops. To
+accomplish this, we make use of control flow graphs from &lt;code&gt;cfg.py&lt;/code&gt; and dominator
+trees from &lt;code&gt;dom.py&lt;/code&gt; within our three functions. Back-edges are identified with
+&lt;code&gt;get_backedges&lt;/code&gt;, and &lt;code&gt;loopsy&lt;/code&gt; finds the natural loop associated with an input
+back-edge.&lt;/p&gt;
+&lt;h3 id=&#34;detecting-loop-invariants&#34;&gt;Detecting loop invariants&lt;/h3&gt;
+&lt;p&gt;An instruction within a natural loop is marked
+loop invariant if its arguments are defined outside of the natural loop.
+Alternately, if the instruction’s arguments are defined once—and that definition
+is loop invariant—then the instruction may be marked as loop invariant. Our goal
+is to find these loop invariants so that we may mark them as movable.
+Iteratively checking these two conditions, we converge on a list of invariant
+instructions.&lt;/p&gt;
+&lt;h2 id=&#34;motion&#34;&gt;Motion&lt;/h2&gt;
+&lt;h3 id=&#34;hoisting-instructions&#34;&gt;Hoisting instructions&lt;/h3&gt;
+&lt;p&gt;Once we have determined which instructions are loop invariant, we check if we
+can actually hoist those instructions out of the loop. The following conditions
+must be met:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;condition 1:&lt;/code&gt; instruction dominates all loop exits&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;condition 2:&lt;/code&gt; instruction is the only definition for that variable in the
+loop&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;condition 3:&lt;/code&gt; definition dominates all of its uses&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After identifying all three criteria, an instruction is labeled in a Boolean
+map, as &lt;code&gt;true&lt;/code&gt; if hoistable, and &lt;code&gt;false&lt;/code&gt; if not.  Instructions are removed from
+their native basic blocks if marked as &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;preheader-generation-and-target-renaming&#34;&gt;Preheader generation and target renaming&lt;/h3&gt;
+&lt;p&gt;We gather hoisted instructions into a new basic preheader block executed before
+the loop header.  This means we have to rename jumps that target the loop header
+to target the preheader instead.  We only rename jumps that target the loop
+header if they are outside the loop. This ensures that the preheader is only to
+be executed when we first enter the loop.&lt;/p&gt;
+&lt;h3 id=&#34;instruction-list-generation&#34;&gt;Instruction list generation&lt;/h3&gt;
+&lt;p&gt;Next is to generate a new list of instructions for the function body. To do
+this, we initially order the basic blocks. The order must follow several
+constraints: the first and last basic blocks of the original program remain in
+place. Fall-throughs between basic blocks and the original function are also
+respected.&lt;/p&gt;
+&lt;p&gt;Here, we ran into a few bugs. 🐝🐛🦋🐌🐞🐜🦗🕷🦂&lt;/p&gt;
+&lt;p&gt;The existing code in the repository that computes dominator trees throws an
+exception when a basic block is unreachable. To solve this, we removed the
+unreachable block from all data structures. This implements a very limited form
+of dead code eliminations as a bonus! ☠️&lt;/p&gt;
+&lt;p&gt;When we have an order for basic blocks we concatenate them to create a new list
+of instructions. Further post-processing to remove empty preheaders is then
+executed. Finally we have our new instruction list!&lt;/p&gt;
+&lt;h2 id=&#34;evaluation&#34;&gt;Evaluation&lt;/h2&gt;
+&lt;p&gt;We evaluated our optimization on a suite of benchmarks by instrumenting the Bril
+interpreter to count the number of instructions it executes. Our optimization
+are evaluated this way, as opposed to comparing execution times. This avoids
+measurement biases that might arise through timing.&lt;/p&gt;
+&lt;p&gt;By abstracting away performance in terms of the number of instructions executed,
+we give a fair comparison between non-optimized and optimized Bril programs: no
+matter the environment in which they are executed, a Bril program that executes
+fewer instructions performs better than an equivalent Bril program that executes
+more instructions.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;test&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;original&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;optimized&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/df_test/cond.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;9&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/df_test/fact.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;62&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;55&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/dom_test/loopcond.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;117&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;108&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/clobber-fold.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/clobber.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/commute.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/idchain.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/idchain-prop.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/nonlocal.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;7&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/reassign.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/redundant.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/lvn_test/redundant-dce.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/combo.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/diamond.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/double-pass.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/reassign.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/reassign-dkp.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/simple.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/tdce_test/skipped.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/loop_test/depend.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;158&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;159&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/loop_test/fibonacci.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;78&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;79&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/loop_test/nest.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;147&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;130&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;examples/loop_test/hoist_expr.bril&lt;/code&gt;&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;48&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The table above shows all executed benchmarks, and the associated number of
+instructions executed by the interpreter—in both optimized and non-optimized
+versions. Our benchmarks are drawn from the &lt;code&gt;examples&lt;/code&gt; directory of the Bril
+repository. We also created a new directory called &lt;code&gt;loop_test&lt;/code&gt; that contain
+benchmarks we wrote ourselves.  Among these freshly baked tests, are
+&lt;code&gt;nested.bril&lt;/code&gt;,  &lt;code&gt;fibonacci.bril&lt;/code&gt;, &lt;code&gt;hoist_expr.bril&lt;/code&gt;, and &lt;code&gt;depend.bril&lt;/code&gt;. The
+first, &lt;code&gt;nested.bril&lt;/code&gt;,  checks if we can navigate redundant expressions in a
+nested loop.  This saved an execution of 17 instructions once optimized.&lt;/p&gt;
+&lt;p&gt;All optimized versions of benchmarks print the same results as their original
+versions, thus showing our optimization preserves the original semantics of the
+program. We note that our optimization instructions execute a smaller number of
+instructions. The only exception to this case is for two of our own built test
+cases—where fall-throughs existed in the original programs, and optimized
+versions had explicit jumps.&lt;/p&gt;
+&lt;p&gt;The results show that if the original program has no loops, our optimization
+does nothing. We also find that our optimization successfully hoists loop
+invariant code out of loops. Thus, the interpreter executes fewer instructions
+in this case.&lt;/p&gt;
+&lt;h2 id=&#34;try-it&#34;&gt;Try it!&lt;/h2&gt;
+&lt;p&gt;Our optimizer is implemented in &lt;code&gt;examples/loop.py&lt;/code&gt;. This program takes in a Bril
+program in JSON format in standard input, and returns an optimized Bril program
+in standard output.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;python bril2txt &amp;lt; test.bril | python loop.py | bril2txt &lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Replace &lt;code&gt;test.bril&lt;/code&gt; with any program you would like to optimize.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Embedding and Extending Go in Haskell</title>
       <link>/blog/go-in-haskell/</link>
       <pubDate>Mon, 18 Dec 2017 00:00:00 +0000</pubDate>
