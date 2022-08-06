@@ -35,7 +35,7 @@ when $M_1^\prime$ and $M_2^\prime$ have equivalent public values.&lt;/p&gt;
 &lt;p&gt;For a program to satisfy this definition, it must not leak the secret values
 in its initial memory. But we can easily imagine programs that satisfy the
 definition that still leak these secrets. For example:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;while (secret &amp;lt; 0) {
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;while (secret &amp;lt; 0) {
   secret--;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The program doesn&amp;rsquo;t read or write public values, so obviously any two runs that

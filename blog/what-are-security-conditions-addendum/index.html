@@ -58,9 +58,10 @@
 <meta property="og:description" content="In my last blog post, I argued that noninterference is an inadequate security condition because many, if not most, secure programs have intentional information release. A thought that I did not entertain is whether noninterference can accurate classify programs with no intentional information release. Is noninterference a necessary and sufficient condition for such programs?
 Let&rsquo;s approach this question with a concrete example. Here is a bog standard definition of noninterference for sequential programs:" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/blog/what-are-security-conditions-addendum/" />
+<meta property="og:url" content="/blog/what-are-security-conditions-addendum/" /><meta property="article:section" content="blog" />
 <meta property="article:published_time" content="2021-08-29T00:00:00+00:00" />
 <meta property="article:modified_time" content="2021-08-29T00:00:00+00:00" />
+
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="What Are Security Conditions? - An Addendum on Noninterference"/>
@@ -173,7 +174,7 @@ when $M_1^\prime$ and $M_2^\prime$ have equivalent public values.</p>
 <p>For a program to satisfy this definition, it must not leak the secret values
 in its initial memory. But we can easily imagine programs that satisfy the
 definition that still leak these secrets. For example:</p>
-<pre><code>while (secret &lt; 0) {
+<pre tabindex="0"><code>while (secret &lt; 0) {
   secret--;
 }
 </code></pre><p>The program doesn&rsquo;t read or write public values, so obviously any two runs that

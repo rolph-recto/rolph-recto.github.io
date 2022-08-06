@@ -58,9 +58,10 @@
 <meta property="og:description" content="This post was written for the Cornell CS 6120 Fall 2019 class blog with Gabriela Correa Calinao and Ryan Doenges. See the original version here.
 Halide is a domain-specific language embedded in C&#43;&#43; for writing code that processes images and, more generally, arrays. The main innovation of Halide is that it separates algorithm &mdash; the actual function being computed &ndash; from schedule &mdash; the decisions regarding when to perform computations and when to store intermediate results." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/blog/halide-autoscheduler/" />
+<meta property="og:url" content="/blog/halide-autoscheduler/" /><meta property="article:section" content="blog" />
 <meta property="article:published_time" content="2019-12-18T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-12-18T00:00:00+00:00" />
+
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="A Toy Halide Autoscheduler"/>
@@ -238,10 +239,10 @@ For example, we can split a function&rsquo;s <code>x</code> variable into <code>
 and <code>x_outer</code>.
 This allows <em>tiered</em> traversal of a function&rsquo;s extent along one dimension.
 For example, splitting the <code>x</code> variable changes this loop:</p>
-<pre><code>for x in [1..16]:
+<pre tabindex="0"><code>for x in [1..16]:
   a[x] = ...
 </code></pre><p>into:</p>
-<pre><code>for x_outer in [1..4]:
+<pre tabindex="0"><code>for x_outer in [1..4]:
   for x_inner in [1..4]:
     a[(x_outer*4)+x_inner] = ...
 </code></pre><p>Combined with <em>reorder</em>, <em>split</em> can represent schedules that <em>tile</em>
@@ -365,7 +366,7 @@ the traversal order for computing the function, and, for called functions,
 the granularity at which the function is stored and computed.</p>
 <p>Consider the schedule above for the functions <code>bx</code>, <code>by</code>, and <code>in</code>.
 Converted into Halide code, the schedule looks like the following:</p>
-<pre><code>by.reorder(y, x);
+<pre tabindex="0"><code>by.reorder(y, x);
 
 bx.store_root();
 bx.compute_at(by, y);
@@ -411,7 +412,7 @@ We measure runtime and memory usage using <code>gprof</code>.</p>
 2048x2048.
 The results below are averaged across three runs.</p>
 <h3 id="benchmark-1">Benchmark 1</h3>
-<pre><code>g(x,y) = sqrt(cos(x) + sin(y));
+<pre tabindex="0"><code>g(x,y) = sqrt(cos(x) + sin(y));
 f(x,y) = g(x + 1,y) + g(x,y) + g(x + 1,y + 1) + g(x,y + 1);
 </code></pre><table>
 <thead>
@@ -445,7 +446,7 @@ f(x,y) = g(x + 1,y) + g(x,y) + g(x + 1,y + 1) + g(x,y + 1);
 </tbody>
 </table>
 <h3 id="benchmark-2">Benchmark 2</h3>
-<pre><code>blur_x(x,y) = input(x - 1,y) + input(x,y) + input(x + 1,y) / 3;
+<pre tabindex="0"><code>blur_x(x,y) = input(x - 1,y) + input(x,y) + input(x + 1,y) / 3;
 blur_y(x,y) = blur_x(x - 1,y) + blur_x(x,y) + blur_x(x + 1,y) / 3;
 </code></pre><table>
 <thead>
@@ -479,7 +480,7 @@ blur_y(x,y) = blur_x(x - 1,y) + blur_x(x,y) + blur_x(x + 1,y) / 3;
 </tbody>
 </table>
 <h3 id="benchmark-3">Benchmark 3</h3>
-<pre><code>f(x,y) = x + y;
+<pre tabindex="0"><code>f(x,y) = x + y;
 </code></pre><table>
 <thead>
 <tr>
@@ -530,17 +531,17 @@ It is not clear how to quantify locality in the cost model, but it is an
 obvious extension to the cost model.</p>
 </li>
 </ul>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
+<li id="fn:1">
 <p>By convention the output function does not have a storage
 node in the schedule tree since it is assumed that storage for the output
 has already been allocated and thus there is no decision to be made about
-the granularity with which to allocate it. <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+the granularity with which to allocate it.&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
-</section>
+</div>
 
         </div>
     </article>

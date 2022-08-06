@@ -58,9 +58,10 @@
 <meta property="og:description" content="This post was written for the Cornell CS 6120 Fall 2019 class blog with Greg Yauney. See the original version here.
 Imagine you, a clever person who wants her C programs to run faster, sat down, thought very hard, and developed a new compiler optimization. Say you implement it as a transformation pass in LLVM so that other people can take advantage of your cleverness to make their programs run faster as well." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/blog/equivalence-modulo-inputs/" />
+<meta property="og:url" content="/blog/equivalence-modulo-inputs/" /><meta property="article:section" content="blog" />
 <meta property="article:published_time" content="2019-12-02T00:00:00+00:00" />
 <meta property="article:modified_time" content="2019-12-02T00:00:00+00:00" />
+
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Compiler Validation via Equivalence Modulo Inputs"/>
@@ -260,55 +261,55 @@ The authors consider other mutation strategies as part of future work,
 but as we&rsquo;ll see in the evaluation section below, the simple strategy of
 deleting statements works well in practice.</p>
 <p>Orion&rsquo;s EMI-variant generation algorithm is sketched below in <code>gen_variant</code>.</p>
-<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Python" data-lang="Python"><span style="color:#008000;font-weight:bold">def</span> <span style="color:#00f">prune_visit</span>(prog, statement, coverage_set):
-  <span style="color:#408080;font-style:italic"># probabilistically delete unexecuted statement</span>
-  <span style="color:#008000;font-weight:bold">if</span> statement <span style="color:#a2f;font-weight:bold">not</span> <span style="color:#a2f;font-weight:bold">in</span> coverage_set <span style="color:#a2f;font-weight:bold">and</span> flip_coin(statement):
-    prog<span style="color:#666">.</span>delete(statement)
-
-  <span style="color:#408080;font-style:italic"># otherwise, traverse its children</span>
-  <span style="color:#008000;font-weight:bold">else</span>:
-    <span style="color:#008000;font-weight:bold">for</span> child <span style="color:#a2f;font-weight:bold">in</span> statement<span style="color:#666">.</span>children:
-      prune_visit(prog, child, coverage_set)
-
-<span style="color:#008000;font-weight:bold">def</span> <span style="color:#00f">gen_variant</span>(prog, coverage_set):
-  emi_variant <span style="color:#666">=</span> clone(prog)
-  <span style="color:#008000;font-weight:bold">for</span> statement <span style="color:#a2f;font-weight:bold">in</span> emi_variant:
-    prune_visit(emi_variant, statement, coverage_set)
-
-  <span style="color:#008000;font-weight:bold">return</span> emi_variant
-</code></pre></div><p><code>gen_variant</code> takes as input a seed program and the coverage set—the
+<div class="highlight"><pre tabindex="0" style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-Python" data-lang="Python"><span style="display:flex;"><span><span style="color:#008000;font-weight:bold">def</span> <span style="color:#00f">prune_visit</span>(prog, statement, coverage_set):
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># probabilistically delete unexecuted statement</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">if</span> statement <span style="color:#a2f;font-weight:bold">not</span> <span style="color:#a2f;font-weight:bold">in</span> coverage_set <span style="color:#a2f;font-weight:bold">and</span> flip_coin(statement):
+</span></span><span style="display:flex;"><span>    prog<span style="color:#666">.</span>delete(statement)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># otherwise, traverse its children</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">for</span> child <span style="color:#a2f;font-weight:bold">in</span> statement<span style="color:#666">.</span>children:
+</span></span><span style="display:flex;"><span>      prune_visit(prog, child, coverage_set)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#008000;font-weight:bold">def</span> <span style="color:#00f">gen_variant</span>(prog, coverage_set):
+</span></span><span style="display:flex;"><span>  emi_variant <span style="color:#666">=</span> clone(prog)
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">for</span> statement <span style="color:#a2f;font-weight:bold">in</span> emi_variant:
+</span></span><span style="display:flex;"><span>    prune_visit(emi_variant, statement, coverage_set)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">return</span> emi_variant
+</span></span></code></pre></div><p><code>gen_variant</code> takes as input a seed program and the coverage set—the
 set of all statements executed for some input in the input set.
 It clones the program into <code>emi_variant</code> and then uses <code>prune_visit</code> to
 probabilistically delete unexecuted statements.</p>
 <p>With its EMI-variant generation algorithm outlined, we can now sketch
 the algorithm by which Orion validates C compilers.</p>
-<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-Python" data-lang="Python"><span style="color:#008000;font-weight:bold">def</span> <span style="color:#00f">validate</span>(compiler, prog, input_set):
-  <span style="color:#408080;font-style:italic"># compile with no optimizations</span>
-  out_prog <span style="color:#666">=</span> compiler<span style="color:#666">.</span>compile(prog, NO_OPTIMIZATION)
-
-  <span style="color:#408080;font-style:italic"># generate reference output</span>
-  in_out_set <span style="color:#666">=</span> [(i, out_prog<span style="color:#666">.</span>execute(i)) <span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> input_set]
-
-  <span style="color:#408080;font-style:italic"># get coverage info</span>
-  <span style="color:#408080;font-style:italic"># a statement is considered covered if it was executed</span>
-  <span style="color:#408080;font-style:italic"># by the program on any input</span>
-  coverage_set <span style="color:#666">=</span> <span style="color:#008000">set</span>()
-  <span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> input_set:
-    coverage_set <span style="color:#666">=</span> union(coverage_set, coverage(prog, i))
-
-  <span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> <span style="color:#008000">range</span>(MAX_ITER):
-    emi_variant <span style="color:#666">=</span> gen_variant(prog, coverage_set)
-
-    <span style="color:#008000;font-weight:bold">for</span> config <span style="color:#a2f;font-weight:bold">in</span> compiler<span style="color:#666">.</span>configurations:
-      out_emi_variant <span style="color:#666">=</span> compiler<span style="color:#666">.</span>compile(emi_variant, config)
-
-      <span style="color:#408080;font-style:italic"># check if compiled EMI variant is equivalent over all inputs</span>
-      <span style="color:#008000;font-weight:bold">for</span> i, o <span style="color:#a2f;font-weight:bold">in</span> in_out_set:
-        <span style="color:#408080;font-style:italic"># compiler is not EMI-valid!</span>
-        emi_o <span style="color:#666">=</span> out_emi_variant<span style="color:#666">.</span>execute(i)
-        <span style="color:#008000;font-weight:bold">if</span> emi_ o <span style="color:#666">!=</span> o:
-          report_bug(compiler, config, prog, emi_variant, i, o, emi_o)
-</code></pre></div><p><code>validate</code> takes as input a compiler (<code>compiler</code>), a seed program (<code>prog</code>),
+<div class="highlight"><pre tabindex="0" style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-Python" data-lang="Python"><span style="display:flex;"><span><span style="color:#008000;font-weight:bold">def</span> <span style="color:#00f">validate</span>(compiler, prog, input_set):
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># compile with no optimizations</span>
+</span></span><span style="display:flex;"><span>  out_prog <span style="color:#666">=</span> compiler<span style="color:#666">.</span>compile(prog, NO_OPTIMIZATION)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># generate reference output</span>
+</span></span><span style="display:flex;"><span>  in_out_set <span style="color:#666">=</span> [(i, out_prog<span style="color:#666">.</span>execute(i)) <span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> input_set]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># get coverage info</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># a statement is considered covered if it was executed</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#408080;font-style:italic"># by the program on any input</span>
+</span></span><span style="display:flex;"><span>  coverage_set <span style="color:#666">=</span> <span style="color:#008000">set</span>()
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> input_set:
+</span></span><span style="display:flex;"><span>    coverage_set <span style="color:#666">=</span> union(coverage_set, coverage(prog, i))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">for</span> i <span style="color:#a2f;font-weight:bold">in</span> <span style="color:#008000">range</span>(MAX_ITER):
+</span></span><span style="display:flex;"><span>    emi_variant <span style="color:#666">=</span> gen_variant(prog, coverage_set)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">for</span> config <span style="color:#a2f;font-weight:bold">in</span> compiler<span style="color:#666">.</span>configurations:
+</span></span><span style="display:flex;"><span>      out_emi_variant <span style="color:#666">=</span> compiler<span style="color:#666">.</span>compile(emi_variant, config)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#408080;font-style:italic"># check if compiled EMI variant is equivalent over all inputs</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">for</span> i, o <span style="color:#a2f;font-weight:bold">in</span> in_out_set:
+</span></span><span style="display:flex;"><span>        <span style="color:#408080;font-style:italic"># compiler is not EMI-valid!</span>
+</span></span><span style="display:flex;"><span>        emi_o <span style="color:#666">=</span> out_emi_variant<span style="color:#666">.</span>execute(i)
+</span></span><span style="display:flex;"><span>        <span style="color:#008000;font-weight:bold">if</span> emi_ o <span style="color:#666">!=</span> o:
+</span></span><span style="display:flex;"><span>          report_bug(compiler, config, prog, emi_variant, i, o, emi_o)
+</span></span></code></pre></div><p><code>validate</code> takes as input a compiler (<code>compiler</code>), a seed program (<code>prog</code>),
 and an input set (<code>input_set</code>).
 First, <code>validate</code> compiles <code>prog</code> with <code>compiler</code> using no optimizations,
 the output of which (<code>out_prog</code>) is then used to generate a reference set
@@ -390,7 +391,7 @@ illustrating their relevance and importance (as it often takes substantial
 effort to fix a miscompilation),&rdquo; the fact that 182 of the 195 total reported
 bugs (with 35 of these getting marked duplicate) were confirmed by outside
 experts to really exist is evidence that EMI is a viable bug-finding strategy.</p>
-<p>95 of the confirmed bugs were miscompilations, lending credence to the authors&rsquo;
+<p>95 of the confirmed bugs were miscompilations, lending credence to the authors'
 initial claim that Orion is able to target miscompilations more easily than
 Csmith alone can. The most bugs were found in the development trunks of both GCC
 and LLVM. More bugs were also found in increasing levels of optimization, with
@@ -422,26 +423,26 @@ variants.</p>
 <p>The following example led to a segfault when compiled with GCC due to a wrong
 offset computation in an optimization pass called &ldquo;predictive commoning,&rdquo; a form
 of common subexpression elimination:</p>
-<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-c" data-lang="c"><span style="color:#b00040">int</span> b, f, d[<span style="color:#666">5</span>][<span style="color:#666">2</span>];
-<span style="color:#b00040">unsigned</span> <span style="color:#b00040">int</span> c;
-<span style="color:#b00040">int</span> <span style="color:#00f">main</span>() {
-  <span style="color:#008000;font-weight:bold">for</span> (c <span style="color:#666">=</span> <span style="color:#666">0</span>; c <span style="color:#666">&lt;</span> <span style="color:#666">2</span>; c<span style="color:#666">++</span>)
-    <span style="color:#008000;font-weight:bold">if</span> (d[b <span style="color:#666">+</span> <span style="color:#666">3</span>][c] <span style="color:#666">&amp;</span> d[b <span style="color:#666">+</span> <span style="color:#666">4</span>][c])
-      <span style="color:#008000;font-weight:bold">if</span> (f)
-        <span style="color:#008000;font-weight:bold">break</span>;
-  <span style="color:#008000;font-weight:bold">return</span> <span style="color:#666">0</span>;
-}
-</code></pre></div><p>Clang incorrectly vectorized the following code:</p>
-<div class="highlight"><pre style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2"><code class="language-c" data-lang="c"><span style="color:#b00040">int</span> <span style="color:#00f">main</span>() {
-  <span style="color:#b00040">int</span> a <span style="color:#666">=</span> <span style="color:#666">1</span>;
-  <span style="color:#b00040">char</span> b <span style="color:#666">=</span> <span style="color:#666">0</span>;
-  <span style="color:#a0a000">lbl</span>:
-    a <span style="color:#666">&amp;=</span> <span style="color:#666">4</span>;
-    b<span style="color:#666">--</span>;
-    <span style="color:#008000;font-weight:bold">if</span> (b) <span style="color:#008000;font-weight:bold">goto</span> lbl;
-  <span style="color:#008000;font-weight:bold">return</span> a;
-}
-</code></pre></div><h4 id="current-statistics">Current statistics</h4>
+<div class="highlight"><pre tabindex="0" style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#b00040">int</span> b, f, d[<span style="color:#666">5</span>][<span style="color:#666">2</span>];
+</span></span><span style="display:flex;"><span><span style="color:#b00040">unsigned</span> <span style="color:#b00040">int</span> c;
+</span></span><span style="display:flex;"><span><span style="color:#b00040">int</span> <span style="color:#00f">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">for</span> (c <span style="color:#666">=</span> <span style="color:#666">0</span>; c <span style="color:#666">&lt;</span> <span style="color:#666">2</span>; c<span style="color:#666">++</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">if</span> (d[b <span style="color:#666">+</span> <span style="color:#666">3</span>][c] <span style="color:#666">&amp;</span> d[b <span style="color:#666">+</span> <span style="color:#666">4</span>][c])
+</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">if</span> (f)
+</span></span><span style="display:flex;"><span>        <span style="color:#008000;font-weight:bold">break</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">return</span> <span style="color:#666">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Clang incorrectly vectorized the following code:</p>
+<div class="highlight"><pre tabindex="0" style=";-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#b00040">int</span> <span style="color:#00f">main</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#b00040">int</span> a <span style="color:#666">=</span> <span style="color:#666">1</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#b00040">char</span> b <span style="color:#666">=</span> <span style="color:#666">0</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#a0a000">lbl</span>:
+</span></span><span style="display:flex;"><span>    a <span style="color:#666">&amp;=</span> <span style="color:#666">4</span>;
+</span></span><span style="display:flex;"><span>    b<span style="color:#666">--</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">if</span> (b) <span style="color:#008000;font-weight:bold">goto</span> lbl;
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">return</span> a;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="current-statistics">Current statistics</h4>
 <p>The website for the <a href="https://web.cs.ucdavis.edu/~su/emi-project/">EMI project</a> shows the number of bugs found and fixed
 by tools using the EMI methodology.
 It shows an astronomical number of bugs found in GCC and LLVM,

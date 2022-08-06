@@ -6,10 +6,46 @@
     <description>Rolph Recto (Reviews)</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 06 Aug 2022 00:00:00 +0000</lastBuildDate>
     
     <atom:link href="/review/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Severance by Ling Ma</title>
+      <link>/review/severance/</link>
+      <pubDate>Sat, 06 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/review/severance/</guid>
+      <description>&lt;p&gt;This novel is ostensibly about a zombie apocalypse but on reading it&amp;rsquo;s actually
+anything but. The book has a surprisingly vast thematic range given its size
+(globalism! mother-daughter relationships! immigration! religion!) but I think
+it revolves around around Candace&amp;rsquo;s disaffection. The parallel between Shen
+Fever and her inability to stop going to work and to leave New York City are
+obvious. As Ling Ma writes in an &lt;a href=&#34;https://chireviewofbooks.com/2018/08/14/severance-ling-ma-interview/&#34;&gt;interview&lt;/a&gt;, Shen Fever really just
+accelerates what we already do: live our lives in mindless repetition. The fact
+that Shen Fever seems to be correlated (as with the cases of Ashley and Bob)
+with nostalgia bolsters this. The idea that we will repeat ourselves to death
+also strongly resonates with Ross Douthat&amp;rsquo;s &lt;a href=&#34;https://www.simonandschuster.com/books/The-Decadent-Society/Ross-Douthat/9781476785257&#34;&gt;decadence thesis&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Candace&amp;rsquo;s mindlessness is strongly tied to her working a job that she does not
+care for. That the object of her labor is the Bible, commodified into a
+bewildering number of iterations each catered to a specific demographic, is
+redolent of the Marxist criticism that under capitalism &amp;ldquo;every solid melts into
+air,&amp;rdquo; including and especially anything that smacks of holiness. But the book&amp;rsquo;s
+relationship to religion is more complicated than just sadness at its
+debasement. A church helped her immigrant parents find community in an alien
+Utah; yet Bob&amp;rsquo;s religiousness is part and parcel of the mindless obedience that
+he fosters in the post-apocalyptic group.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Severance&lt;/em&gt; reminds me strongly of Ottessa Moshfegh&amp;rsquo;s work featuring lonely
+women, particularly &lt;a href=&#34;/review/eileen&#34;&gt;Eileen&lt;/a&gt; specifically the ending, with both
+Candace and Eileen escaping to a city by car) and &lt;em&gt;My Year of Rest and
+Relaxation&lt;/em&gt;, albeit without Moshfegh&amp;rsquo;s heightened, ostentatious sense of
+misery. Both Candace and the unnamed narrator of &lt;em&gt;Rest and Relaxation&lt;/em&gt; (who
+would be clearly one of the Art Girls that Candace finds herself in contrast
+to) find New York City not exciting and invigorating but rather as a shiny
+backdrop to their meaningless jobs and muted relationships with men.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>God, Human, Animal, Machine by Meghan O&#39;Gieblyn</title>
@@ -1744,27 +1780,27 @@ and statistics. However, my hunch is that Dreyfus&amp;rsquo;s assessment of mach
 learning would be similarly negative as of his assessment of symbolist AI
 unless it integrated an &amp;ldquo;embodied&amp;rdquo; approach, which would require insights
 from robotics&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
-&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
 &lt;hr&gt;
 &lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
 &lt;p&gt;It is easiest to see the force of Dreyfus&amp;rsquo;s criticisms in light of,
 say, the logical positivists. But his claim that the entire tradition,
 from Socrates up to (but not including) Wittgenstein and Heidegger is party
 to these assumptions seems to me a stretch. However, I think this is not
 really crucial to Dreyfus&amp;rsquo;s central points, as he only connects the
 philosophical underpinnings of symbolist AI with these assumptions to draw
-a contrast with the alternative &amp;ldquo;embodied&amp;rdquo; paradigm. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+a contrast with the alternative &amp;ldquo;embodied&amp;rdquo; paradigm.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
 &lt;p&gt;His negative remarks concerning Watson, the AI that won Jeopardy!
 against Ken Jennings, seem to vindicate this hunch. See his piece on
 the Times &lt;a href=&#34;http://opinionator.blogs.nytimes.com/2011/02/28/watson-still-cant-think/&#34;&gt;here&lt;/a&gt;,
 where he constrasts Watson with the more embodied approach by the
-&amp;ldquo;subsumption architecture&amp;rdquo; that Rodney Brooks pioneered in robotics. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&amp;ldquo;subsumption architecture&amp;rdquo; that Rodney Brooks pioneered in robotics.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/section&gt;
+&lt;/div&gt;
 </description>
     </item>
     
@@ -1812,18 +1848,18 @@ beginning of the book. He is a staunch atheist, and while he is defending a
 notion of design in the natural world he is not, by his own lights, defending
 intelligent design. Whether this book is one of the first in shifting the tides
 against neo-Darwinian materialism, as he claims, is left to be seen.&lt;/p&gt;
-&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
 &lt;hr&gt;
 &lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
 &lt;p&gt;Nagel does not talk much about inter-theoretic reduction, but he seems to
 think that the consensus in the scientific community is that such a reduction is
 in the offing. This is unclear, and there is a lot of work showing that such a
 reduction is not possible, in principle (Fodor 1974).  Reduction isn&amp;rsquo;t central
-to his points, however. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+to his points, however.&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/section&gt;
+&lt;/div&gt;
 </description>
     </item>
     

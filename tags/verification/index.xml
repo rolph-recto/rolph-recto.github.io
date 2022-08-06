@@ -146,21 +146,21 @@ Once we rid ourselves of this spurious analogy, we will have a clearer idea
 of verification&amp;rsquo;s role in software development.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
 &lt;hr&gt;
 &lt;ol&gt;
-&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;The formalist dream might be deferred, but perhaps &lt;a href=&#34;https://leanprover-community.github.io/&#34;&gt;not forever&lt;/a&gt;! &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;The formalist dream might be deferred, but perhaps &lt;a href=&#34;https://leanprover-community.github.io/&#34;&gt;not forever&lt;/a&gt;!&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;li id=&#34;fn:2&#34;&gt;
 &lt;p&gt;A proof assistant satisfies the &amp;ldquo;de Bruijn criterion&amp;rdquo; if the language
 its proof terms are written in is sufficiently simple that its type checker
 can be understood to be correct or even reimplemented.
 See the &amp;ldquo;Easy-to-Check Kernel Proof Language&amp;rdquo; section of the introduction
-to &lt;a href=&#34;http://adam.chlipala.net/cpdt/html/Intro.html&#34;&gt;CPDT&lt;/a&gt;. &lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+to &lt;a href=&#34;http://adam.chlipala.net/cpdt/html/Intro.html&#34;&gt;CPDT&lt;/a&gt;.&amp;#160;&lt;a href=&#34;#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/section&gt;
+&lt;/div&gt;
 </description>
     </item>
     
