@@ -3,12 +3,15 @@
 # If a command fails then the deploy stops
 set -e
 
+SITE_PATH=~/projects/rolph-recto.github.io
+
 printf "\033[0;32mDeploying updates to GitHub...\033[0m\n"
 
-# Go To Public folder
-cd public
+rm -rf $SITE_PATH/*
+cp -r public/* $SITE_PATH
 
 # Add changes to git.
+cd $SITE_PATH
 git add .
 
 # Commit changes.
