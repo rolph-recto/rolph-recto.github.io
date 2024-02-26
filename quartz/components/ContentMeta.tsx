@@ -5,7 +5,6 @@ import readingTime from "reading-time"
 export default (() => {
   function ContentMetadata({ cfg, fileData, displayClass }: QuartzComponentProps) {
     const text = fileData.text
-    console.log(fileData.frontmatter)
     if (text && !fileData.frontmatter.hidemeta) {
       const segments: string[] = []
 
