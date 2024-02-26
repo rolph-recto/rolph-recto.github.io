@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html><head><title>Implementing call/cc</title><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta property="og:title" content="Implementing call/cc"/><meta property="og:description" content="I’ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations. call/cc always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code."/><meta property="og:image" content="https://rolph-recto.github.io/static/og-image.png"/><meta property="og:width" content="1200"/><meta property="og:height" content="675"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="I’ve been working on implementing a Lisp interpreter for my own amusement, and the next feature on my todo list is first-class continuations. call/cc always seemed mysterious to me, and since this is PL, the best way to get rid of that air of mystery is to actually implement it in code."/><meta name="generator" content="Quartz"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><link href="https://fonts.googleapis.com/css2?family=IBM Plex Mono&amp;family=Arial:wght@400;700&amp;family=Arial:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap" rel="stylesheet" type="text/css" spa-preserve/><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script></head><body data-slug="blog/implementing-callcc"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h1 class="page-title "><a href="..">Rolph Recto</a></h1><div class="spacer mobile-only"></div><div class="explorer desktop-only"><button type="button" id="explorer" data-behavior="collapse" data-collapsed="collapsed" data-savestate="true" data-tree="[{&quot;path&quot;:&quot;reviews&quot;,&quot;collapsed&quot;:true},{&quot;path&quot;:&quot;blog&quot;,&quot;collapsed&quot;:true}]"><h1>Explorer</h1><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-content"><ul class="overflow" id="explorer-ul"><li><div class="folder-outer open"><ul style="padding-left:0;" class="content" data-folderul><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div data-folderpath="reviews"><button class="folder-button"><span class="folder-title">Book Reviews</span></button></div></div><div class="folder-outer "><ul style="padding-left:1.4rem;" class="content" data-folderul="reviews"><li><a href="../reviews/childrens-bible" data-for="reviews/childrens-bible">A Childrens Bible by Lydia Millet</a></li><li><a href="../reviews/a-libertarian-walks-into-a-bear" data-for="reviews/a-libertarian-walks-into-a-bear">A Libertarian Walks Into a Bear by Matthew Honglitz-Hetling</a></li><li><a href="../reviews/abolition-of-man" data-for="reviews/abolition-of-man">Abolition of Man by C. S. Lewis</a></li><li><a href="../reviews/anti-intellectualism-in-american-life" data-for="reviews/anti-intellectualism-in-american-life">Anti-Intellectualism in American Life by Richard Hofstadter</a></li><li><a href="../reviews/bad-blood" data-for="reviews/bad-blood">Bad Blood by John Carreyrou</a></li><li><a href="../reviews/basic-economics" data-for="reviews/basic-economics">Basic Economics by Thomas Sowell</a></li><li><a href="../reviews/beautiful-world-where-are-you" data-for="reviews/beautiful-world-where-are-you">Beautiful World, Where Are You? by Sally Rooney</a></li><li><a href="../reviews/between-the-world-and-me" data-for="reviews/between-the-world-and-me">Between the World and Me by Ta-Nehisi Coates</a></li><li><a href="../reviews/catch-and-kill" data-for="reviews/catch-and-kill">Catch and Kill by Ronan Farrow</a></li><li><a href="../reviews/consciousness-explained" data-for="reviews/consciousness-explained">Consciousness Explained by Daniel Dennett</a></li><li><a href="../reviews/consider-the-lobster-both-flesh-and-not" data-for="reviews/consider-the-lobster-both-flesh-and-not">Consider the Lobster and Both Flesh and Not by David Foster Wallace</a></li><li><a href="../reviews/convenience-store-woman" data-for="reviews/convenience-store-woman">Convenience Store Woman by Sayaka Murata</a></li><li><a href="../reviews/crossroads" data-for="reviews/crossroads">Crossroads by Jonathan Franzen</a></li><li><a href="../reviews/cult-of-smart" data-for="reviews/cult-of-smart">Cult of Smart by Freddie deBoer</a></li><li><a href="../reviews/debt-the-first-5000-years" data-for="reviews/debt-the-first-5000-years">Debt: The First 5000 Years by David Graeber</a></li><li><a href="../reviews/dune" data-for="reviews/dune">Dune by Frank Herbert</a></li><li><a href="../reviews/eileen" data-for="reviews/eileen">Eileen by Ottessa Moshfegh</a></li><li><a href="../reviews/gate-of-angels" data-for="reviews/gate-of-angels">Gate of Angels by Penelope Fitzgerald</a></li><li><a href="../reviews/god-human-animal-machine" data-for="reviews/god-human-animal-machine">God, Human, Animal, Machine by Meghan O'Gieblyn</a></li><li><a href="../reviews/heaven" data-for="reviews/heaven">Heaven by Mieko Kawakami</a></li><li><a href="../reviews/homage-to-catalonia" data-for="reviews/homage-to-catalonia">Homage to Catalonia by George Orwell</a></li><li><a href="../reviews/jack" data-for="reviews/jack">Jack by Marilynne Robinson</a></li><li><a href="../reviews/klara-and-the-sun" data-for="reviews/klara-and-the-sun">Klara and the Sun by Kazuo Ishiguro</a></li><li><a href="../reviews/lightning-rods" data-for="reviews/lightning-rods">Lightning Rods by Helen DeWitt</a></li><li><a href="../reviews/love-of-a-good-woman" data-for="reviews/love-of-a-good-woman">Love of a Good Woman by Alice Munro</a></li><li><a href="../reviews/mind-and-cosmos" data-for="reviews/mind-and-cosmos">Mind and Cosmos by Thomas Nagel</a></li><li><a href="../reviews/orthodoxy" data-for="reviews/orthodoxy">Orthodoxy by G. K. Chesterton</a></li><li><a href="../reviews/palo-alto" data-for="reviews/palo-alto">Palo Alto by Malcolm Harris</a></li><li><a href="../reviews/philosophy-and-real-politics" data-for="reviews/philosophy-and-real-politics">Philosophy and Real Politics by Raymond Geuss</a></li><li><a href="../reviews/red-plenty" data-for="reviews/red-plenty">Red Plenty by Francis Spufford</a></li><li><a href="../reviews/severance" data-for="reviews/severance">Severance by Ling Ma</a></li><li><a href="../reviews/silence" data-for="reviews/silence">Silence by Shūsaku Endō</a></li><li><a href="../reviews/slouching-towards-bethlehem" data-for="reviews/slouching-towards-bethlehem">Slouching Towards Bethlehem by Joan Didion</a></li><li><a href="../reviews/strangers-drowning" data-for="reviews/strangers-drowning">Strangers Drowning by Larissa MacFarquhar</a></li><li><a href="../reviews/submission" data-for="reviews/submission">Submission by Michel Houllebecq</a></li><li><a href="../reviews/ten-days-that-shook-the-world" data-for="reviews/ten-days-that-shook-the-world">Ten Days That Shook the World by John Reed</a></li><li><a href="../reviews/alignment-problem" data-for="reviews/alignment-problem">The Alignment Problem by Brian Christian</a></li><li><a href="../reviews/blank-slate" data-for="reviews/blank-slate">The Blank Slate by Steven Pinker</a></li><li><a href="../reviews/dialectic-of-sex" data-for="reviews/dialectic-of-sex">The Dialectic of Sex by Shulamith Firestone</a></li><li><a href="../reviews/the-dispossessed" data-for="reviews/the-dispossessed">The Dispossessed by Ursula Le Guin</a></li><li><a href="../reviews/the-great-divorce" data-for="reviews/the-great-divorce">The Great Divorce by C. S. Lewis</a></li><li><a href="../reviews/happiness-hypothesis" data-for="reviews/happiness-hypothesis">The Happiness Hypothesis by Jonathan Haidt</a></li><li><a href="../reviews/the-known-world" data-for="reviews/the-known-world">The Known World by Edward P. Jones</a></li><li><a href="../reviews/the-lonely-city" data-for="reviews/the-lonely-city">The Lonely City by Olivia Laing</a></li><li><a href="../reviews/the-moviegoer" data-for="reviews/the-moviegoer">The Moviegoer by Walker Percy</a></li><li><a href="../reviews/the-power" data-for="reviews/the-power">The Power by Naomi Alderman</a></li><li><a href="../reviews/the-restless-clock" data-for="reviews/the-restless-clock">The Restless Clock by Jessica Riskin</a></li><li><a href="../reviews/selfish-gene" data-for="reviews/selfish-gene">The Selfish Gene by Richard Dawkins</a></li><li><a href="../reviews/the-trial" data-for="reviews/the-trial">The Trial by Franz Kafka</a></li><li><a href="../reviews/will-to-change" data-for="reviews/will-to-change">The Will to Change by bell hooks</a></li><li><a href="../reviews/the-world-goes-on" data-for="reviews/the-world-goes-on">The World Goes On by László Krasznahorkai</a></li><li><a href="../reviews/what-computers-cant-do" data-for="reviews/what-computers-cant-do">What Computers Can't Do by Hubert Dreyfus</a></li><li><a href="../reviews/why-liberalism-failed" data-for="reviews/why-liberalism-failed">Why Liberalism Failed by Patrick Deneen</a></li><li><a href="../reviews/wise-blood" data-for="reviews/wise-blood">Wise Blood by Flannery O'Connor</a></li></ul></div></li><li><div class="folder-outer "><ul style="padding-left:0;" class="content" data-folderul></ul></div></li><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div data-folderpath="blog"><button class="folder-button"><span class="folder-title">Rolph's Blog</span></button></div></div><div class="folder-outer "><ul style="padding-left:1.4rem;" class="content" data-folderul="blog"><li><a href="../blog/go-in-haskell" data-for="blog/go-in-haskell">Embedding and Extending Go in Haskell</a></li><li><a href="../blog/hamilton-hiring-and-women-guards" data-for="blog/hamilton-hiring-and-women-guards">Hamilton and Hiring Women Guards</a></li><li><a href="../blog/hello-world" data-for="blog/hello-world">Hello World, Meet Blog</a></li><li><a href="../blog/implementing-callcc" data-for="blog/implementing-callcc">Implementing call/cc</a></li><li><a href="../blog/on-proofs-programs-and-houses" data-for="blog/on-proofs-programs-and-houses">On Proofs, Programs, and Houses</a></li><li><a href="../blog/simulating-random-walks" data-for="blog/simulating-random-walks">Simulating Random Walks with the List Monad</a></li><li><a href="../blog/what-are-security-conditions" data-for="blog/what-are-security-conditions">What are Security Conditions?</a></li><li><a href="../blog/what-are-security-conditions-addendum" data-for="blog/what-are-security-conditions-addendum">What Are Security Conditions? - An Addendum on Noninterference</a></li><li><a href="../blog/you-cant-stop-cancel-culture" data-for="blog/you-cant-stop-cancel-culture">You can't stop cancel culture</a></li></ul></div></li><li><a href="../personal" data-for="personal">Personal</a></li></ul></div></li><li id="explorer-end"></li></ul></div></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container " aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../blog/">Rolph's Blog</a></div></nav><h1 class="article-title ">Implementing call/cc</h1><p class="content-meta ">Dec 25, 2016</p><ul class="tags "><li><a href="../tags/cs" class="internal tag-link">#cs</a></li><li><a href="../tags/pl" class="internal tag-link">#pl</a></li></ul></div></div><article class="popover-hint"><p>I’ve been working on implementing a Lisp interpreter for my own amusement, and
+the next feature on my todo list is first-class continuations.
+<code>call/cc</code> always seemed mysterious to me, and since this is PL, the best way to
+get rid of that air of mystery is to actually implement it in code.
+Before diving in to implement this for Lisp, I thought it would be a good
+exercise to implement an interpreter for a toy language. The idea is that once
+I’ve implemented <code>call/cc</code> there then I can have a better idea of how to
+implement it for the Lisp interpreter.<sup><a href="#user-content-fn-1" id="user-content-fnref-1" data-footnote-ref aria-describedby="footnote-label" class="internal alias">1</a></sup></p>
+<h2 id="continuations-recap">Continuations Recap<a aria-hidden="true" tabindex="-1" data-no-popover="true" href="#continuations-recap" class="internal alias"> §</a></h2>
+<p>A quick recap on what continuations are. There’s many ways to describe them,
+but essentially they define the “context” of a computation. For example, let’s
+say you’re interpreting the expression:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>(2 + 3) + (4 + 5)</span></span></code></pre></figure>
+<p>To interpret this expression, you need to interpret its subexpressions <code>(2 + 3)</code> and <code>(4 + 5)</code>.  Say your interpreter evaluates summands left to right so
+you interpret <code>(2 + 3)</code> first. The context of this computation is</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>[ ] + (4 + 5)</span></span></code></pre></figure>
+<p>Think of it as an expression with a hole.<sup><a href="#user-content-fn-2" id="user-content-fnref-2" data-footnote-ref aria-describedby="footnote-label" class="internal alias">2</a></sup>
+In other words, <code>[ ] + (4 + 5)</code> is the <em>current continuation</em> while interpreting
+<code>(2 + 3)</code>. It’s the “rest of the computation.”</p>
+<p>So that’s the current continuation. What then does <code>call/cc</code> or
+<code>call-with-current-continuation</code> do? <code>call/cc</code> is a function that basically
+allows the programmer to <em>manipulate the current continuation or context of
+computation within the language itself!</em> It takes in another function <code>f</code> as an
+argument and passes in to <code>f</code> a “reified” version of the current continuation.
+The reified continuation is basically a function (a lambda abstraction), except
+that whenever it is called we erase the current continuation, which allows the
+programmer to replace the current continuation with the reified one.</p>
+<p>That might be confusing so here’s an example. Consider the addition expression
+above, but with the addition of <code>call/cc</code> as a subexpression:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>(call/cc (\k -> k (2 + 3))) + (4 + 5)</span></span></code></pre></figure>
+<p>This looks weird, but actually it is equivalent to <code>(2 + 3) + (4 + 5)</code>. How?
+Notice that when we interpret the <code>call/cc</code> expression, the current continuation
+is <code>[ ] + (4 + 5)</code>. This continuation becomes reified as a function</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>(\hole -> hole + (4 + 5))</span></span></code></pre></figure>
+<p>Basically, you replace the hole with a variable and create a (special kind of)
+lambda abstraction so that this variable is bound. Recall that <code>call/cc</code> passes
+this function to its argument, and when it is called it replaces the current
+continuation with an empty context, an “identity continuation”.  So the
+expression above would evaluate as follows:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>(call/cc (\k -> k (2 + 3))) + (4 + 5) =></span></span>
+<span data-line><span>((\k -> k (2 + 3)) (\hole -> hole + (4 + 5)) + (4 + 5) =></span></span>
+<span data-line><span>(\hole -> hole + (4 + 5)) (2 + 3) =></span></span>
+<span data-line><span>(2 + 3) + (4 + 5) =></span></span>
+<span data-line><span>-- and so on...</span></span></code></pre></figure>
+<p>The expression with <code>call/cc</code> is equivalent to the one without, as promised!
+This doesn’t really display the power of <code>call/cc</code> though. Because the
+continuation is reified as a function, <em>you can do whatever you want with it!</em>
+For example, you can “short-circuit” evaluation by not calling the reified
+continuation at all:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>(call/cc (\k -> 2 + 3)) + (4 + 5) =></span></span>
+<span data-line><span>((\k -> 2 + 3) (\hole -> hole + (4 + 5)) + (4 + 5) =></span></span>
+<span data-line><span>2 + 3 =></span></span>
+<span data-line><span>5</span></span></code></pre></figure>
+<p>This is just a simple example. There’s a bewildering number of ways to use
+<code>call/cc</code>, from <a href="http://stackoverflow.com/questions/13338559/scheme-how-does-a-nested-call-cc-work-for-a-coroutine" class="external">implementing
+coroutines<svg class="external-icon" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>
+to much more. But now let’s think about how to implement this. We want to keep
+track of the current continuation, and when we call <code>call/cc</code> we want to reify
+the current continuation into a function. How do we do this?</p>
+<p>Programs can usually be represented as an abstract syntax tree (AST). You can
+then think of interpreting a program as a traversal through an AST. What this
+traversal entails depends on the semantics of the language. In the case of
+arithmetic expressions, traversing the AST means to compute the number that the
+expression denotes. Continuations are the context of traversing the AST; they
+mark the position on the tree where interpretation is currently taking place.
+We want a good representation of this traversal, so that we can easily move the
+mark through the tree.</p>
+<p>“Representing a traversal” might ring some bells: continuations can be
+represented by <a href="https://en.wikibooks.org/wiki/Haskel/Zippers" class="external">zippers<svg class="external-icon" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>! When we
+traverse a subexpression / subtree during interpretation, we push a new
+expression with a hole into a stack, where the hole represents the
+subexpression being traversed. This expression-with-a-hole is <em>part</em> of the
+context of computation, and can be represented as a function <code>Expr -> Expr</code>
+in the metalanguage (i.e. the implementation language). When the interpretation
+“bottoms out,” meaning the current expression has no subexpressions left to be
+further interpreted, we compute the value of the current expression, pop the
+head of the stack, place the value into the hole of the head expression (i.e.,
+we apply the value as an argument to the function), and then continue
+interpretation.</p>
+<p>Let’s do an example to make this concrete. Here’s a trace of interpreting an
+expression:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>CURRENT EXPR: (1 + (2 + 3)) + (4 + 5)</span></span>
+<span data-line><span>STACK: []</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> hole)</span></span>
+<span data-line><span>[(1 + (2 + 3)) + (4 + 5)] => (traverse down)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: (1 + (2 + 3))</span></span>
+<span data-line><span>STACK: [(\h1 -> h1 + (4 + 5))]</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> hole + (4 + 5))</span></span>
+<span data-line><span>[(1 + (2 + 3))] + (4 + 5) => (traverse down)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: (2 + 3)</span></span>
+<span data-line><span>STACK: [(\h2 -> 1 + h2), (\h1 -> h1 + (4 + 5))]</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> (1 + hole) + (4 + 5))</span></span>
+<span data-line><span>(1 + [(2 + 3)]) + (4 + 5) => (traverse up)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: (1 + 5)</span></span>
+<span data-line><span>STACK: [(\h1 -> h1 + (4 + 5))]</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> (1 + hole) + (4 + 5))</span></span>
+<span data-line><span>[(1 + 5)] + (4 + 5) => (traverse up)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: 6 + (4 + 5)</span></span>
+<span data-line><span>STACK: []</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> hole)</span></span>
+<span data-line><span>[6 + (4 + 5)] => (traverse down)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: 4 + 5</span></span>
+<span data-line><span>STACK: [(\h1 -> 6 + h1)]</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> 6 + hole)</span></span>
+<span data-line><span>6 + [(4+ 5)] => (traverse up)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: 6 + 9</span></span>
+<span data-line><span>STACK: []</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> hole)</span></span>
+<span data-line><span>6 + 9  => (traverse up)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>CURRENT EXPR: 15</span></span>
+<span data-line><span>STACK: []</span></span>
+<span data-line><span>CURRENT CONTINUATION: (\hole -> hole)</span></span>
+<span data-line><span>15</span></span></code></pre></figure>
+<p>Each interpretation step is annotated with the current expression, the current
+stack, and the current continuation. Each transition <code>(=>)</code> is labeled as
+either “traverse down,” meaning next we interpret a subexpression of the
+current expression, or “traverse up,” meaning we interpret the current
+expression directly and place its interpretation (value) in the context of the
+stack head.</p>
+<p>Does this representation of continuations allow us to implement <code>call/cc</code>
+easily? Yes! To reify the current continuation, we just glue the together holed
+expressions (functions) in the stack by function composition. Try it with the
+example above. You’ll see that you can compute the current continuation at
+any step just with the contents of the stack: plug the first element into
+the second element, plug the second element into the third, and so on, until
+you only have one function remaining, which should be equivalent to the
+current continuation.</p>
+<h2 id="implementing-the-toy-language">Implementing The Toy Language<a aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementing-the-toy-language" class="internal alias"> §</a></h2>
+<p>Now that we have the idea, let’s write actual code. This toy language will be
+very simple, but to make it more interesting we’ll add commands. Here is the
+AST:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>data Expr   = ILit Int</span></span>
+<span data-line><span>            | Var Int</span></span>
+<span data-line><span>            | Plus Expr Expr</span></span>
+<span data-line><span>            | Lam Int Expr</span></span>
+<span data-line><span>            | App Expr Expr</span></span>
+<span data-line><span>            | Unit</span></span>
+<span data-line><span>            | Print Expr</span></span>
+<span data-line><span>            | Seq [Expr]</span></span>
+<span data-line><span>            | Cont Int Expr</span></span>
+<span data-line><span>            | CallCC Int Expr</span></span>
+<span data-line><span>            deriving (Show)</span></span></code></pre></figure>
+<p>Hopefully this is straightforward. The language has integer literals (<code>ILit</code>),
+variables (<code>Var</code>, indexed by integers instead of the usual strings), lambda
+abstraction (<code>Lam</code>), application (<code>App</code>), unit / zero-tuple (guess which
+constructor??), a print command (<code>Print</code>), a sequence of commands (<code>Seq</code>),
+continuations (<code>Cont</code>), which are basically lambdas with an extra side effect
+as we’ll see below, and finally <code>call/cc</code> itself. For simplicity I didn’t
+bother having separate datatypes for commands and expressions; everything is
+just an <code>Expr</code>.</p>
+<p>It is important that the interpreter we write for this toy language corresponds
+to the <em>small step</em> semantics of the language. The small step semantics defines
+exactly the order in which interpretation happens. The interpreter trace in the
+example above follows the small step semantics of an arithmetic language where
+summands are interpreted left to right. Contrast this with <em>large step</em>
+semantics, which defines only the value of expressions in a language.
+Interpreters written to reflect this style of semantics cannot capture the
+exact context of the ongoing computation because it leaves the order of
+interpretation up to the semantics of the implementation language. For example,
+a large step interpreter might have the following rule to interpret addition
+expressions:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>interp e</span></span>
+<span data-line><span>  | Plus e1 e2 &lt;- e = (interp e1) + (interp e2)</span></span></code></pre></figure>
+<p>Which gets interpreted first, <code>e1</code> or <code>e2</code>? It is left implicit, and depends
+on Haskell’s semantics.</p>
+<p>Let’s see some code! First off, some type declarations and convenience
+functions:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>import qualified Data.Map.Strict as M</span></span>
+<span data-line><span></span></span>
+<span data-line><span>type Env         = M.Map Int Expr</span></span>
+<span data-line><span>type DCont       = Expr -> Expr</span></span>
+<span data-line><span>type InterpState = [DCont]</span></span>
+<span data-line><span>type InterpM a   = ExceptT String (ReaderT Env (StateT InterpState IO)) a</span></span>
+<span data-line><span></span></span>
+<span data-line><span>isValue :: Expr -> Bool</span></span>
+<span data-line><span>isValue expr = case expr of</span></span>
+<span data-line><span>  ILit _ -> True</span></span>
+<span data-line><span>  Var _ -> True</span></span>
+<span data-line><span>  Lam _ _ -> True</span></span>
+<span data-line><span>  App _ _ -> False</span></span>
+<span data-line><span>  Unit -> True</span></span>
+<span data-line><span>  Print _ -> False</span></span>
+<span data-line><span>  Seq [] -> True</span></span>
+<span data-line><span>  Seq _ -> False</span></span>
+<span data-line><span>  Cont _ _ -> True</span></span>
+<span data-line><span>  CallCC _ _ -> False</span></span></code></pre></figure>
+<p>Notice that continuations (<code>DCont</code>) are functions in the <em>metalanguage</em> (i.e.
+the implementation language), not the object language (i.e. the toy language).
+They are called <code>DCont</code>s because they are technically <em>delimited
+continuations</em>, which represent not the entire context of a computation but
+only part of it.  We reify the (undelimited) continuation used by <code>call/cc</code> by
+composing these together. Reifying a continuation is the process of turning
+this metalanguage function into an object language function represented by the
+constructor <code>Cont</code>. The control stack (<code>InterpState</code>) consists of a stack of
+<code>DCont</code>s.</p>
+<p>We’ll be running the interpreter in the <code>InterpM</code> monad, which has <code>StateT</code> for
+keeping track of the stack / current continuation, a <code>ReaderT</code> component
+for keeping track of bound variables, and an <code>ExceptT</code> for handling errors.</p>
+<p>Lastly, we define an <code>isValue</code> function to define certain expression forms as
+values.  We’ll use this information to determine whether to “traverse up”
+during interpretation.</p>
+<p>Now to the interpreter proper.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>ret :: Expr -> InterpM Expr</span></span>
+<span data-line><span>ret expr = do</span></span>
+<span data-line><span>  st &lt;- get</span></span>
+<span data-line><span>  case st of</span></span>
+<span data-line><span>    [] -> return expr</span></span>
+<span data-line><span>    (c:cs) -> do</span></span>
+<span data-line><span>      put cs</span></span>
+<span data-line><span>      eval (c expr)</span></span></code></pre></figure>
+<p>The <code>ret</code> function corresponds to the (initial part of the) “traverse up”
+transition in the example trace above. During interpretation, once we have a
+value expression (i.e., an expression that cannot be interpreted further) we
+pass this to <code>ret</code>, which will either place it in the head expression of the
+stack and continue interpretation (“traverse down”), or, if the stack is empty,
+return the expression. Note that if the stack is empty then the current
+continuation is the “identity continuation,” <code>(\hole -> hole)</code>.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>pushToStack :: DCont -> InterpM ()</span></span>
+<span data-line><span>pushToStack cont = do</span></span>
+<span data-line><span>  st &lt;- get</span></span>
+<span data-line><span>  put (cont:st)</span></span></code></pre></figure>
+<p><code>pushToStack</code> is an aptly named helper function that pushes a new delimited
+continuation on top of the stack. Alternatively, if you’re fine with
+applicative notation or want to play some Haskell code golf, you can write it
+like this:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>pushToStack :: Cont -> InterpM ()</span></span>
+<span data-line><span>pushToStack cont = (cont:) &lt;$> get >>= put</span></span></code></pre></figure>
+<p>Here part the <code>eval</code> function:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>eval :: Expr -> InterpM Expr</span></span>
+<span data-line><span>eval expr</span></span>
+<span data-line><span>  | ILit n &lt;- expr = ret expr</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Var v &lt;- expr = do</span></span>
+<span data-line><span>    env &lt;- ask</span></span>
+<span data-line><span>    case M.lookup v env of</span></span>
+<span data-line><span>      Nothing -> throwError $ &quot;unexpected free variable: v&quot; ++ (show v)</span></span>
+<span data-line><span>      Just val -> ret val</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Lam _ _ &lt;- expr = ret expr</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Cont _ _ &lt;- expr = do</span></span>
+<span data-line><span>    ret expr</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Unit &lt;- expr = ret expr</span></span></code></pre></figure>
+<p>This is the boring part, since we’re just matching on value expressions and
+immediately calling <code>ret</code>. Note that <code>eval</code> and <code>ret</code> are mutually recursive.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>  -- eval continued...</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | App (Lam var body) arg &lt;- expr, isValue arg = do</span></span>
+<span data-line><span>    local (M.insert var arg) (eval body)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | App (Lam var body) arg &lt;- expr, not (isValue arg) = do</span></span>
+<span data-line><span>    pushToStack $ App (Lam var body)</span></span>
+<span data-line><span>    eval arg</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | App func arg &lt;- expr = do</span></span>
+<span data-line><span>    env &lt;- ask</span></span>
+<span data-line><span>    let cont f = App f arg</span></span>
+<span data-line><span>    pushToStack cont</span></span>
+<span data-line><span>    eval func</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Plus (ILit x) (ILit y) &lt;- expr = ret (ILit $ x + y)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Plus (Var x) (ILit y) &lt;- expr = do</span></span>
+<span data-line><span>    env &lt;- ask</span></span>
+<span data-line><span>    case M.lookup x env of</span></span>
+<span data-line><span>      Nothing -> throwError $ &quot;unexpected free variable: v&quot; ++ (show x)</span></span>
+<span data-line><span>      Just (ILit xval) -> ret (ILit $ xval + y)</span></span>
+<span data-line><span>      otherwise -> throwError &quot;expected integer argument to Plus&quot;</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Plus (ILit x) (Var y) &lt;- expr = eval (Plus (Var y) (ILit x))</span></span>
+<span data-line><span>  </span></span>
+<span data-line><span>  | Plus (Var x) (Var y) &lt;- expr = do</span></span>
+<span data-line><span>    env &lt;- ask</span></span>
+<span data-line><span>    case M.lookup x env of</span></span>
+<span data-line><span>      Nothing -> throwError $ &quot;unexpected free variable: v&quot; ++ (show x)</span></span>
+<span data-line><span>      Just (ILit xval) -> eval (Plus (ILit xval) (Var y))</span></span>
+<span data-line><span>      otherwise -> throwError &quot;expected integer argument to Plus&quot;</span></span></code></pre></figure>
+<p>Now it gets a bit interesting. Notice that when we are “traversing down” during
+interpretation and need to interpret a subexpression, we push a new delimited
+continuation to the stack and continue interpreting that subexpression. This
+happens, for example, when addition expressions have variables as summands, or
+when a function’s argument needs to be interpreted further.<sup><a href="#user-content-fn-3" id="user-content-fnref-3" data-footnote-ref aria-describedby="footnote-label" class="internal alias">3</a></sup>
+When no subexpressions need to be further interpreted, such as when we are
+adding two literals together, we call <code>ret</code> instead of <code>eval</code> and “traverse up.”</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>  -- eval continued ...</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Print pexpr &lt;- expr, isValue pexpr = do</span></span>
+<span data-line><span>      liftIO $ print pexpr</span></span>
+<span data-line><span>      ret Unit</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Print pexpr &lt;- expr, not (isValue pexpr) = do</span></span>
+<span data-line><span>      pushToStack Print</span></span>
+<span data-line><span>      eval pexpr</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Seq (cmd:tlcmds) &lt;- expr = do</span></span>
+<span data-line><span>      pushToStack $ const (Seq tlcmds)</span></span>
+<span data-line><span>      eval cmd</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | Seq [] &lt;- expr = do</span></span>
+<span data-line><span>      ret Unit</span></span></code></pre></figure>
+<p>Here are the commands. They are interpreted similarly to the expressions above,
+except of course they have side effects, as seen in the first pattern match
+on <code>Print</code>. The only interesting thing to notice is that when interpreting
+sequences, the delimited continuation for interpreting the next command of the
+sequence just discards its argument. This makes sense since the context for
+interpreting (executing) a command is just the rest of the commands to be
+executed; no information from the current command is needed. Hence the unused
+argument.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>  -- eval continued ...</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | App (Cont var body) arg &lt;- expr, isValue arg = do</span></span>
+<span data-line><span>    put []</span></span>
+<span data-line><span>    local (M.insert var arg) (eval body)</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | App (Cont var body) arg &lt;- expr, not (isValue arg) = do</span></span>
+<span data-line><span>    pushToStack $ App (Cont var body)</span></span>
+<span data-line><span>    eval arg</span></span></code></pre></figure>
+<p>As promised, reified continuations are exactly like lambdas, except that when
+calling them we erase the current context of computation by erasing the
+stack. This essentially allows the reified continuation to replace the current
+continuation whenever it is called.</p>
+<p>Finally, <code>call/cc</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>  -- eval continued ...</span></span>
+<span data-line><span></span></span>
+<span data-line><span>  | CallCC k body &lt;- expr = do</span></span>
+<span data-line><span>    -- reify the current continuation into a function</span></span>
+<span data-line><span>    st &lt;- get </span></span>
+<span data-line><span>    let contf = foldr (.) id $ reverse st</span></span>
+<span data-line><span>    let cont = Cont (-1) (contf (Var (-1)))</span></span>
+<span data-line><span></span></span>
+<span data-line><span>    -- evaluate the body</span></span>
+<span data-line><span>    local (M.insert k cont) (eval body)</span></span></code></pre></figure>
+<p>Again, we create the current continuation by composing the delimited
+continuations in the stack together (<code>contf</code>). We then reify this continuation,
+which is a function in the metalanguage / implementation language, into an
+object language continuation by applying a variable expression to the function,
+so that it returns an expression with a free variable <code>Var (-1)</code>. By <em>free</em> I
+mean free in the object language; also, we’re going to punt on issues with
+capture for now. We then wrap this expression into a <code>Cont</code> to bind the
+variable, and we’re done!<sup><a href="#user-content-fn-4" id="user-content-fnref-4" data-footnote-ref aria-describedby="footnote-label" class="internal alias">4</a></sup></p>
+<p>We can now evaluate the body, in whose environment the variable <code>k</code> will be
+mapped to the reified continuation. Note that syntactically <code>call/cc</code> takes in
+two arguments: the name of the variable and the body expression to be evaluated
+whose environment contains the variable so named mapped to the reified
+continuation. This is equivalent to having <code>call/cc</code> take a function as a single
+argument.</p>
+<p>That’s the interpreter. Let’s test it out!</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>>> let subexpr = Seq [ILit 98, App (Var 0) Unit]</span></span>
+<span data-line><span>>> let expr = Seq [CallCC 0 subexpr, Print (ILit 99)]</span></span>
+<span data-line><span>>> res &lt;- evalStateT (runReaderT (runExceptT (eval expr)) M.empty) initState</span></span>
+<span data-line><span>>> putStrLn $ either id show res</span></span>
+<span data-line><span>>></span></span>
+<span data-line><span>ILit 98</span></span>
+<span data-line><span>ILit 99</span></span></code></pre></figure>
+<p>We have a sequence of commands where <code>call/cc</code> is executed first. So the
+current continuation when <code>call/cc</code> is executed is the rest of the sequence,
+<code>\hole -> Seq [Print (ILit 99)]</code>. <code>call/cc</code> then passes this continuation to a
+function whose body is also a sequence. <code>98</code> gets printed out first, and then
+we call the continuation, which prints <code>99</code>.</p>
+<p>This use of <code>call/cc</code> is a bit pointless, since <code>99</code> would’ve been printed
+after <code>98</code> anyway. Here’s a slightly less pointless use of <code>call/cc</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>>> let subexpr = Seq [App (Var 0) Unit, Print (ILit 98)]</span></span>
+<span data-line><span>>> let expr = Seq [CallCC 0 subexpr, Print (ILit 99)]</span></span>
+<span data-line><span>>> res &lt;- evalStateT (runReaderT (runExceptT (eval expr)) M.empty) initState</span></span>
+<span data-line><span>>> putStrLn $ either id show res</span></span>
+<span data-line><span>>></span></span>
+<span data-line><span>ILit 99</span></span></code></pre></figure>
+<p>So instead of printing <code>98</code>, we skip that command and instead
+print <code>99</code> right away. This happens because calling the reified continuation
+erases the stack, which destroys the current continuation that would’ve printed
+<code>98</code> next. As you can see, we can use <code>call/cc</code> to implement jumps!</p>
+<p>That’s it for now. In retrospect it was a good call to implement <code>call/cc</code> for
+a toy language first, since now I have a pretty clear idea of how to do it.
+It certainly was more productive than my futile initial attempts at implementing
+first-class continuations in my Lisp interpreter, where I was bogged down with
+trying to fit the implementation with the rest of the interpreter, which made
+the endeavor a lot more complicated.</p>
+<p>You can find the full source for the interpreter
+<a href="https://github.com/rolph-recto/lambda-type-systems/blob/master/Cont.hs" class="external">here<svg class="external-icon" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.
+For further reading, Matt Might has a <a href="http://matt.might.net/articles/writing-an-interpreter-substitution-denotational-big-step-small-step/" class="external">good blog
+post<svg class="external-icon" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>
+that describes the relationship between small step interpreters and
+continuations. He mentions the zipper approach that I followed here but he
+instead uses class methods to manipulate contexts of a computation.</p>
+<p><em>Edit: Fixed some typos and added some clarifications.</em></p>
+<section data-footnotes class="footnotes"><h2 class="sr-only" id="footnote-label">Footnotes<a aria-hidden="true" tabindex="-1" data-no-popover="true" href="#footnote-label" class="internal alias"> §</a></h2>
+<ol>
+<li id="user-content-fn-1">
+<p>While I’ve got a decent idea of how to implement this feature now, the
+interpreter is still a bit of a mess. It turns out first-class continuations
+are a big feature that touches pretty much every part of an interpreter! <a href="#user-content-fnref-1" data-footnote-backref aria-label="Back to reference 1" class="data-footnote-backref internal alias">↩</a></p>
+</li>
+<li id="user-content-fn-2">
+<p>You could also think of this expression-with-a-hole as a function from
+expressions to expressions: this fact will be important later. <a href="#user-content-fnref-2" data-footnote-backref aria-label="Back to reference 2" class="data-footnote-backref internal alias">↩</a></p>
+</li>
+<li id="user-content-fn-3">
+<p>Notice that this language is eagerly evaluated. <a href="#user-content-fnref-3" data-footnote-backref aria-label="Back to reference 3" class="data-footnote-backref internal alias">↩</a></p>
+</li>
+<li id="user-content-fn-4">
+<p>You might think, as I originally did, that the interpreter should clear
+the stack when <code>call/cc</code> is called. A quick test in Racket disabused me of that
+misconception: <code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2.
+Explanation for why this answers our question is left as an exercise for the
+reader! <a href="#user-content-fnref-4" data-footnote-backref aria-label="Back to reference 4" class="data-footnote-backref internal alias">↩</a></p>
+</li>
+</ol>
+</section></article></div><div class="right sidebar"></div></div><footer class><hr/><ul></ul></footer></div></body><script src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script type="application/javascript">// quartz/components/scripts/quartz/components/scripts/callout.inline.ts
+function toggleCallout() {
+  const outerBlock = this.parentElement;
+  outerBlock.classList.toggle(`is-collapsed`);
+  const collapsed = outerBlock.classList.contains(`is-collapsed`);
+  const height = collapsed ? this.scrollHeight : outerBlock.scrollHeight;
+  outerBlock.style.maxHeight = height + `px`;
+  let current = outerBlock;
+  let parent = outerBlock.parentElement;
+  while (parent) {
+    if (!parent.classList.contains(`callout`)) {
+      return;
+    }
+    const collapsed2 = parent.classList.contains(`is-collapsed`);
+    const height2 = collapsed2 ? parent.scrollHeight : parent.scrollHeight + current.scrollHeight;
+    parent.style.maxHeight = height2 + `px`;
+    current = parent;
+    parent = parent.parentElement;
+  }
+}
+function setupCallout() {
+  const collapsible = document.getElementsByClassName(
+    `callout is-collapsible`
+  );
+  for (const div of collapsible) {
+    const title = div.firstElementChild;
+    if (title) {
+      title.removeEventListener(`click`, toggleCallout);
+      title.addEventListener(`click`, toggleCallout);
+      const collapsed = div.classList.contains(`is-collapsed`);
+      const height = collapsed ? title.scrollHeight : div.scrollHeight;
+      div.style.maxHeight = height + `px`;
+    }
+  }
+}
+document.addEventListener(`nav`, setupCallout);
+window.addEventListener(`resize`, setupCallout);
+</script><script type="module">
+          import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+          const darkMode = document.documentElement.getAttribute('saved-theme') === 'dark'
+          mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: 'loose',
+            theme: darkMode ? 'dark' : 'default'
+          });
+          document.addEventListener('nav', async () => {
+            await mermaid.run({
+              querySelector: '.mermaid'
+            })
+          });
+          </script><script type="application/javascript">
+          const socket = new WebSocket('ws://localhost:3001')
+          socket.addEventListener('message', () => document.location.reload())
+        </script><script src="../postscript.js" type="module"></script></html>
