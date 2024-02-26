@@ -13,7 +13,9 @@ cp -r public/* $SITE_PATH
 # Add changes to git.
 cd $SITE_PATH
 # remove .DS_Store file (thanks Mac)
-rm .DS_Store
+if test -f .DS_Store; then
+	rm .DS_Store
+fi
 git add .
 
 # Commit changes.
