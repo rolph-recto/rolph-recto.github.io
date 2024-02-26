@@ -49,6 +49,10 @@ export const FrontMatter: QuartzTransformerPlugin<Partial<Options> | undefined> 
               data.title = file.stem ?? "Untitled"
             }
 
+            if (data.hidemeta == undefined) {
+              data.hidemeta = false
+            }
+
             if (data.tags) {
               // coerce to array
               if (!Array.isArray(data.tags)) {

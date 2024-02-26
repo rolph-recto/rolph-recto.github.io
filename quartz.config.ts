@@ -3,19 +3,19 @@ import * as Plugin from "./quartz/plugins"
 
 const config: QuartzConfig = {
   configuration: {
-    pageTitle: "🪴 Quartz 4.0",
-    enableSPA: true,
-    enablePopovers: true,
+    pageTitle: "Rolph Recto",
+    enableSPA: false,
+    enablePopovers: false,
     analytics: {
       provider: "plausible",
     },
-    baseUrl: "quartz.jzhao.xyz",
+    baseUrl: "rolph-recto.github.io",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
     theme: {
       typography: {
-        header: "Schibsted Grotesk",
-        body: "Source Sans Pro",
+        header: "Arial",
+        body: "Arial",
         code: "IBM Plex Mono",
       },
       colors: {

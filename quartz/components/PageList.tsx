@@ -44,11 +44,6 @@ export function PageList({ cfg, fileData, allFiles, limit }: Props) {
         return (
           <li class="section-li">
             <div class="section">
-              {page.dates && (
-                <p class="meta">
-                  <Date date={getDate(cfg, page)!} />
-                </p>
-              )}
               <div class="desc">
                 <h3>
                   <a href={resolveRelative(fileData.slug!, page.slug!)} class="internal">
@@ -56,6 +51,12 @@ export function PageList({ cfg, fileData, allFiles, limit }: Props) {
                   </a>
                 </h3>
               </div>
+              {page.dates && (
+                <p class="meta">
+                  <Date date={getDate(cfg, page)!} />
+                </p>
+              )}
+              {/*
               <ul class="tags">
                 {tags.map((tag) => (
                   <li>
@@ -68,6 +69,7 @@ export function PageList({ cfg, fileData, allFiles, limit }: Props) {
                   </li>
                 ))}
               </ul>
+              */}
             </div>
           </li>
         )
@@ -85,3 +87,18 @@ PageList.css = `
   margin: 0;
 }
 `
+/*
+
+              <ul class="tags">
+                {tags.map((tag) => (
+                  <li>
+                    <a
+                      class="internal tag-link"
+                      href={resolveRelative(fileData.slug!, `tags/${tag}` as FullSlug)}
+                    >
+                      #{tag}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+*/
