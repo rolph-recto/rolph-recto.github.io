@@ -502,30 +502,30 @@ repeatedly extracts values from <code>chan</code>, applies the value to <code>f<
 pushes the output of <code>f</code> into a <em>new</em> channel. In this way, goroutines pushing
 values should do it to the old channel, and goroutines extracting values should
 do so from the new channel.</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>chan_map :: (GoExpr -> GoExpr) -> GoChan -> GoProgram GoChan</span></span>
-<span data-line><span>chan_map f inchan = do</span></span>
-<span data-line><span>  outchan &lt;- newchan </span></span>
-<span data-line><span>  go $ map_goroutine outchan</span></span>
-<span data-line><span>  return outchan</span></span>
-<span data-line><span>  where map_goroutine outchan = do</span></span>
-<span data-line><span>          v &lt;- getchan inchan</span></span>
-<span data-line><span>          putchan outchan (f v)</span></span>
-<span data-line><span>          map_goroutine outchan</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1;">chan_map</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ::</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">GoExpr</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoExpr</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoChan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoProgram</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoChan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">chan_map f inchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  outchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan </span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> map_goroutine outchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  return outchan</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">  where</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> map_goroutine outchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">          v </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> getchan inchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">          putchan outchan (f v)</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">          map_goroutine outchan</span></span></code></pre></figure>
 <p>This works, albeit awkwardly. Here’s one way to use it:</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>source lst chan = do</span></span>
-<span data-line><span>  forM_ lst $ \x -> do</span></span>
-<span data-line><span>    putchan chan x</span></span>
-<span data-line><span></span></span>
-<span data-line><span>sink chan = do</span></span>
-<span data-line><span>  v &lt;- getchan chan</span></span>
-<span data-line><span>  goprint (show v)</span></span>
-<span data-line><span>  sink chan</span></span>
-<span data-line><span></span></span>
-<span data-line><span>mapmain = do</span></span>
-<span data-line><span>  inchan &lt;- newchan</span></span>
-<span data-line><span>  outchan &lt;- chan_map (\GoInt x -> GoInt (x+100)) inchan</span></span>
-<span data-line><span>  go $ source [1..10] inchan</span></span>
-<span data-line><span>  go $ sink outchan</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">source lst chan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  forM_ lst </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> \</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">    putchan chan x</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">sink chan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  v </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> getchan chan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  goprint (show v)</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  sink chan</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">mapmain </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  inchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  outchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan_map (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (x</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">+</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">100</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">)) inchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> source [</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">1</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">..</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">10</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">] inchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> sink outchan</span></span></code></pre></figure>
 <p>This will work as intended and print out 101 to 200. However, notice that the
 two channels here are being treated as <em>unidirectional</em>: one channel is only
 receiving input (i.e. only calls to the channel are <code>putchan</code>) while the other
@@ -534,10 +534,10 @@ channel is only returning output (i.e. only calls to the channel are <code>getch
 but that is (and should be) invisible to the user. It would be nice if instead
 of having two unidirectional channels, we would have just one bidirectional
 channel — that is, just a regular channel. We want something like this:</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>mapmain = do</span></span>
-<span data-line><span>  chan &lt;- newchan >>= chan_map (\GoInt x -> GoInt (x+100))</span></span>
-<span data-line><span>  go $ source [1..10] chan</span></span>
-<span data-line><span>  go $ sink chan</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">mapmain </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  chan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">>>=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan_map (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (x</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">+</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">100</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">))</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> source [</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">1</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">..</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">10</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">] chan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> sink chan</span></span></code></pre></figure>
 <p>The <code>source</code> goroutine puts values 1 to 100 in the channel, and then when
 <code>sink</code> extracts values out of the channel it will magically receive 101 to 200.
 As currently implemented, <code>chan_map</code> will not work as intended here. How will we
@@ -548,7 +548,7 @@ value. Now instead of a single key into a runtime map, instead it will be a
 <em>pair</em> of keys: one key will be used to push values into the map, and the other
 key will be used to get values from it.</p>
 <p>Some diagrams might help with the explanation.</p>
-<p><img src="../img/chan-regular.svg" alt="Regular channel"/></p>
+<p><img src=".././files/chan-regular.svg" alt="Regular channel"/></p>
 <p>The diagram above should be pretty self-explanatory. For this to work properly
 the <code>source</code> function needs to be passed the <code>inchan</code> channel and the <code>sink</code>
 channel needs to be passed the <code>outchan</code> channel. <code>chan_map</code> currently returns
@@ -558,7 +558,7 @@ when a goroutine pushes a value to it, the goroutine is really pushing a value
 to <code>inchan</code>; when a goroutine extracts a value from it, the goroutine is really
 extracting a value out of <code>outchan</code>. So under the hood the same thing is
 happening, but the interface to the user is a bit nicer. Like so:</p>
-<p><img src="../img/chan-composition.svg" alt="Channel composition"/></p>
+<p><img src=".././files/chan-composition.svg" alt="Channel composition"/></p>
 <p>Let’s see how this change looks like in code.</p>
 <figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>type ChanPort = Int</span></span>
 <span data-line><span>type GoChan = (ChanPort, ChanPort) </span></span>
@@ -585,110 +585,110 @@ the name “port” instead of “channel” in the runtime code. For the helper
 functions, nothing really changes except the type annotations. Since <code>GoChan</code>
 is now a pair these should instead take in <code>ChanPort</code> arguments.</p>
 <p>Now to changes to the interpreter proper.</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>interpGo :: GoProgram () -> GoInterp ()</span></span>
-<span data-line><span>interpGo prog = case prog of</span></span>
-<span data-line><span>  Free (GoMakeChan next) -> do</span></span>
-<span data-line><span>    {- code here stays the same ... -}</span></span>
-<span data-line><span>    interpGo $ next (pnum, pnum)</span></span>
-<span data-line><span></span></span>
-<span data-line><span>  Free (GoPutChan (port,_) v next) -> do</span></span>
-<span data-line><span>    {- code here stays the same ... -}</span></span>
-<span data-line><span></span></span>
-<span data-line><span>  Free (GoGetChan (_,port) next) -> do</span></span>
-<span data-line><span>    {- code here stays the same ... -}</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1;">interpGo</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ::</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoProgram</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> ()</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoInterp</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> ()</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">interpGo prog </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> case</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> prog </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">of</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">  Free</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoMakeChan</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> next) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D;">    {- code here stays the same ... -}</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">    interpGo </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> next (pnum, pnum)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">  Free</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoPutChan</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (port,_) v next) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D;">    {- code here stays the same ... -}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">  Free</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoGetChan</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (_,port) next) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D;">    {- code here stays the same ... -}</span></span></code></pre></figure>
 <p>There’s not much to change. <code>GoMakeChan</code> should now return a pair. <code>GoPutChan</code>
 should put values in the first port of the channel. <code>GoGetChan</code> should put
 values in the second port of the channel. That’s pretty much it!</p>
 <p>Now, we can finally write <code>chan_map</code>.</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>chan_map :: GoExprable a => (GoExpr -> a) -> GoChan -> GoProgram GoChan</span></span>
-<span data-line><span>chan_map f inchan@(inchan_put,_) = do</span></span>
-<span data-line><span>  outchan@(_, outchan_get) &lt;- newchan</span></span>
-<span data-line><span>  go $ map_goroutine inchan outchan</span></span>
-<span data-line><span>  return (inchan_put, outchan_get)</span></span>
-<span data-line><span>  where</span></span>
-<span data-line><span>    map_goroutine inchan outchan = do</span></span>
-<span data-line><span>      val &lt;- getchan inchan</span></span>
-<span data-line><span>      putchan outchan $ toGoExpr $ f val</span></span>
-<span data-line><span>      map_goroutine inchan outchan</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1;">chan_map</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ::</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoExprable</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> a </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">GoExpr</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> a) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoChan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoProgram</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoChan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">chan_map f inchan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">@</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(inchan_put,_) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  outchan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">@</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(_, outchan_get) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> map_goroutine inchan outchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  return (inchan_put, outchan_get)</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">  where</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">    map_goroutine inchan outchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      val </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> getchan inchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      putchan outchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> toGoExpr </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> f val</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      map_goroutine inchan outchan</span></span></code></pre></figure>
 <p>And voila!</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>>> run_gomain mapmain</span></span>
-<span data-line><span>GoInt 101</span></span>
-<span data-line><span>GoInt 102</span></span>
-<span data-line><span>GoInt 103</span></span>
-<span data-line><span>GoInt 104</span></span>
-<span data-line><span>GoInt 105</span></span>
-<span data-line><span>GoInt 106</span></span>
-<span data-line><span>GoInt 107</span></span>
-<span data-line><span>GoInt 108</span></span>
-<span data-line><span>GoInt 109</span></span>
-<span data-line><span>GoInt 110</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">>></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> run_gomain mapmain</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 101</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 102</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 103</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 104</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 105</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 106</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 107</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 108</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 109</span></span>
+<span data-line><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 110</span></span></code></pre></figure>
 <p>Here’s a particularly useful combinator, <code>chan_partition</code>, and a nice
 use for it.</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>-- partition an input channel into two output channels</span></span>
-<span data-line><span>chan_partition :: (GoExpr -> Bool) -> GoChan -> GoProgram (GoChan, GoChan)</span></span>
-<span data-line><span>chan_partition pred chan@(chan_put, _) = do</span></span>
-<span data-line><span>  lchan@(_, lchan_get) &lt;- newchan</span></span>
-<span data-line><span>  rchan@(_, rchan_get) &lt;- newchan</span></span>
-<span data-line><span>  let lchan' = (chan_put, rchan_get)</span></span>
-<span data-line><span>  let rchan' = (chan_put, lchan_get)</span></span>
-<span data-line><span>  go $ partition_goroutine lchan rchan</span></span>
-<span data-line><span>  return (lchan', rchan')</span></span>
-<span data-line><span>  where</span></span>
-<span data-line><span>    partition_goroutine lchan rchan = do</span></span>
-<span data-line><span>      val &lt;- getchan chan</span></span>
-<span data-line><span>      if pred val</span></span>
-<span data-line><span>      then do </span></span>
-<span data-line><span>        putchan lchan val</span></span>
-<span data-line><span>        partition_goroutine lchan rchan</span></span>
-<span data-line><span>      else do</span></span>
-<span data-line><span>        putchan rchan val</span></span>
-<span data-line><span>        partition_goroutine lchan rchan</span></span>
-<span data-line><span></span></span>
-<span data-line><span>count :: GoExprable a => [a] -> GoChan -> GoProgram ()</span></span>
-<span data-line><span>count [] chan = return ()</span></span>
-<span data-line><span>count (x:xs) chan = do</span></span>
-<span data-line><span>  putchan chan x</span></span>
-<span data-line><span>  count xs chan</span></span>
-<span data-line><span></span></span>
-<span data-line><span>printLeftRight n left right = do</span></span>
-<span data-line><span>  forM_ [1..n] $ \_ -> do</span></span>
-<span data-line><span>    select [</span></span>
-<span data-line><span>      selcase left (\x -> do</span></span>
-<span data-line><span>        goprint $ &quot;left: &quot; ++ (show x)</span></span>
-<span data-line><span>      ),</span></span>
-<span data-line><span>      selcase right (\x -> do</span></span>
-<span data-line><span>        goprint $ &quot;right: &quot; ++ (show x)</span></span>
-<span data-line><span>      )]</span></span>
-<span data-line><span></span></span>
-<span data-line><span>eomain :: GoProgram ()</span></span>
-<span data-line><span>eomain = do</span></span>
-<span data-line><span>  c &lt;- newchan</span></span>
-<span data-line><span>  (evenchan, oddchan) &lt;- chan_partition (\(GoInt x) -> x `mod` 2 == 0) c</span></span>
-<span data-line><span>  go $ count ([1..] :: [Int]) c</span></span>
-<span data-line><span>  go $ printLeftRight 10 evenchan oddchan</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#6A737D;--shiki-light:#6A737D;">-- partition an input channel into two output channels</span></span>
+<span data-line><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1;">chan_partition</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ::</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">GoExpr</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> Bool</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoChan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoProgram</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">GoChan</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">, </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">GoChan</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">)</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">chan_partition pred chan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">@</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(chan_put, _) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  lchan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">@</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(_, lchan_get) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  rchan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">@</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(_, rchan_get) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">  let</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> lchan' </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (chan_put, rchan_get)</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">  let</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> rchan' </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (chan_put, lchan_get)</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> partition_goroutine lchan rchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  return (lchan', rchan')</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">  where</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">    partition_goroutine lchan rchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      val </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> getchan chan</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">      if</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> pred val</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">      then</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> </span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">        putchan lchan val</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">        partition_goroutine lchan rchan</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">      else</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">        putchan rchan val</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">        partition_goroutine lchan rchan</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1;">count</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ::</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoExprable</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> a </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> [a] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoChan</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> -></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoProgram</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> ()</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">count </span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">[]</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> return </span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">()</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">count (x</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">xs) chan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  putchan chan x</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  count xs chan</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">printLeftRight n left right </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  forM_ [</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">1</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">..</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">n] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> \</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">_ </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">    select [</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      selcase left (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">        goprint </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62;"> &quot;left: &quot;</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ++</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (show x)</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      ),</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      selcase right (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">        goprint </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#9ECBFF;--shiki-light:#032F62;"> &quot;right: &quot;</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ++</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (show x)</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">      )]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-dark:#B392F0;--shiki-light:#6F42C1;">eomain</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ::</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> GoProgram</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> ()</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">eomain </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">=</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> do</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  c </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> newchan</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  (evenchan, oddchan) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">&lt;-</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan_partition (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">`mod`</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 2</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;"> ==</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 0</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">) c</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> count ([</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">1</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">..</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">] </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">::</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> [</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">Int</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">]) c</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">  go </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">$</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> printLeftRight </span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">10</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> evenchan oddchan</span></span></code></pre></figure>
 <p>And as you’d expect:</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>>> run_gomain eomain</span></span>
-<span data-line><span>left: GoInt 1</span></span>
-<span data-line><span>right: GoInt 2</span></span>
-<span data-line><span>left: GoInt 3</span></span>
-<span data-line><span>right: GoInt 4</span></span>
-<span data-line><span>left: GoInt 5</span></span>
-<span data-line><span>right: GoInt 6</span></span>
-<span data-line><span>left: GoInt 7</span></span>
-<span data-line><span>right: GoInt 8</span></span>
-<span data-line><span>left: GoInt 9</span></span>
-<span data-line><span>right: GoInt 10</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">>></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> run_gomain eomain</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">left</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 1</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">right</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 2</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">left</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 3</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">right</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 4</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">left</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 5</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">right</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 6</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">left</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 7</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">right</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 8</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">left</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 9</span></span>
+<span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">right</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">:</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> GoInt</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 10</span></span></code></pre></figure>
 <p>In fact, you can basically just go through Haskell’s <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Data-List.html" class="external">Data.List
 library<svg class="external-icon" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>
 and implement most of the functions there as channel combinators. It’s a fun
 exercise---I recommend doing it.</p>
 <p>A nice improvement for the future would be to do some kind of deforestation
 analysis on channel combinators. For example, consider the channel</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>newchan >>= chan_map (\(GoInt x) -> x + 10)</span></span>
-<span data-line><span>        >>= chan_map (\(GoInt x) -> x*2)</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">newchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">>>=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan_map (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">+</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;"> 10</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">)</span></span>
+<span data-line><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">        >>=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan_map (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">*</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">2</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">)</span></span></code></pre></figure>
 <p>Instead of creating two intermediate goroutines, we can optimize this to
 just have one:</p>
-<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="Haskell" data-theme="github-dark github-light"><code data-language="Haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span>newchan >>= chan_map (\(GoInt x) -> (x+10)*2)</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="haskell" data-theme="github-dark github-light"><code data-language="haskell" data-theme="github-dark github-light" style="display:grid;"><span data-line><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">newchan </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">>>=</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> chan_map (</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">\</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">(</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">GoInt</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> x) </span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">-></span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;"> (x</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">+</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">10</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">)</span><span style="--shiki-dark:#F97583;--shiki-light:#D73A49;">*</span><span style="--shiki-dark:#79B8FF;--shiki-light:#005CC5;">2</span><span style="--shiki-dark:#E1E4E8;--shiki-light:#24292E;">)</span></span></code></pre></figure>
 <p>I think we can get away with having at most one intermediate goroutine that does
 the transformation between input and output channels, no matter how many channel
 transformations we bind together. But it would involve adding extra state to
@@ -765,7 +765,4 @@ window.addEventListener(`resize`, setupCallout);
               querySelector: '.mermaid'
             })
           });
-          </script><script type="application/javascript">
-          const socket = new WebSocket('ws://localhost:3001')
-          socket.addEventListener('message', () => document.location.reload())
-        </script><script src="../postscript.js" type="module"></script></html>
+          </script><script src="../postscript.js" type="module"></script></html>
