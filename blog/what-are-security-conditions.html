@@ -83,7 +83,7 @@ property, but not that all programs that satisfy the relevant property can be
 well-typed.</p>
 <p>You might wonder why this is the case. I think it’s because negatively defining
 what information release is unintentional is much easier than positively
-defining what information release is intentional. To do the latter, you just
+defining what information release is intentional. To do the former, you just
 need to capture common mistakes regarding information release to prevent
 programmers from making such mistakes. It’s not clear to me how you would even
 attempt to do the latter.</p>
@@ -93,7 +93,7 @@ security is to identify common patterns of insecurity in programs and then
 define security conditions that eliminate them. We’ll never reach a “true”
 definition of security---that way lies human intention and thus all the
 messiness of life---but the hope is that we eliminate enough security bugs to
-gain assurance in the software that we build.</p></article></div><div class="right sidebar"></div></div><footer class><hr/><ul></ul></footer></div></body><script src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script type="application/javascript">// quartz/components/scripts/quartz/components/scripts/callout.inline.ts
+gain assurance in the software that we build.</p></article></div><div class="right sidebar"><div class="backlinks "><h3>Backlinks</h3><ul class="overflow"><li><a href="../blog/what-are-security-conditions-addendum" class="internal">What Are Security Conditions? - An Addendum on Noninterference</a></li></ul></div></div></div><footer class><hr/><ul></ul></footer></div></body><script src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script type="application/javascript">// quartz/components/scripts/quartz/components/scripts/callout.inline.ts
 function toggleCallout() {
   const outerBlock = this.parentElement;
   outerBlock.classList.toggle(`is-collapsed`);
@@ -143,4 +143,7 @@ window.addEventListener(`resize`, setupCallout);
               querySelector: '.mermaid'
             })
           });
-          </script><script src="../postscript.js" type="module"></script></html>
+          </script><script type="application/javascript">
+          const socket = new WebSocket('ws://localhost:3001')
+          socket.addEventListener('message', () => document.location.reload())
+        </script><script src="../postscript.js" type="module"></script></html>
