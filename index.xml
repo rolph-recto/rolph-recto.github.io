@@ -12,42 +12,6 @@
     <description>A worthy successor to Labatut’s debut When We Cease to Understand the World, this is a three-part novel about Paul Ehrenfest, John von Neumann, and Lee Sedol’s match with AlphaGo.</description>
     <pubDate>Thu, 18 Apr 2024 00:00:00 GMT</pubDate>
   </item><item>
-    <title>Term Rewriting and Optimization</title>
-    <link>https://rolph-recto.github.io/notebooks/Term-Rewriting-and-Optimization</link>
-    <guid>https://rolph-recto.github.io/notebooks/Term-Rewriting-and-Optimization</guid>
-    <description>Equality saturation: a new approach to optimization The paper that introduces the term equality saturation, but not the first to use e-graphs for optimization (I believe that would be Denali.</description>
-    <pubDate>Tue, 05 Mar 2024 01:13:37 GMT</pubDate>
-  </item><item>
-    <title>Information Flow Control</title>
-    <link>https://rolph-recto.github.io/notebooks/Information-Flow-Control</link>
-    <guid>https://rolph-recto.github.io/notebooks/Information-Flow-Control</guid>
-    <description></description>
-    <pubDate>Tue, 05 Mar 2024 01:13:28 GMT</pubDate>
-  </item><item>
-    <title>Neurosymbolic AI</title>
-    <link>https://rolph-recto.github.io/notebooks/Neurosymbolic-AI</link>
-    <guid>https://rolph-recto.github.io/notebooks/Neurosymbolic-AI</guid>
-    <description>Machine learning techniques have known pitfalls at this point: they hallucinate, they require insane amounts of data and compute, they’re hard to interpret.</description>
-    <pubDate>Sun, 03 Mar 2024 00:16:47 GMT</pubDate>
-  </item><item>
-    <title>Notebooks</title>
-    <link>https://rolph-recto.github.io/notebooks/</link>
-    <guid>https://rolph-recto.github.io/notebooks/</guid>
-    <description>Here’s a list of notebooks about various topics. They mostly consist of annotated bibliographies, clippings, and links that I find interesting or informative.</description>
-    <pubDate>Thu, 29 Feb 2024 05:17:43 GMT</pubDate>
-  </item><item>
-    <title>Literature</title>
-    <link>https://rolph-recto.github.io/notebooks/literature</link>
-    <guid>https://rolph-recto.github.io/notebooks/literature</guid>
-    <description>Cormac McCarthy § “Gnosticism and McCarthy’s Blood Meridian”, Leo Dougherty Leo Dougherty’s essay on Blood Meridian as a “gnostic tragedy”: instead of a hero whose destiny and downfall is sealed by Fate, the Kid, who contains in him the divine spark of the alien god is killed inevitably by Judge Holden, one of the Archons who created the world and is jealous of the alien god.</description>
-    <pubDate>Thu, 29 Feb 2024 05:10:30 GMT</pubDate>
-  </item><item>
-    <title>AI</title>
-    <link>https://rolph-recto.github.io/notebooks/AI</link>
-    <guid>https://rolph-recto.github.io/notebooks/AI</guid>
-    <description>Things to Read § Computation and Human Experience, Phil Agre Read the first few chapters of this book. Seems to be an exciting synthesis (Agre characterizes his work as such too) between Dreyfus-style critiques of AI and an honest attempt at a new foundations of AI research.</description>
-    <pubDate>Thu, 29 Feb 2024 04:59:58 GMT</pubDate>
-  </item><item>
     <title>Convenience Store Woman by Sayaka Murata</title>
     <link>https://rolph-recto.github.io/reviews/convenience-store-woman</link>
     <guid>https://rolph-recto.github.io/reviews/convenience-store-woman</guid>
@@ -65,6 +29,42 @@
     <guid>https://rolph-recto.github.io/blog/</guid>
     <description></description>
     <pubDate>Wed, 31 Jan 2024 22:20:42 GMT</pubDate>
+  </item><item>
+    <title>Book Reviews</title>
+    <link>https://rolph-recto.github.io/reviews/</link>
+    <guid>https://rolph-recto.github.io/reviews/</guid>
+    <description></description>
+    <pubDate>Wed, 31 Jan 2024 22:13:33 GMT</pubDate>
+  </item><item>
+    <title>Home</title>
+    <link>https://rolph-recto.github.io/</link>
+    <guid>https://rolph-recto.github.io/</guid>
+    <description>I am a software engineer living in New York. In a previous life, I was a graduate student in the computer science department at Cornell University, studying under Andrew C.</description>
+    <pubDate>Wed, 31 Jan 2024 04:59:37 GMT</pubDate>
+  </item><item>
+    <title>Palo Alto by Malcolm Harris</title>
+    <link>https://rolph-recto.github.io/reviews/palo-alto</link>
+    <guid>https://rolph-recto.github.io/reviews/palo-alto</guid>
+    <description>This is a sprawling mess of a book that takes Palo Alto the city and uses it as a symbol of all the ills that capitalism has wrought. Harris takes the “Palo Alto System,” originally Leland Stanford’s innovative program for breeding thoroughbreds, as the original articulation of the ethos that pervades the companies revolving around the university which bears his late son’s name, as well as the students who study in its halls.</description>
+    <pubDate>Sat, 08 Jul 2023 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>Ten Days That Shook the World by John Reed</title>
+    <link>https://rolph-recto.github.io/reviews/ten-days-that-shook-the-world</link>
+    <guid>https://rolph-recto.github.io/reviews/ten-days-that-shook-the-world</guid>
+    <description>The most important thing that I learned from this book is that the October Revolution was actually just a bunch of meetings.</description>
+    <pubDate>Thu, 16 Feb 2023 00:00:00 GMT</pubDate>
+  </item><item>
+    <title>Heaven by Mieko Kawakami</title>
+    <link>https://rolph-recto.github.io/reviews/heaven</link>
+    <guid>https://rolph-recto.github.io/reviews/heaven</guid>
+    <description>A plain, unassuming book that opens up into an intense meditation of Nietzschean themes in its second half. (See this review by Merve Emre for the same observation.</description>
+    <pubDate>Thu, 29 Dec 2022 17:41:28 GMT</pubDate>
+  </item><item>
+    <title>The Dispossessed by Ursula Le Guin</title>
+    <link>https://rolph-recto.github.io/reviews/the-dispossessed</link>
+    <guid>https://rolph-recto.github.io/reviews/the-dispossessed</guid>
+    <description>As always, Le Guin’s worldbuilding is impeccable here. The exploration of what an anarcho-syndicalist society would look like is thorough and realistic; indeed, it is an “ambiguous” utopia as some printings of the book make its subtitle to be.</description>
+    <pubDate>Wed, 28 Dec 2022 18:43:22 GMT</pubDate>
   </item>
     </channel>
   </rss>
