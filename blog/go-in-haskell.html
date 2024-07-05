@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2017-12-18" />
+  <title>Rolph Recto – Embedding and Extending Go in Haskell</title>
+  <style>
+    html {
+      line-height: 1.4;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">Embedding and Extending Go in Haskell</h1>
+<p>December 18, 2017</p>
+<p>Here’s a fun question: what would Go look like embedded inside of
+Haskell?</p>
+<p>By “Go” here I don’t mean the full language itself but some kind of
+core calculus with the features that people really like about Go:
+namely, its synchronization primitives. This core calculus should at
+least have the ability to spawn new goroutines and the ability to pass
+data between goroutines using channels.</p>
+<p>By “embedding” a language in Haskell, I mean that I want to re-use
+Haskell’s constructs for most things and only write what is specific to
+the language. That means only writing code involving goroutines and
+channels. Everything else—variables, functions, control structures—are
+Haskell’s. The interpreter we’re going to write for this language—let’s
+call it “HaskGo”—will look like a virtual machine executing a small
+instruction set. This makes the interpreter quite simple, since there’s
+no AST to traverse: HaskGo programs are just lists of instructions.</p>
+<p>It’s not just for fun that I wanted to embed Go in Haskell. Embedding
+a language inside of Haskell is an easy way to model its actual
+implementation. There’s no lexer or parser to create, just the
+interpreter and the instruction set. Embedding a language in Haskell
+allows us to easily experiment with extending the language with new
+extensions. For example, determining what might <em>channel
+combinators</em> in Go look like, as we will see later on, is as easy as
+writing a few example programs and changing the interpreter—all within
+one language, Haskell.</p>
+<h2 id="writing-haskgo-with-free-monads">Writing HaskGo with Free
+Monads</h2>
+<p>The standard way of embedding a language in Haskell is through
+<em>free monads</em>. I’m not going to dwell too much on how free monads
+work since there are already a lot of good resources that provide an
+introduction. I’m particularly fond of Gabriel Gonzalez’s blog post on
+the topic, linked <a
+href="http://www.haskellforall.com/2012/06/you-could-have-invented-free-monads.html">here</a>.
+The short of it is that free monads are so named because from any
+functor, we can derive a monad for it, for free.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+Free monads are useful for creating embedded languages because they
+allow you to write monadic expressions that look like regular imperative
+code—just like how expressions in the <code>IO</code> monad look like
+imperative code—but actually denote a list of instructions for our
+language’s interpeter / virtual machine to execute.</p>
+<p>With that preamble, let’s get to the code. Here’s the datatype
+representing the instruction set of our language:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">GoExpr</span> <span class="ot">=</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">GoInt</span> <span class="dt">Int</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoBool</span> <span class="dt">Bool</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoString</span> <span class="dt">String</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Eq</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GoChan</span> <span class="ot">=</span> <span class="dt">Int</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GoProgram</span> a <span class="ot">=</span> <span class="dt">Free</span> <span class="dt">GoCmd</span> a</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">GoSelectBranch</span> <span class="ot">=</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">GoSelectBranch</span> {</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ot">    branchChan ::</span> <span class="dt">GoChan</span>, </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ot">    branchProg ::</span> <span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">GoCmd</span> next <span class="ot">=</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">GoRun</span> (<span class="dt">GoProgram</span> ()) next</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoMakeChan</span> (<span class="dt">GoChan</span> <span class="ot">-&gt;</span> next)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoPutChan</span> <span class="dt">GoChan</span> <span class="dt">GoExpr</span> next</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoGetChan</span> <span class="dt">GoChan</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> next)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoSelect</span> [<span class="dt">GoSelectBranch</span>] next</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">GoPrint</span> <span class="dt">String</span> next</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Functor</span>)</span></code></pre></div>
+<p>As promised, the instruction set is simple. <code>GoRun</code>
+denotes the instruction to spawn off a new goroutine.
+<code>GoMakeChan</code> denotes the creation of a new channel.
+<code>GoPutChan</code> and <code>GoGetChan</code> denote putting and and
+getting values from a channel respectively. <code>GoSelect</code>
+implements Go’s <code>select</code> control structure, which allows the
+user to wait on a list of channels instead of just one. If there is a
+branch waiting on a channel that is not blocked, <code>select</code>
+jumps to that branch; otherwise it blocks until one of the branches is
+unblocked. <code>GoPrint</code> denotes an instruction to print
+something on the screen. <code>GoProgram</code> is a type synonym for
+the free monad for our <code>GoCmd</code> instruction set.
+<code>GoChan</code>, the type of the channel value that the user has
+access to, is merely an <code>Int</code> identifier that the runtime
+uses, as we will see below.</p>
+<p>Some things to note. All of the constructors have a <code>next</code>
+argument. This argument allows the free monad to build a list of
+instructions. <code>GoMakeChan</code> and <code>GoGetChan</code> have
+<code>(GoChan -&gt; next)</code> and <code>(GoExpr -&gt; next)</code>
+arguments instead of just <code>next</code> because the next instruction
+for these expects a new variable bound to the value of the new channel
+or value extracted from the channel respectively. To test your
+understanding of how free monads work, as yourself why the goroutine
+argument in <code>GoRun</code> has type <code>GoProgram ()</code>
+instead of just <code>next</code>.</p>
+<p>The channels aren’t typed—or, rather, are unityped: they only pass
+<code>GoExpr</code>s between goroutines. The channels can only store one
+value at a time—this is not apparent in the datatype, but it will be
+reflected in the implementation of the interpreter. We can add channel
+types and channel buffers to the language quite easily, but we’re going
+to punt on those for now.</p>
+<p>Here’s some free monad boilerplate. These are the monadic functions
+we will use to build HaskGo programs. I will present these with no
+further comment—read Gabriel’s blog post linked above to understand how
+this works!</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">GoExprable</span> a <span class="kw">where</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  toGoExpr ::</span> a <span class="ot">-&gt;</span> <span class="dt">GoExpr</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">GoExprable</span> <span class="dt">Int</span> <span class="kw">where</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  toGoExpr <span class="ot">=</span> <span class="dt">GoInt</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">GoExprable</span> <span class="dt">Bool</span> <span class="kw">where</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  toGoExpr <span class="ot">=</span> <span class="dt">GoBool</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">GoExprable</span> <span class="dt">GoExpr</span> <span class="kw">where</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  toGoExpr <span class="ot">=</span> <span class="fu">id</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>liftFree x    <span class="ot">=</span> <span class="dt">Free</span> (<span class="fu">fmap</span> <span class="dt">Pure</span> x)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>defaultPort   <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>selcase c p   <span class="ot">=</span> <span class="dt">GoSelectBranch</span> c p</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>seldefault p  <span class="ot">=</span> <span class="dt">GoSelectBranch</span> defaultPort p</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>go cmd        <span class="ot">=</span> liftFree (<span class="dt">GoRun</span> cmd ())</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>newchan       <span class="ot">=</span> liftFree (<span class="dt">GoMakeChan</span> <span class="fu">id</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>putchan c v   <span class="ot">=</span> liftFree (<span class="dt">GoPutChan</span> c (toGoExpr v) ())</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>getchan c     <span class="ot">=</span> liftFree (<span class="dt">GoGetChan</span> c <span class="fu">id</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>select bs     <span class="ot">=</span> liftFree (<span class="dt">GoSelect</span> bs ())</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>goprint s     <span class="ot">=</span> liftFree (<span class="dt">GoPrint</span> s ())</span></code></pre></div>
+<p>An interesting thing to note is that <code>select</code> as
+implemented above is strictly more expressive than in Go, as the list of
+branches on which it waits is just a regular value. That means it can
+block on a list of branches given as an argument to a function,
+something that is impossible in Go.</p>
+<p>Here’s what a HaskGo program looks like, using the functions above.
+The following is an elegant solution to the classic producer-consumer
+problem:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">consume ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>consume chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> getchan chan</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  goprint <span class="op">$</span> <span class="fu">show</span> v</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  consume chan</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ot">produce ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>produce <span class="fu">range</span> chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  forM_ <span class="fu">range</span> <span class="op">$</span> \i <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    putchan chan i</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ot">bufmain ::</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>bufmain <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> newchan</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> produce [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>] c</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> consume c</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  goprint <span class="st">&quot;producer-consumer queue running!&quot;</span></span></code></pre></div>
+<p>While distinctly Haskell in syntax, if you squint a little it does
+indeed have Go-like synchronization primitives: you can create a channel
+and bind a variable to it (i.e. channels are first-class); you can spawn
+off goroutines just with the <code>go</code> command; and you can get
+and put values into channels.</p>
+<p>Now for the interpreter proper. The interpreter will be, essentially,
+a simulation of the Go runtime. What kind of data does the HaskGo
+runtime need to keep track of? The runtime must handle goroutines and
+channels, so we must at least have a list of each. We also need a map
+from channels to values put in them. For scheduling purposes we also
+need a ready queue, as well as wait queues for each channel to keep
+track of goroutines blocked on it. So the runtime state should look
+something like this:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">GoRuntime</span> <span class="ot">=</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">GoRuntime</span> {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    curGoroutine  ::</span> <span class="dt">GoRoutine</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ot">    nextGoroutine ::</span> <span class="dt">Int</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    goroutines    ::</span> <span class="dt">M.Map</span> <span class="dt">GoRoutine</span> (<span class="dt">GoProgram</span> ()),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ot">    nextPort      ::</span> <span class="dt">GoChan</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    portVals      ::</span> <span class="dt">M.Map</span> <span class="dt">GoChan</span> (<span class="dt">Maybe</span> <span class="dt">GoExpr</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ot">    waitQueues    ::</span> <span class="dt">M.Map</span> <span class="dt">GoChan</span> [<span class="dt">GoRoutine</span>],</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="ot">    readyQueue    ::</span> [<span class="dt">GoRoutine</span>]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>This should be almost self-explanatory. <code>curGoroutine</code> is
+the current goroutine scheduled; <code>nextGoroutine</code> and
+<code>nextPort</code> are the identifiers of the next created goroutine
+and channel respectively. <code>goroutines</code> is a map from
+goroutines to the program they are executing; <code>portVals</code> is a
+map from channels to the (possible) values they hold.
+<code>readyQueue</code> and <code>waitQueues</code> keep track of
+scheduling information as described above. (Why the runtime state keeps
+data on ports instead of channels will become clear later when we extend
+HaskGo.)</p>
+<p>Finally, the HaskGo interpreter. First, some helper functions:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GoInterp</span>   <span class="ot">=</span> <span class="dt">ExceptT</span> <span class="dt">String</span> (<span class="dt">StateT</span> <span class="dt">GoRuntime</span> <span class="dt">IO</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ot">scheduleNextGoroutine ::</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>scheduleNextGoroutine <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  st <span class="ot">&lt;-</span> get</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> rq <span class="ot">=</span> readyQueue st</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> rq <span class="kw">of</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    rid<span class="op">:</span>rs <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> M.lookup rid (goroutines st) <span class="kw">of</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Just</span> cont <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>          put <span class="op">$</span> st { curGoroutine <span class="ot">=</span> rid, readyQueue <span class="ot">=</span> rs }</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>          interpGo cont</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>          throwError <span class="op">$</span> <span class="st">&quot;invalid goroutine id &quot;</span> <span class="op">++</span> (<span class="fu">show</span> rid)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    [] <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="ot">wakeFromWaitQueue ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>wakeFromWaitQueue port <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  st <span class="ot">&lt;-</span> get</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> wqs <span class="ot">=</span> waitQueues st</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> M.lookup port wqs <span class="kw">of</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Just</span> (rid<span class="op">:</span>rs) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- because of select, the woken goroutine might be in</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- several wait queues. we must remove it from all wait queues</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> wqs&#39;  <span class="ot">=</span> M.map (<span class="fu">filter</span> (\rid2 <span class="ot">-&gt;</span> <span class="fu">not</span> (rid <span class="op">==</span> rid2))) wqs</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> rq    <span class="ot">=</span> readyQueue st</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> rq&#39;   <span class="ot">=</span> rq <span class="op">++</span> [rid]</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      put <span class="op">$</span> st { readyQueue <span class="ot">=</span> rq&#39;, waitQueues <span class="ot">=</span> wqs&#39; }</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- nobody to wake!</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Just</span> [] <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="op">$</span> <span class="st">&quot;unknown port &quot;</span> <span class="op">++</span> (<span class="fu">show</span> port)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="ot">addToWaitQueue ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoRoutine</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>addToWaitQueue port rid cont <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  st <span class="ot">&lt;-</span> get </span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> wqs <span class="ot">=</span> waitQueues st</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> M.lookup port wqs <span class="kw">of</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Just</span> wq <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- add to port&#39;s wait queue</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> wq&#39;   <span class="ot">=</span> wq <span class="op">++</span> [rid]</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> wqs&#39;  <span class="ot">=</span> M.insert port wq&#39; wqs</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- update goroutine program with new instruction stream</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> grs <span class="ot">=</span> M.insert rid cont (goroutines st)</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>      put <span class="op">$</span> st { waitQueues <span class="ot">=</span> wqs&#39;, goroutines <span class="ot">=</span> grs }</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="op">$</span> <span class="st">&quot;unknown port &quot;</span> <span class="op">++</span> (<span class="fu">show</span> port)</span></code></pre></div>
+<p>Notice that the interpreter is in a monad transformer stack
+consisting of <code>IO</code> (to print to <code>stdout</code>),
+<code>State</code> (to track runtime state) and <code>Except</code> (to
+handle errors). <code>scheduleNextGoroutine</code> is, as its name
+implies, the scheduling function. It implements a basic round-robin
+scheduler. <code>wakeFromWaitQueue</code> and
+<code>addToWaitQueue</code> either removes or adds a goroutine from
+channel wait queues. The only thing that might give pause is the
+<code>cont</code> argument to <code>addToWaitQueue</code>, which
+contains the rest of the computation (the continuation) that the
+goroutine needs to execute. If we do not update this, the next time the
+goroutine is scheduled it will restart execution of the computation from
+the beginning!</p>
+<p>Once these helper functions are in place, the actual interpreter is
+quite straightforward.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">interpGo ::</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>interpGo prog <span class="ot">=</span> <span class="kw">case</span> prog <span class="kw">of</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- create a new goroutine and add it to the back of the ready queue</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoRun</span> goroutine next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    st <span class="ot">&lt;-</span> get</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rnum  <span class="ot">=</span> nextGoroutine st</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rmap  <span class="ot">=</span> goroutines st</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rmap&#39; <span class="ot">=</span> M.insert rnum goroutine rmap</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rq    <span class="ot">=</span> readyQueue st</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rq&#39;   <span class="ot">=</span> rq <span class="op">++</span> [rnum]</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    put <span class="op">$</span> st {</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            nextGoroutine <span class="ot">=</span> rnum<span class="op">+</span><span class="dv">1</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            goroutines <span class="ot">=</span> rmap&#39;,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            readyQueue <span class="ot">=</span> rq&#39;</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    interpGo next</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- create a new channel</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoMakeChan</span> next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    st <span class="ot">&lt;-</span> get</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> pnum  <span class="ot">=</span> nextPort st</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> pmap  <span class="ot">=</span> portVals st</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> pmap&#39; <span class="ot">=</span> M.insert pnum <span class="dt">Nothing</span> pmap</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> wqs   <span class="ot">=</span> waitQueues st</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> wqs&#39;  <span class="ot">=</span> M.insert pnum [] wqs</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    put <span class="op">$</span> st { nextPort <span class="ot">=</span> pnum<span class="op">+</span><span class="dv">1</span>, portVals <span class="ot">=</span> pmap&#39;, waitQueues <span class="ot">=</span> wqs&#39; }</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    interpGo <span class="op">$</span> next pnum</span></code></pre></div>
+<p><code>GoRun</code> and <code>GoMakeChan</code> create goroutines and
+channels respectively. There’s just a lot of code to update the runtime
+state, but otherwise these are pretty straightfoward.</p>
+<p>Next are <code>GoPutChan</code> and <code>GoGetChan</code>.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- put a value in a channel</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoPutChan</span> port v next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    st <span class="ot">&lt;-</span> get</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> pmap <span class="ot">=</span> portVals st</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rid <span class="ot">=</span> curGoroutine st</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- block goroutine if channel is full,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- otherwise put value into channel</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> M.lookup port pmap <span class="kw">of</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> pmap&#39; <span class="ot">=</span> M.insert port (<span class="dt">Just</span> v) pmap</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        put <span class="op">$</span> st { portVals <span class="ot">=</span> pmap&#39; }</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        wakeFromWaitQueue port</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        interpGo next</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> _ <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        addToWaitQueue port rid prog</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        scheduleNextGoroutine</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        throwError <span class="op">$</span> <span class="st">&quot;Channel &quot;</span> <span class="op">++</span> (<span class="fu">show</span> port) <span class="op">++</span> <span class="st">&quot; not found!&quot;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoGetChan</span> port next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    st <span class="ot">&lt;-</span> get</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> pmap <span class="ot">=</span> portVals st</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rid <span class="ot">=</span> curGoroutine st</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- block goroutine if channel is empty,</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- otherwise get value from channel</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> M.lookup port pmap <span class="kw">of</span> </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        addToWaitQueue port rid prog</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        scheduleNextGoroutine</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> (<span class="dt">Just</span> cval) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> pmap&#39; <span class="ot">=</span> M.insert port <span class="dt">Nothing</span> pmap</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        put <span class="op">$</span> st { portVals <span class="ot">=</span> pmap&#39; }</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>        wakeFromWaitQueue port</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>        interpGo <span class="op">$</span> next cval</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        throwError <span class="op">$</span> <span class="st">&quot;Channel &quot;</span> <span class="op">++</span> (<span class="fu">show</span> port) <span class="op">++</span> <span class="st">&quot; not found!&quot;</span></span></code></pre></div>
+<p>These are duals of each other. <code>GoPutChan</code> puts a value in
+the channel if it is empty, and blocks the goroutine otherwise.
+<code>GoGetChan</code> extracts a value from the channel if it is full,
+and blocks the goroutine otherwise. When either operation is successful
+(i.e. doesn’t block), we wake goroutines that are blocked on the
+channel.</p>
+<p>A subtlety: notice that when the goroutine is blocked on the channel,
+it stores <code>prog</code> as the continuation instead of
+<code>next</code>. This is so because <code>prog</code> contains the
+current instruction being executed, and we want to try executing the
+instruction again when it is woken up. For example, if executing
+<code>GoGetChan</code> blocks on an empty channel, we want to execute
+<code>GoGetChan</code> again when the goroutine is woken up and the
+channel is full.</p>
+<p><code>select</code> is probably the most complicated.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoSelect</span> branches next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    st <span class="ot">&lt;-</span> get</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> rid <span class="ot">=</span> curGoroutine st</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    unblockedBranches <span class="ot">&lt;-</span> filterM isBranchUnblocked branches</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> unblockedBranches <span class="kw">of</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- one of the branches is unblocked. jump to it</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      b<span class="op">:</span>bs <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> bprog v <span class="ot">=</span> (branchProg b) v <span class="op">&gt;&gt;</span> next</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- notice that we have to add the instruction stream after the</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- branch, otherwise it won&#39;t be executed!</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        interpGo <span class="op">$</span> <span class="dt">Free</span> (<span class="dt">GoGetChan</span> (branchChan b) bprog)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- all of the branches are blocked.</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- block the goroutine until one of</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      <span class="co">-- the branches becomes unblocked</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      [] <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> ports <span class="ot">=</span> <span class="fu">map</span> (<span class="fu">snd</span> <span class="op">.</span> branchChan) branches</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        forM ports <span class="op">$</span> \port <span class="ot">-&gt;</span> addToWaitQueue port rid prog</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        scheduleNextGoroutine</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="ot">      isBranchUnblocked ::</span> <span class="dt">GoSelectBranch</span> <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> <span class="dt">Bool</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      isBranchUnblocked branch <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        st <span class="ot">&lt;-</span> get</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> port <span class="ot">=</span> branchChan branch</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- default port is always unblocked</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> port <span class="op">==</span> defaultPort</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">then</span> <span class="fu">return</span> <span class="dt">True</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span> <span class="kw">do</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>          <span class="kw">case</span> M.lookup port (portVals st) <span class="kw">of</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Just</span> <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="dt">False</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Just</span> (<span class="dt">Just</span> cval) <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="dt">True</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>              throwError <span class="op">$</span> <span class="st">&quot;Channel &quot;</span> <span class="op">++</span> (<span class="fu">show</span> port) <span class="op">++</span> <span class="st">&quot; not found!&quot;</span></span></code></pre></div>
+<p>There are two cases:</p>
+<ul>
+<li><p>If there are branches that are unblocked, we pick the first one,
+and essentially execute a <code>GoGetChan</code> command: we extract the
+value from the channel we block on, apply the value to the branch code,
+and then execute it.</p></li>
+<li><p>If all branches are blocked, we block the goroutine.</p></li>
+</ul>
+<p>Another subtlety: notice that we need to bind the <code>next</code>
+argument to the executed branch. Otherwise the rest of the instructions
+after <code>select</code> won’t be executed!</p>
+<p>Finally here’s <code>GoPrint</code>, which is trivial:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoPrint</span> e next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    liftIO <span class="op">$</span> <span class="fu">putStrLn</span> e</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    interpGo next</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- goroutine is finished: run next one</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Pure</span> _ <span class="ot">-&gt;</span> scheduleNextGoroutine</span></code></pre></div>
+<p>We now have a HaskGo interpreter. Let’s write a helper function to
+initialize the runtime state and run the interpreter:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">run_gomain ::</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>run_gomain main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> <span class="fu">init</span> <span class="ot">=</span> <span class="dt">GoRuntime</span> { curGoroutine <span class="ot">=</span> <span class="dv">1</span>, nextGoroutine <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>              goroutines <span class="ot">=</span> M.empty, nextPort <span class="ot">=</span> <span class="dv">1</span>, portVals <span class="ot">=</span> M.empty,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>              waitQueues <span class="ot">=</span> M.empty, readyQueue <span class="ot">=</span> [] }</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> evalStateT (runExceptT (interpGo main)) <span class="fu">init</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> res <span class="kw">of</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Left</span> err  <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> err</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Right</span> _   <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span></code></pre></div>
+<p>Let’s see the output of the producer-consumer HaskGo program from
+above:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> run_gomain bufmain</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>producer<span class="op">-</span>consumer queue running<span class="op">!</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">1</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">2</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">3</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">4</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">5</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">6</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">7</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">8</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">9</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">10</span></span></code></pre></div>
+<p>Works as expected!</p>
+<p>How about something more complicated? Here’s a <a
+href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">sieve of
+Eratosthenes</a>!<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">source ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>source <span class="fu">max</span> c <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  forM_ [<span class="dv">2</span><span class="op">..</span><span class="fu">max</span>] <span class="op">$</span> \i <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    putchan c i</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ot">pfilter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>pfilter p left right <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">GoInt</span> v <span class="ot">&lt;-</span> getchan left</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if</span> v <span class="ot">`mod`</span> p <span class="op">/=</span> <span class="dv">0</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">then</span> <span class="kw">do</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    putchan right v</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    pfilter p left right</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">else</span> <span class="kw">do</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    pfilter p left right</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="ot">sink ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>sink chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">GoInt</span> v <span class="ot">&lt;-</span> getchan chan</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  goprint <span class="op">$</span> <span class="st">&quot;got prime: &quot;</span> <span class="op">++</span> (<span class="fu">show</span> v)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  chan&#39; <span class="ot">&lt;-</span> newchan</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> pfilter v chan chan&#39;</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  sink chan&#39;</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="ot">sievemain ::</span> <span class="dt">GoProgram</span>()</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>sievemain <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  goprint <span class="st">&quot;running prime sieve...&quot;</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> newchan</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> source <span class="dv">50</span> c</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> sink c</span></code></pre></div>
+<p>Let’s break down what’s going on here. <code>source</code> just puts
+integers into a channel in sequence, up to some maximum number.
+<code>sink</code> extracts a value from <code>chan</code> channel, and
+then once it does it spawns off a <code>pfilter</code> goroutine,
+creates a new channel, and then extracts values from that.
+<code>pfilter</code> extracts values from a <code>left</code> chan,
+checks if it is a multiple of <code>p</code>, and if it isn’t passes it
+to the <code>right</code> channel.</p>
+<p>Do you see what’s going on? Every time <code>sink</code> extracts a
+prime number from <code>chan</code>, it creates a new filter between it
+and <code>source</code> to filter out multiples of the prime number just
+extracted. It looks like this:</p>
+<pre><code>source &lt;--&gt; pfilter 2 &lt;--&gt; pfilter 3 &lt;--&gt; ... &lt;--&gt; sink</code></pre>
+<p>And thus:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> run_gomain sievemain</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>running prime sieve<span class="op">...</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">2</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">3</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">5</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">7</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">11</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">13</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">17</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">19</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">23</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">29</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">31</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">37</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">41</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">43</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>got prime<span class="op">:</span> <span class="dv">47</span></span></code></pre></div>
+<p>As you can see, this style of programming leads to particularly
+elegant solutions, even though concurrency isn’t strictly necessary to
+solve them. I’m feeling a little philosophical so I’m going to draw a
+more general lesson here. Most programs we write are structured to
+reflect an increasingly archaic model of hardware: a single-core
+processor executing instructions one at a time. We resort to concurrency
+only when the problem demands it—as in writing web servers or databases,
+for example—or to exploit multicore processors and make our programs
+parallelized. But what if we write concurrent programs simply because
+<em>they’re the most elegant way of solving the problem at hand</em>?
+How will we change how we code if, instead of treating concurrency as a
+tool of last resort or as an optimization, we use it pervasively? Is
+this aversion to concurrency another incarnation of the <a
+href="https://en.wikipedia.org/wiki/Von_Neumann_architecture#Von_Neumann_bottleneck">von
+Neumann bottleneck</a>?</p>
+<p>I’m glad Go has expanded the <a
+href="https://en.wikipedia.org/wiki/Overton_window">Overton window</a>,
+so to speak, when it comes to what counts as mainstream synchronization
+primitives. But the design space is obviously still wide and sparse, and
+I’m sure there are more interesting questions to be answered in the
+offing.</p>
+<p>I digress—now let’s talk about how to make channels more
+interesting.</p>
+<h2 id="haskgo-with-channel-combinators">HaskGo with Channel
+Combinators</h2>
+<p>Here’s where our choice to implement an embedded language instead of
+implementing one from scratch will pay dividends. Let’s say we want to
+implement <em>channel combinators</em>—functions that take a channel,
+does some transformation on it, and return a new channel. What kinds of
+combinators do we want to write? At a very high level, we can see
+channels as semantically being <em>streams</em> of values. So let’s
+start off with some combinators from elementary functional
+programming.</p>
+<p>Here’s a first pass at <code>chan_map</code>, which like regular old
+<code>map</code> applies a function “element-wise” to every value in the
+channel:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ot">chan_map ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoChan</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>chan_map f chan <span class="ot">=</span>  <span class="co">-- WHAT TO PUT HERE??</span></span></code></pre></div>
+<p>Hm. As we’ve seen in the implementation of the HaskGo interpreter, a
+channel value is really just an identifier. There is no way to extract
+values from it outside of the interpreter. So <code>chan_map</code>
+actually needs to be a HaskGo <em>program</em>.</p>
+<p>Here’s a second pass at <code>chan_map</code>:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ot">chan_map ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>chan_map f chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> getchan chan</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  putchan chan (f v)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> chan</span></code></pre></div>
+<p>A little better, though definitely not right either. This will only
+work as intended if <code>chan_map</code> is scheduled to run before any
+other goroutine that extracts a value from <code>chan</code>. Also, this
+will only work at most once, since it only extracts a value from
+<code>chan</code> once.</p>
+<p>What we really need <code>chan_map</code> to do is to spawn a
+<em>new</em> goroutine, one that repeatedly extracts values from
+<code>chan</code>, applies the value to <code>f</code>, and then pushes
+the output of <code>f</code> into a <em>new</em> channel. In this way,
+goroutines pushing values should do it to the old channel, and
+goroutines extracting values should do so from the new channel.</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ot">chan_map ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">GoExpr</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>chan_map f inchan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  outchan <span class="ot">&lt;-</span> newchan </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> map_goroutine outchan</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> outchan</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> map_goroutine outchan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>          v <span class="ot">&lt;-</span> getchan inchan</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>          putchan outchan (f v)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>          map_goroutine outchan</span></code></pre></div>
+<p>This works, albeit awkwardly. Here’s one way to use it:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>source lst chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  forM_ lst <span class="op">$</span> \x <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    putchan chan x</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>sink chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> getchan chan</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  goprint (<span class="fu">show</span> v)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  sink chan</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>mapmain <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  inchan <span class="ot">&lt;-</span> newchan</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  outchan <span class="ot">&lt;-</span> chan_map (\<span class="dt">GoInt</span> x <span class="ot">-&gt;</span> <span class="dt">GoInt</span> (x<span class="op">+</span><span class="dv">100</span>)) inchan</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> source [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>] inchan</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> sink outchan</span></code></pre></div>
+<p>This will work as intended and print out 101 to 200. However, notice
+that the two channels here are being treated as <em>unidirectional</em>:
+one channel is only receiving input (i.e. only calls to the channel are
+<code>putchan</code>) while the other channel is only returning output
+(i.e. only calls to the channel are <code>getchan</code>).
+<code>chan_map</code> spawned off a goroutine to pipe the input from
+<code>inchan</code> to <code>outchan</code>, but that is (and should be)
+invisible to the user. It would be nice if instead of having two
+unidirectional channels, we would have just one bidirectional channel –
+that is, just a regular channel. We want something like this:</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mapmain <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  chan <span class="ot">&lt;-</span> newchan <span class="op">&gt;&gt;=</span> chan_map (\<span class="dt">GoInt</span> x <span class="ot">-&gt;</span> <span class="dt">GoInt</span> (x<span class="op">+</span><span class="dv">100</span>))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> source [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>] chan</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> sink chan</span></code></pre></div>
+<p>The <code>source</code> goroutine puts values 1 to 100 in the
+channel, and then when <code>sink</code> extracts values out of the
+channel it will magically receive 101 to 200. As currently implemented,
+<code>chan_map</code> will not work as intended here. How will we
+implement this feature?</p>
+<p>The trick is as follows: we’re going to change what a channel value
+means. Currently, a channel is a key into a runtime map that may or may
+not hold a value. Now instead of a single key into a runtime map,
+instead it will be a <em>pair</em> of keys: one key will be used to push
+values into the map, and the other key will be used to get values from
+it.</p>
+<p>Some diagrams might help with the explanation.</p>
+<figure>
+<img src="../files/chan-regular.png" alt="Regular channel" />
+<figcaption aria-hidden="true">Regular channel</figcaption>
+</figure>
+<p>The diagram above should be pretty self-explanatory. For this to work
+properly the <code>source</code> function needs to be passed the
+<code>inchan</code> channel and the <code>sink</code> channel needs to
+be passed the <code>outchan</code> channel. <code>chan_map</code>
+currently returns <code>outchan</code>. To make it so that we can pass
+the same channel to both <code>source</code> and <code>sink</code>,
+we’re going to change <code>chan_map</code> so that it returns a
+“virtual” channel: when a goroutine pushes a value to it, the goroutine
+is really pushing a value to <code>inchan</code>; when a goroutine
+extracts a value from it, the goroutine is really extracting a value out
+of <code>outchan</code>. So under the hood the same thing is happening,
+but the interface to the user is a bit nicer. Like so:</p>
+<figure>
+<img src="../files/chan-composition.png" alt="Channel composition" />
+<figcaption aria-hidden="true">Channel composition</figcaption>
+</figure>
+<p>Let’s see how this change looks like in code.</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ChanPort</span> <span class="ot">=</span> <span class="dt">Int</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GoChan</span> <span class="ot">=</span> (<span class="dt">ChanPort</span>, <span class="dt">ChanPort</span>) </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">GoRuntime</span> <span class="ot">=</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">GoRuntime</span> {</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="ot">    curGoroutine  ::</span> <span class="dt">GoRoutine</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    nextGoroutine ::</span> <span class="dt">Int</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ot">    goroutines    ::</span> <span class="dt">M.Map</span> <span class="dt">GoRoutine</span> (<span class="dt">GoProgram</span> ()),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="ot">    nextPort      ::</span> <span class="dt">ChanPort</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="ot">    portVals      ::</span> <span class="dt">M.Map</span> <span class="dt">ChanPort</span> (<span class="dt">Maybe</span> <span class="dt">GoExpr</span>),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="ot">    waitQueues    ::</span> <span class="dt">M.Map</span> <span class="dt">ChanPort</span> [<span class="dt">GoRoutine</span>],</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="ot">    readyQueue    ::</span> [<span class="dt">GoRoutine</span>]</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="ot">wakeFromWaitQueue ::</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>wakeFromWaitQueue port <span class="ot">=</span> <span class="kw">do</span> <span class="op">...</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="ot">addToWaitQueue ::</span> <span class="dt">ChanPort</span> <span class="ot">-&gt;</span> <span class="dt">GoRoutine</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>addToWaitQueue port rid cont <span class="ot">=</span> <span class="kw">do</span> <span class="op">...</span></span></code></pre></div>
+<p>As mentioned above, we’re changing channel values to be pairs of
+keys, one of the “inport” of the channel and another for the “outport”
+of the channel. Hence the name “port” instead of “channel” in the
+runtime code. For the helper functions, nothing really changes except
+the type annotations. Since <code>GoChan</code> is now a pair these
+should instead take in <code>ChanPort</code> arguments.</p>
+<p>Now to changes to the interpreter proper.</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ot">interpGo ::</span> <span class="dt">GoProgram</span> () <span class="ot">-&gt;</span> <span class="dt">GoInterp</span> ()</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>interpGo prog <span class="ot">=</span> <span class="kw">case</span> prog <span class="kw">of</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoMakeChan</span> next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">{- code here stays the same ... -}</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    interpGo <span class="op">$</span> next (pnum, pnum)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoPutChan</span> (port,_) v next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">{- code here stays the same ... -}</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Free</span> (<span class="dt">GoGetChan</span> (_,port) next) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">{- code here stays the same ... -}</span></span></code></pre></div>
+<p>There’s not much to change. <code>GoMakeChan</code> should now return
+a pair. <code>GoPutChan</code> should put values in the first port of
+the channel. <code>GoGetChan</code> should put values in the second port
+of the channel. That’s pretty much it!</p>
+<p>Now, we can finally write <code>chan_map</code>.</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ot">chan_map ::</span> <span class="dt">GoExprable</span> a <span class="ot">=&gt;</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> <span class="dt">GoChan</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>chan_map f inchan<span class="op">@</span>(inchan_put,_) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  outchan<span class="op">@</span>(_, outchan_get) <span class="ot">&lt;-</span> newchan</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> map_goroutine inchan outchan</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (inchan_put, outchan_get)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    map_goroutine inchan outchan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      val <span class="ot">&lt;-</span> getchan inchan</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>      putchan outchan <span class="op">$</span> toGoExpr <span class="op">$</span> f val</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>      map_goroutine inchan outchan</span></code></pre></div>
+<p>And voila!</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> run_gomain mapmain</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">101</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">102</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">103</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">104</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">105</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">106</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">107</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">108</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">109</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="dt">GoInt</span> <span class="dv">110</span></span></code></pre></div>
+<p>Here’s a particularly useful combinator, <code>chan_partition</code>,
+and a nice use for it.</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- partition an input channel into two output channels</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ot">chan_partition ::</span> (<span class="dt">GoExpr</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> (<span class="dt">GoChan</span>, <span class="dt">GoChan</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>chan_partition <span class="fu">pred</span> chan<span class="op">@</span>(chan_put, _) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  lchan<span class="op">@</span>(_, lchan_get) <span class="ot">&lt;-</span> newchan</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  rchan<span class="op">@</span>(_, rchan_get) <span class="ot">&lt;-</span> newchan</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> lchan&#39; <span class="ot">=</span> (chan_put, rchan_get)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> rchan&#39; <span class="ot">=</span> (chan_put, lchan_get)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> partition_goroutine lchan rchan</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (lchan&#39;, rchan&#39;)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    partition_goroutine lchan rchan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>      val <span class="ot">&lt;-</span> getchan chan</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">if</span> <span class="fu">pred</span> val</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">then</span> <span class="kw">do</span> </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        putchan lchan val</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        partition_goroutine lchan rchan</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">else</span> <span class="kw">do</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        putchan rchan val</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>        partition_goroutine lchan rchan</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="ot">count ::</span> <span class="dt">GoExprable</span> a <span class="ot">=&gt;</span> [a] <span class="ot">-&gt;</span> <span class="dt">GoChan</span> <span class="ot">-&gt;</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>count [] chan <span class="ot">=</span> <span class="fu">return</span> ()</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>count (x<span class="op">:</span>xs) chan <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>  putchan chan x</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>  count xs chan</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>printLeftRight n left right <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>  forM_ [<span class="dv">1</span><span class="op">..</span>n] <span class="op">$</span> \_ <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    select [</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>      selcase left (\x <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>        goprint <span class="op">$</span> <span class="st">&quot;left: &quot;</span> <span class="op">++</span> (<span class="fu">show</span> x)</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>      selcase right (\x <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>        goprint <span class="op">$</span> <span class="st">&quot;right: &quot;</span> <span class="op">++</span> (<span class="fu">show</span> x)</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>      )]</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a><span class="ot">eomain ::</span> <span class="dt">GoProgram</span> ()</span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>eomain <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> newchan</span>
+<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a>  (evenchan, oddchan) <span class="ot">&lt;-</span> chan_partition (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> x <span class="ot">`mod`</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>) c</span>
+<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> count ([<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> [<span class="dt">Int</span>]) c</span>
+<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>  go <span class="op">$</span> printLeftRight <span class="dv">10</span> evenchan oddchan</span></code></pre></div>
+<p>And as you’d expect:</p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> run_gomain eomain</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>left<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">1</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>right<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">2</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>left<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">3</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>right<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">4</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>left<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">5</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>right<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">6</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>left<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">7</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>right<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">8</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>left<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">9</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>right<span class="op">:</span> <span class="dt">GoInt</span> <span class="dv">10</span></span></code></pre></div>
+<p>In fact, you can basically just go through Haskell’s <a
+href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Data-List.html">Data.List
+library</a> and implement most of the functions there as channel
+combinators. It’s a fun exercise—I recommend doing it.</p>
+<p>A nice improvement for the future would be to do some kind of
+deforestation analysis on channel combinators. For example, consider the
+channel</p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>newchan <span class="op">&gt;&gt;=</span> chan_map (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> x <span class="op">+</span> <span class="dv">10</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;=</span> chan_map (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> x<span class="op">*</span><span class="dv">2</span>)</span></code></pre></div>
+<p>Instead of creating two intermediate goroutines, we can optimize this
+to just have one:</p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>newchan <span class="op">&gt;&gt;=</span> chan_map (\(<span class="dt">GoInt</span> x) <span class="ot">-&gt;</span> (x<span class="op">+</span><span class="dv">10</span>)<span class="op">*</span><span class="dv">2</span>)</span></code></pre></div>
+<p>I think we can get away with having at most one intermediate
+goroutine that does the transformation between input and output
+channels, no matter how many channel transformations we bind together.
+But it would involve adding extra state to the runtime that keeps track
+of what goroutines feed from and push to which channels.</p>
+<p>That’s it for now. If you want to see the full source code for
+HaskGo, see <a
+href="https://gist.github.com/rolph-recto/5e8ca67f701675103d651795a0c70a89">this
+gist</a>. Until next time!</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>“Free” as in beer (gratis). I’m a little fuzzy on the
+category theory details, but I think free monads are also free, as in
+speech (libre). <a
+href="https://stackoverflow.com/questions/13352205/what-are-free-monads">Here</a>
+is a discussion on StackOverflow to whet your appetite.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>NB: I originally encountered this implementation of the
+sieve in a class for which I was a TA, Cornell’s CS 4410 (Operating
+Systems). It was a testcase for a project that involved implementing a
+threading library in C. The original C code had to manually manage
+channels using semaphores. The HaskGo version is a lot simpler, since
+the semaphores are managed by the runtime: you can see calls to
+<code>addToWaitQueue</code> and <code>wakeFromWaitQueue</code> in the
+interpreter as calls to <code>P()</code> and <code>V()</code> to channel
+semaphores.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2021-07-27" />
+  <title>Rolph Recto – The Alignment Problem by Brian Christian</title>
+  <style>
+    html {
+      line-height: 1.4;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">The Alignment Problem by Brian Christian</h1>
+<p>July 27, 2021</p>
+<p>A lucid account of modern machine learning research. Christian does a
+phenomenal job giving the historical development of ideas in machine
+learning, particularly in the interaction of the fields with neighboring
+disciplines. I particularly enjoyed the sequence describing the exchange
+between reinforcement learning and neuroscience. That Sutton’s idea of
+temporal-difference learning could model the role of dopamine is a great
+scientific achievement and gives real bones to the idea that artificial
+intelligence can be a “transcendental psychology” in the Kantian sense,
+studying not how intelligence manifests in humans but rather the
+conditions for the possibility of intelligence.</p>
+<p>The struggles of learning actions to accomplish explicit goals, and
+the subsequent development of imitation learning and inverse
+reinforcement learning as a response, is really interesting. I think
+these developments parallel earlier developments in cognitive science,
+namely, embodied and embedded cognition: if beliefs and desires aren’t
+just “symbols in the head” but rather are a bit more mushy, then it
+would make sense that we don’t bother representing such beliefs and
+desires explicitly in the AI systems that we build. What does it mean to
+do a backflip? I’m not sure, but I know it when I see it; and sometimes
+I can show you directly. That’s as much as we can do for a lot of
+concepts, a tantalizing possibility that Christian contemplates:</p>
+<blockquote>
+<p>I tell them that what makes the result feel, to me, not just so
+impressive but so hopeful, is that it’s not such a stretch to imagine
+replacing the nebulous concept of “backflip” with an even more nebulous
+and ineffable concept, like “helpfulness.” Or “kindness.” Or “good”
+behavior. “Exactly,” says Leike. “And that’s the whole point,
+right?”</p>
+</blockquote>
+<p>Of course, you can take this to be a practical limitation. Maybe it’s
+in principle possible to define exactly what we mean, and represent it
+formally as a goal for an RL agent to follow. But I would rather take
+this as a <em>Wittgensteinian</em> picture of learning, one where
+definitions of concepts are given by their use and thus cannot be
+disentangled from them. We play language games where “kindness” comes
+into play, and we mean by “kindness” is nothing but the enumeration of
+these games (if we can enumerate them at all). So it would not be
+surprising at all that we can’t give necessary and sufficient conditions
+for kindness, let alone a formal representation of it; but we sure can
+give examples of being kind, and we can demonstrate it. Under this view,
+then, to teach an RL agent is nothing less than to assimilate it in our
+“forms of life.” (Given this, efforts to vouch for the <a
+href="http://petrl.org/">ethical treatment of RL agents</a> sound a bit
+less eggheaded.)</p>
+<p>This leads me to a more general point: I think it would be very
+fruitful looked into philosophy for insights. The discussion on fairness
+clearly echoes a lot of discussion in moral and political philosophy
+(and I’ve seen more than one fairness paper mention and cite <em>A
+Theory of Justice</em> and then proceed to not engage with its contents
+at all); the tangle of specifying goals in reinforcement learning
+clearly echoes debates in philosophy of mind. To his credit Christian
+does, particularly with ethics, discuss connections between AI and
+philosophy, but I think there are a lot more connections to be made.</p>
+<p>As far as the alignment problem itself, I am partial on Christian’s
+take on it:</p>
+<blockquote>
+<p>Even if we—that is, everyone working on AI and ethics, AI and
+technical safety—do our jobs, if we can avoid the obvious dystopia and
+catastrophes, which is far from certain—we still have to overcome the
+fundamental and possibly irresistible progression into a world that
+increasingly is a formalism. We must do this even as, inevitably, we are
+shaped—in our lives, in our imaginations, in our bodies—by those very
+models. This is the dark side of Rodney Brooks’s famous robotics
+manifesto: “The world is its own best model.” Increasingly, this is
+true, but not in the spirit Brooks meant it. The best model of the world
+stands in for the world itself, and threatens to kill off the real
+thing. We must take great care not to ignore the things that are not
+easily quantified or do not easily admit themselves into our models. The
+danger, paraphrasing Hannah Arendt, is not so much that our models are
+false but that they might become true.</p>
+</blockquote>
+<p>It’s not the existential risk of paperclip maximizers that I’m
+worried about. Rather, it is the fact that the world is increasingly
+becoming hyperreal, where the distinction between the world and its
+representations is increasingly becoming blurred. Those who long for the
+Singularity and uploading our consciousness into the internet really are
+longing for the acceleration of hyperreality, which is why I don’t
+understand them. They see this terrible thing happening and they want
+more of it!</p>
+</body>
+</html>

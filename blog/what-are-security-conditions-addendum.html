@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2021-08-29" />
+  <title>Rolph
+Recto – What Are Security Conditions? - An Addendum on Noninterference</title>
+  <style>
+    html {
+      line-height: 1.4;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">What Are Security Conditions? - An Addendum on
+Noninterference</h1>
+<p>August 29, 2021</p>
+<p>In <a href="/blog/what-are-security-conditions.html">my last blog
+post</a>, I argued that noninterference is an inadequate security
+condition because many, if not most, secure programs have intentional
+information release. A thought that I did not entertain is whether
+noninterference can accurate classify programs with no intentional
+information release. Is noninterference a necessary and sufficient
+condition for such programs?</p>
+<p>Let’s approach this question with a concrete example. Here is a bog
+standard definition of noninterference for sequential programs:</p>
+<blockquote>
+<p>Let <span class="math inline">\(P\)</span> be a program and <span
+class="math inline">\(M_1\)</span> and <span
+class="math inline">\(M_2\)</span> be memories that have equivalent
+public values. Let running <span class="math inline">\(P\)</span> with
+<span class="math inline">\(M_1\)</span> as its initial memory arrive at
+final memory <span class="math inline">\(M_1^\prime\)</span> and running
+<span class="math inline">\(P\)</span> with <span
+class="math inline">\(M_2\)</span> as its initial memory arrive at final
+memory <span class="math inline">\(M_2^\prime\)</span>. Then <span
+class="math inline">\(P\)</span> satisfies noninterference when <span
+class="math inline">\(M_1^\prime\)</span> and <span
+class="math inline">\(M_2^\prime\)</span> have equivalent public
+values.</p>
+</blockquote>
+<p>For a program to satisfy this definition, it must not leak the secret
+values in its initial memory. But we can easily imagine programs that
+satisfy the definition that still leak these secrets. For example:</p>
+<pre><code>while (secret &lt; 0) {
+  secret--;
+}</code></pre>
+<p>The program doesn’t read or write public values, so obviously any two
+runs that start with the same public values will end with the same
+public values as well. This means that the program satisfies
+noninterference as stated above. At the same time there’s a clear way
+that the program leaks information: the execution time of the program
+directly correlates with the value of <code>secret</code>. Thus if the
+adversary can measure the execution time, it can glean the value of
+<code>secret</code>!</p>
+<p>The program above is a classic example of an external timing channel,
+a particularly pernicious kind of side channel. The upshot is that
+noninterference as stated above is not a sufficient condition for secure
+programs with no intentional information release. The definition is,
+however, still necessary—all secure programs with no intentional
+information release should satisfy it.</p>
+<p>Can you patch the definition so it does not admit programs with
+timing channels? Here’s the pessimistic take. Definitions of
+noninterference are usually given over the operational semantics of a
+program. But the operational semantics of a program is nothing but a
+model of a program’s execution in an actual machine. We can imagine an
+operational semantics with an additional “counter” component that gets
+incremented at every step, and a revision of noninterference that
+demands that two runs of a program not only have public-equivalent
+memories but equal counters at termination. This might work—but now you
+have to assume that all steps take the same amount of time, which
+ignores things such as cache effects and the <a
+href="https://ranjitjhala.github.io/static/subnormal.pdf">inherent
+variability</a> between instruction execution times.</p>
+<p>In other words, it might lead to a better model, but it is a model
+nonetheless, and thus abstracts out some implementation details. But
+side effects are all about leaking information through implementation
+details! So unless we have a <a
+href="https://kwarc.info/teaching/TDM/Borges.pdf">Borgesian</a> model as
+exact as the program executing in a real machine, we can’t be sure that
+a definition of noninterference has ruled out all possible leaks through
+side channels.</p>
+<p>This leads us to the conclusion that there are at least two sources
+of incompleteness for security conditions—that is, why programs
+satisfying such conditions are not necessarily secure:</p>
+<ul>
+<li>Inability to exactly capture intentional information release</li>
+<li>Inability to capture all possible side channels through which
+information can be leaked</li>
+</ul>
+<p>Let’s zoom out to the bigger picture. Assume that any intentional
+information release you would want to have in a secure program can be
+captured approximately as a “relaxed” security condition (i.e. a
+security condition that, unlike noninterference, allows for intentional
+information release). Then we can visualize the space of programs as
+follows.</p>
+<figure>
+<img src="../files/secure-programs.png"
+alt="Sets of secure programs and programs satisfying security conditions" />
+<figcaption aria-hidden="true">Sets of secure programs and programs
+satisfying security conditions</figcaption>
+</figure>
+<p>Let’s go down the sets from largest to smallest. The first set is the
+set of programs that satisfy relaxed security conditions—i.e., given the
+set of relaxed security conditions <span
+class="math inline">\(SC\)</span> and set of programs <span
+class="math inline">\(P_{c}\)</span> that satisfy a particular relaxed
+security condition <span class="math inline">\(c\)</span>, then the
+largest set is <span class="math inline">\(\bigcap_{c \in SC}
+P_c\)</span>. The second set is the set of all secure programs,
+including those with intentional information release. The third set is
+the set of programs satisfying some definition of noninterference.
+Finally, the fourth set is the set of secure programs with no
+intentional information release.</p>
+<p>The second and fourth sets classifying secure programs are “fuzzy”,
+in that we have no formal way of characterizing such sets the way we do
+for the first and third sets, which classify programs that satisfy some
+security conditions. Two of the big research programs in language-based
+security is to more and more accurately characterize the second and
+fourth sets by way of the first and third sets. As we get better and
+better at characterizing intentional information release, the first set
+gets smaller and approaches the second set. As our operational models
+get better and better at capturing side channels that can leak
+information in programs, the third set gets smaller and approaches the
+fourth set. I doubt that the first and second sets and the third and
+fourth sets respectively will ever coincide, but it is fruitful research
+nonetheless to try.</p>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2016-01-07" />
+  <title>Rolph
+Recto – Simulating Random Walks with the List Monad</title>
+  <style>
+    html {
+      line-height: 1.4;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">Simulating Random Walks with the List Monad</h1>
+<p>January 07, 2016</p>
+<p>The List monad is usually used to model nondeterministic
+computations: it allows you to describe taking a choice from a set of
+possibilities and then merge the outcomes from each possibility
+together. In this post I’ll show how to use the List monad to simulate a
+canonical nondeterministic computation: a random walk.</p>
+<h2 id="random-walks">Random Walks</h2>
+<p>Here’s a quick refresher on random walks before we discuss their
+implementation. Random walks are stochastic processes, which are
+collections of random variables indexed over time. For simplicity we’ll
+take a “random walk” to mean processes with the following properties:<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<ul>
+<li><p><em>Runs on discrete time and a discrete state space</em>. That
+means that the random variables in the process are indexed by the
+natural numbers, and can take integer values.</p></li>
+<li><p><em>Satisfies the Markov property</em>. Intuitively, the Markov
+property means that the probability that the process will inhabit some
+state in the future only depends on the current state of the process,
+not its history or the path that it took to get to the current state.
+Formally, the Markov property is the requirement that</p></li>
+</ul>
+<p><span class="math display">\[
+P(X_n = s_n | X_{n-1} = s_{n-1}, \ldots, X_0 = s_0) = P(X_n = s_n |
+X_{n+1} = s_{n-1}).
+\]</span></p>
+<ul>
+<li><em>Does not jump</em>. This means that the process is on state
+<span class="math inline">\(s\)</span>, the only possible states that it
+can occupy are at most 1 state away – that is, it can only occupy <span
+class="math inline">\(s-1\)</span>, <span
+class="math inline">\(s\)</span>, or <span
+class="math inline">\(s+1\)</span> in the next timestep.</li>
+</ul>
+<p>The first example of a random walk that we’ll discuss is the aptly
+named <em>simple random walk</em>. This process starts at 0 and moves
+left or right with equal probability. Formally, a simple random walk is
+defined as follows:</p>
+<p><span class="math display">\[
+X_0 = 0
+\]</span></p>
+<p><span class="math display">\[
+P(X_{n+1} = s + 1 \mid X_n = s) = P(X_{n+1} = s - 1 \mid X_n = s) = 1/2.
+\]</span></p>
+<p>We can create variations of the simple random walk. For example, what
+if we set the process so that once it reaches some state, it never
+leaves that state? We would have a <em>random walk with absorbing
+boundaries</em>, which we can characterize formally as</p>
+<p><span class="math display">\[
+P(X_{n+1} = b \mid X_n = b) = 1
+\]</span></p>
+<p><span class="math display">\[
+P(X_{n+1} = s + 1 \mid X_n = s) = P(X_{n+1} = s - 1 \mid X_n = s) = 1/2.
+\]</span></p>
+<p>where <em>b</em> is the boundary state and <em>s</em> is any
+non-boundary state.</p>
+<p>What if instead of never leaving the boundary state, the process
+“bounces” off of the boundary? We get a <em>random walk with reflecting
+boundaries</em>, characterized formally as</p>
+<p><span class="math display">\[
+P(X_{n+1} = lo+1 \mid X_n = lo) = 1
+\]</span></p>
+<p><span class="math display">\[
+P(X_{n+1} = hi-1 \mid X_n = hi) = 1
+\]</span></p>
+<p><span class="math display">\[
+P(X_{n+1} = s + 1 \mid X_n = s) = P(X_{n-1} = s - 1 \mid X_n = s) = 1/2.
+\]</span></p>
+<p>where <em>lo</em> is a “low” boundary, which bounces the process to
+the right, <em>hi</em> is a “high” boundary, which bounces the process
+to the left, and <em>s</em> is any non-boundary state.</p>
+<h2 id="simulation-with-the-list-monad">Simulation with the List
+Monad</h2>
+<p>The List monad can simulate a random walk by transforming a list of
+possible states that a random walk can occupy into a new list of
+possible states and the requisite probability of being in that state by
+applying one-step transition probabilities.<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>To better understand how this works, I’ll employ an analogy. Think of
+the probability of a process being in a particular state as being a pile
+of sand. The higher the pile of sand, the higher the probability of the
+process being in that state (at a particular time). As the process runs,
+the pile of sand can be moved or spread around – maybe one big pile
+becomes two smaller piles in some other states – but, following
+Kolmogorov’s axioms, the total amount of sand that the process started
+with cannot change: all the piles of sand must add up to a height of
+1.</p>
+<p>Take the simple random walk. At the beginning of the process, there
+is only one pile of sand of height 1, which is located at 0. At timestep
+1, the pile at 0 gets split in half; the halves are moved to the left
+and right, so there is a pile at -1 of height 0.5 and a pile at 1 of
+height 0.5. The animation below visualizes how the “pile of sand” gets
+spread from 0 to neighboring states as time goes by.</p>
+<p><img src="../img/random-walk.gif" /></p>
+<p>However, don’t let the analogy confuse you: the piles of sand
+represent the <em>probabilities</em> of being at particular states.
+There can be many piles of sand at any given timestep, since there can
+be many states for which there is nonzero probability that the process
+is in that state. But <em>at any given time, the process is exactly at
+one state</em>.</p>
+<p>You can think of a transition function for a process as a rule for
+how to move around a pile of sand located at a particular state. For the
+simple random walk, a “sand-ified” version of the transition rule is:
+<em>for a pile of sand located anywhere, split the pile in half, putting
+one half to the left and the other half to the right</em>.</p>
+<p>Here’s the version for a random walk with absorbing boundaries:
+<em>for a pile of sand not located in a boundary state, split the pile
+in half, putting one half to the left and the other half to the right;
+do not move a pile of sand located at a boundary state</em>.</p>
+<p>Here’s the version for a random walk with reflecting boundaries:
+<em>for a pile of sand not located in a boundary state, split the pile
+in half, putting one half to the left and the other half to the right;
+for the pile in the low boundary, move the entire pile to the right; for
+the pile in the high boundary, move the entire pile to the
+left</em>.</p>
+<p>We can take these descriptions and essentially transliterate them to
+Haskell:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">srw ::</span> (<span class="dt">State</span>, <span class="dt">Probability</span>) <span class="ot">-&gt;</span>  [(<span class="dt">State</span>, <span class="dt">Probability</span>)]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>srw (x,p) <span class="ot">=</span> [(x<span class="op">-</span><span class="dv">1</span>,p<span class="op">*</span><span class="fl">0.50</span>), (x<span class="op">+</span><span class="dv">1</span>,p<span class="op">*</span><span class="fl">0.50</span>)]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ot">absorb ::</span> <span class="dt">State</span> <span class="ot">-&gt;</span> <span class="dt">State</span> <span class="ot">-&gt;</span> (<span class="dt">State</span>, <span class="dt">Probability</span>) <span class="ot">-&gt;</span> [(<span class="dt">State</span>, <span class="dt">Probability</span>)]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>absorb lo hi (x,p) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> x <span class="ot">=</span> lo    <span class="ot">=</span> [(x,p)]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> x <span class="ot">=</span> hi    <span class="ot">=</span> [(x,p)]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> [(x<span class="op">-</span><span class="dv">1</span>,p<span class="op">*</span><span class="fl">0.50</span>), (x<span class="op">+</span><span class="dv">1</span>,p<span class="op">*</span><span class="fl">0.50</span>)]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ot">reflect ::</span> <span class="dt">State</span> <span class="ot">-&gt;</span> <span class="dt">State</span> <span class="ot">-&gt;</span> (<span class="dt">State</span>, <span class="dt">Probability</span>) <span class="ot">-&gt;</span> [(<span class="dt">State</span>, <span class="dt">Probability</span>)]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>reflect lo hi (x,p) </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> x <span class="op">==</span> lo   <span class="ot">=</span> [(x<span class="op">+</span><span class="dv">1</span>,p)]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> x <span class="op">==</span> hi   <span class="ot">=</span> [(x<span class="op">-</span><span class="dv">1</span>,p)]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> [(x<span class="op">-</span><span class="dv">1</span>,p<span class="op">*</span><span class="fl">0.50</span>), (x<span class="op">+</span><span class="dv">1</span>,p<span class="op">*</span><span class="fl">0.50</span>)]</span></code></pre></div>
+<p>Note that we use the following type synonyms above:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">State</span> <span class="ot">=</span> <span class="dt">Int</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Probability</span> <span class="ot">=</span> <span class="dt">Double</span></span></code></pre></div>
+<p>Now we can <code>bind</code> these functions directly to an
+distribution (i.e., a list of state-probability tuples) and get the next
+timestep. For the simple random walk, it looks like this:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[(<span class="dv">0</span>,<span class="fl">1.0</span>)] <span class="op">&gt;&gt;=</span> srw</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> [(<span class="op">-</span><span class="dv">1</span>,<span class="fl">0.5</span>), (<span class="dv">1</span>,<span class="fl">0.5</span>)]</span></code></pre></div>
+<p>So the output is exactly the probability distribution of <span
+class="math inline">\(X_1\)</span>. To get subsequent timesteps, we can
+chain binds to <code>srw</code>:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>[(<span class="dv">0</span>,<span class="fl">1.0</span>)] <span class="op">&gt;&gt;=</span> srw <span class="op">&gt;&gt;=</span> srw</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> [(<span class="op">-</span><span class="dv">2</span>,<span class="fl">0.25</span>), (<span class="dv">0</span>,<span class="fl">0.25</span>), (<span class="dv">0</span>,<span class="fl">0.25</span>), (<span class="dv">2</span>,<span class="fl">0.25</span>)]</span></code></pre></div>
+<p>This looks almost right, except there are two entries for 0. This is
+expected because there are two ways of going back to 0 after 2
+timesteps: go left to -1 then right back to 0, or right to 1 then left
+back to 0. Thus the first entry for 0 is the joint probability of
+stepping to the left then stepping to the right; the second entry for 0
+is the joint probability of stepping to the left then stepping to the
+right. Since we only care about the total probability of being in some
+state at some timestep, we marginalize and add these two joint
+probabilities. We can do that generically with the
+<code>marginalize</code> function:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">marginalize ::</span> <span class="dt">Distribution</span> <span class="ot">-&gt;</span> <span class="dt">Distribution</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>marginalize dist <span class="ot">=</span> M.toList <span class="op">$</span> <span class="fu">foldr</span> addPath M.empty dist</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> sumProb (x,p) acc <span class="ot">=</span> <span class="fu">maybe</span> p (<span class="op">+</span>p) (M.lookup x acc)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        addPath (x,p) acc <span class="ot">=</span> M.insert x (sumProb (x,p) acc) acc</span></code></pre></div>
+<p>Marginalizing also ensures that our simulation is efficient; since
+the transition function processes every element of the list, by
+marginalizing we make the runtime linear relative to the number of
+possible states the process can inhabit instead of linear relative to
+the number of possible paths that the process can take – which is
+exponential relative to the timestep!</p>
+<p>Now we complete our implementation by writing a function that chains
+<em>n</em> transition functions together, allow us to simulate the
+process up to any timestep <em>n</em>:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">runWalk ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TransitionRule</span> <span class="ot">-&gt;</span> <span class="dt">Distribution</span> <span class="ot">-&gt;</span> <span class="dt">Distribution</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>runWalk n step <span class="fu">init</span> <span class="ot">=</span> foldl&#39; apm <span class="fu">init</span> (<span class="fu">replicate</span> n step)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> apm acc f <span class="ot">=</span> marginalize (acc <span class="op">&gt;&gt;=</span> f)</span></code></pre></div>
+<p>Note that we use the following type synonyms above:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Distribution</span> <span class="ot">=</span> [(<span class="dt">State</span>,<span class="dt">Probability</span>)]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">TransitionRule</span> <span class="ot">=</span> (<span class="dt">State</span>, <span class="dt">Probability</span>) <span class="ot">-&gt;</span> <span class="dt">Distribution</span></span></code></pre></div>
+<p>Notice that we marginalize at the every step of the fold and we use
+<code>foldl'</code> instead of <code>foldr</code>, which evaluates the
+output of the binary function before appending it to the accumulator, to
+make sure <code>runWalk</code> is efficient.</p>
+<p>Alternatively, you can also use Kleisi composition to compose
+<em>n</em> monadic functions and get an <em>n</em>-step transition
+function:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">runWalk&#39; ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TransitionRule</span> <span class="ot">-&gt;</span> <span class="dt">Distribution</span> <span class="ot">-&gt;</span> <span class="dt">Distribution</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>runWalk&#39; n step <span class="fu">init</span> <span class="ot">=</span> <span class="fu">init</span> <span class="op">&gt;&gt;=</span> stepN</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> stepN <span class="ot">=</span> <span class="fu">foldr</span> (<span class="op">&gt;=&gt;</span>) (<span class="fu">return</span>) (<span class="fu">replicate</span> n step)</span></code></pre></div>
+<p>However, while elegant, this is very inefficient especially when
+<em>n</em> gets large, so I’d recommend using <code>runWalk</code>
+instead since they are equivalent.</p>
+<p>Let’s observe some simulations. Here’s a simple random walk up to 10
+timesteps:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>runWalk <span class="dv">10</span> srw [(<span class="dv">0</span>,<span class="fl">1.0</span>)]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> [(<span class="op">-</span><span class="dv">10</span>,<span class="fl">9.76e-4</span>),(<span class="op">-</span><span class="dv">8</span>,<span class="fl">9.76e-3</span>),(<span class="op">-</span><span class="dv">6</span>,<span class="fl">4.39e-2</span>),(<span class="op">-</span><span class="dv">4</span>,<span class="fl">0.11</span>),(<span class="op">-</span><span class="dv">2</span>,<span class="fl">0.20</span>),(<span class="dv">0</span>,<span class="fl">0.24</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">2</span>,<span class="fl">0.20</span>),(<span class="dv">4</span>,<span class="fl">0.11</span>),(<span class="dv">6</span>,<span class="fl">4.39e-2</span>),(<span class="dv">8</span>,<span class="fl">9.76e-3</span>),(<span class="dv">10</span>,<span class="fl">9.76e-4</span>)]</span></code></pre></div>
+<p>If that distribution looks familiar, it should be – it’s the binomial
+distribution! Here’s an intuition for why this is true: consider
+stepping to the right as a “success” and stepping to the left as a
+“failure”. The probability of moving along a certain path (of having a
+certain sequence of successes and failures) can be calculated by
+multiplying the probability of moving left or right in sequence. For
+example, if a path consists of left, right, left, then the probability
+of the process taking this path is <span
+class="math inline">\((1-p)p(1-p)\)</span>. Since in a simple random
+walk <span class="math inline">\(p = 1/2\)</span>, <span
+class="math inline">\(p = 1 - p\)</span> and thus the probability of the
+path is <span class="math inline">\(p^3\)</span>. This gives us an even
+stronger property: <em>the possible paths taken by the process for any
+timestep is uniformly distributed</em>.</p>
+<p>Notice, however, that given a certain path that makes the process end
+up in some state, <em>the process will still end up in that state no
+matter how you rearrange the steps in the path</em>. If the process
+steps left, right, left, it ends up at -1; but it will also end up at -1
+if it steps left, left, right, or right, left, left. Thus, while paths
+are equiprobable, the probability of the process ending up at some state
+is determined by the number of ways you can rearrange the steps in a
+single path that ends in that state. This is given by the binomial
+coefficient, and hence the distribution of <span
+class="math inline">\(X_n\)</span> is binomial. More formally, for a
+simple random walk</p>
+<p><span class="math display">\[
+P(X_n = i) = \binom{n}{(i+n)/2} \left ( \dfrac{1}{2} \right )^n
+\]</span></p>
+<p>where <span class="math inline">\(i \in \{ -n, -n+2, -n+4, \ldots,
+n-4, n-2, n \}\)</span>.</p>
+<p>Here is a random walk with absorbing boundaries after 1000 timesteps,
+where the boundary states are -5 and 5:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>runWalk <span class="dv">1000</span> absorb [(<span class="dv">0</span>,<span class="fl">1.0</span>)]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> [(<span class="op">-</span><span class="dv">5</span>,<span class="fl">0.49</span>),(<span class="op">-</span><span class="dv">4</span>,<span class="fl">1.98e-23</span>),(<span class="op">-</span><span class="dv">2</span>,<span class="fl">5.20e-23</span>),(<span class="dv">0</span>,<span class="fl">6.43e-23</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="dv">2</span>,<span class="fl">5.20e-23</span>),(<span class="dv">4</span>,<span class="fl">1.98e-23</span>),(<span class="dv">5</span>,<span class="fl">0.49</span>)]</span></code></pre></div>
+<p>So after a long time we can expect that the process will be in one of
+the two boundary states – this makes sense, since the longer it runs the
+more chances it has of reaching a boundary state, and once it does so it
+never leaves. There is equal probability of reaching one boundary state
+instead of another since the initial state of the process is equidistant
+to both boundaries.</p>
+<p>Here is a random walk with reflecting boundaries after 1000
+timesteps, where the boundary states are -5 and 5:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>runWalk <span class="dv">1000</span> reflect [(<span class="dv">0</span>,<span class="fl">1.0</span>)]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> [(<span class="op">-</span><span class="dv">4</span>,<span class="fl">0.20</span>), (<span class="op">-</span><span class="dv">2</span>,<span class="fl">0.20</span>), (<span class="dv">0</span>,<span class="fl">0.20</span>), (<span class="dv">2</span>,<span class="fl">0.20</span>), (<span class="dv">4</span>,<span class="fl">0.20</span>)]</span></code></pre></div>
+<p>So after a long time the probability of the process inhabit some
+state is equal to all other states within the boundary are equal!
+Intuitively, you can think of a wave (of sand!) in a pool: the wave
+loses energy by hitting the walls of the pool, so that after a while it
+dies off and the pool becomes calm again.</p>
+<p>I’ve only mentioned three transition functions here, but in reality
+the code we’ve outlined here can work for any arbitrary transition
+function. Check out the code in <a
+href="http://github.com/rolph-recto/stochastic-process/blob/master/RandomWalk.hs">this
+Github repo</a> and implement your own!</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>There are other processes such as Brownian motion, which
+has a continuous state space and runs on continuous time, that can be
+called random walks, but we’ll punt on those and focus on these simpler
+examples.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>This is usually described either as a probability
+formula or, more commonly for processes with finite state spaces, the
+stochastic matrix P.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
