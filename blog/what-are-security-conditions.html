@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2021-08-12" />
+  <title>Rolph Recto – What are Security Conditions?</title>
+  <style>
+    html {
+      line-height: 1.4;
+      font-size: 1.1em;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">What are Security Conditions?</h1>
+<p>August 12, 2021</p>
+<p>I had a research meeting with my <a
+href="https://www.cs.cornell.edu/andru/">advisor</a> a while ago where I
+was describing a new security condition and trying to justify why we
+should care that programs enforce it. I had an example program that is
+clearly insecure that my condition deems to be so, but I was despairing
+because I also thought of another program that to me is clearly insecure
+but my condition admits as secure.</p>
+<p>My advisor was more sanguine than I was about the situation. “If
+someone wrote the second program, they should have just written a better
+one,” he said. A glib and funny response, yes—but I think I got what he
+meant, and it got me thinking about what security conditions really
+are.</p>
+<p>The usual move in language-based security is to define a security
+condition and then show that an enforcement mechanism, usually a type
+system, defends it. In turn, the standard pitch we give about type
+systems to developers—the grand bargain offered by programming languages
+research, if you will—is a trade-off between expressiveness and
+guaranteed properties. We tell developers: <em>write your program so
+that it satisfies these conditions, and we can guarantee these
+properties about your program</em>. This, it turns out, is a very good
+bargain in practice.</p>
+<p>So you might imagine that, applied to security-typed languages, the
+trade-off for expressiveness and the annotation burden of writing
+security labels throughout your program is a guarantee that your program
+is secure. After all, isn’t that what a security conditions intuitively
+is: a definition of what it means for a program to be secure? So how can
+my advisor think that it is okay for a program to be clearly insecure
+while still satisfying my security condition?</p>
+<p>Let’s start with noninterference, the standard security condition
+defended by most security-typed languages. Roughly (and this is
+<em>quite</em> rough; there are many, many variants), a program
+satisfies noninterference if changing the secret inputs to a program
+does not change its public outputs. This is supposed to capture the fact
+that secret data do not influence (do not flow to) public data. That
+sounds like in the ballpark of what we mean by security (for
+confidentiality, anyway)—it guarantees that <em>no</em> information
+about secrets is encoded in public data.</p>
+<p>The problem is that noninterference is a very exacting condition. In
+a sealed-bid auction, for example, parties must construct their bids
+without any information about other bids, but the auctioneer must
+necessarily reveal some information about all bids to all parties to
+declare the winner (e.g. Bob is not supposed to know Alice’s bid, but if
+the auctioneer declares Alice the winner then Bob knows at least that
+Alice’s bid is greater than his). This immediately violates
+noninterference. Almost every real program you would want to write is
+like this: they involve intentional information release, or
+declassification. The literature on language-based security has focused
+largely on noninterference, but I think this is an artefact of how
+cleanly it can be formalized than its actual usefulness.</p>
+<p>So this means we have to look beyond noninterference and define a
+security condition that both allows for intentional information release
+and captures our intuitive notion of “security.” Whereas noninterference
+comes close to this intuition (“no secret information is encoded in
+public information”), our intuitions for “security that allows for
+intentional information release” fail us because <em>insecurity is
+characterized by information release</em>. What we are really asking
+for, then, is a security condition that demarcates between unintentional
+and intentional information release—we reject programs that do the
+former, and accept programs that do the latter.</p>
+<p>You might guess at this point that searching for a security condition
+that neatly divides between intentional and unintentional information
+release is a fool’s errand. But we still want <em>some</em> security
+condition. At this point, then, we must revisit what a security
+condition is. If it is not defining security, then what is it doing?</p>
+<p>Here’s the punchline: <em>security conditions, particularly those
+that allow for intentional information release, are necessary conditions
+on secure programs.</em> Under this reading, a security condition at
+best can codify general principles that negatively define intentional
+information release. That is, it can characterize what information
+release <em>isn’t</em> intentional—it cannot positively define what
+information release <em>is</em> intentional.</p>
+<p>For example, the security condition of <a
+href="https://www.cs.cornell.edu/andru/papers/csfw01.pdf">robust
+declassification</a> states that the principals to whom you are
+releasing information should not be able to influence the decision to
+declassify nor the value to be declassified. So if you have a program
+where Bob can influence whether Alice declassifies data to him, robust
+declassification would reject this program, under the assumption that
+you never intend to give Bob such power—the program you wrote must have
+a bug. On the other hand, if you have a program where Bob can’t
+influence whether Alice declassifies data to him, it satisfies robust
+declassification but this is no guarantee that the program is secure.
+Maybe in the program Alice sends Bob her SSN instead of her birth
+date!</p>
+<p>This is interesting because this means that security conditions are
+designed to be complete but unsound for capturing intentional
+information release. They aim to guarantee that all programs with
+intentional information release are accepted, but not that all accepted
+programs have intentional information release. This is the opposite of
+type systems, which are usually sound but incomplete: they can guarantee
+that all well-typed programs satisfy the relevant property, but not that
+all programs that satisfy the relevant property can be well-typed.</p>
+<p>You might wonder why this is the case. I think it’s because
+negatively defining what information release is unintentional is much
+easier than positively defining what information release is intentional.
+To do the former, you just need to capture common mistakes regarding
+information release to prevent programmers from making such mistakes.
+It’s not clear to me how you would even attempt to do the latter.</p>
+<p>Of course, my advisor is well aware that security conditions are just
+necessary conditions, hence his reaction to my conundrum. The game in
+language-based security is to identify common patterns of insecurity in
+programs and then define security conditions that eliminate them. We’ll
+never reach a “true” definition of security—that way lies human
+intention and thus all the messiness of life—but the hope is that we
+eliminate enough security bugs to gain assurance in the software that we
+build.</p>
+</body>
+</html>

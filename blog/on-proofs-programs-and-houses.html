@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2020-12-22" />
+  <title>Rolph Recto – On Proofs, Programs, and Houses</title>
+  <style>
+    html {
+      line-height: 1.4;
+      font-size: 1.1em;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">On Proofs, Programs, and Houses</h1>
+<p>December 22, 2020</p>
+<p>I recently read the (in)famous <a
+href="https://www.cs.umd.edu/~gasarch/BLOGPAPERS/social.pdf">“Social
+Processes” paper</a> that dismissed the then-nascent area of program
+verification. Forty years after its publication, there’s still a lot of
+things that the paper got right, especially in the assumption of
+“continuity” in verifying toy programs to verifying real systems. Of
+course, in a world where <a href="https://compcert.org/">CompCert</a>
+and <a href="https://sel4.systems/">seL4</a> exist, verification has not
+quite died as De Millo, Lipton, and Perlis had expected (or wished), and
+these developments show that the authors were overly pessimistic in
+their assessment of program verification’s viability.</p>
+<p>Also, I found the disanalogy the paper makes between proofs of
+mathematical theorems and program verification, from which it draws much
+of its rhetorical power, to be misguided. The authors make much hay of
+the difference between proofs and verifications, but caring about this
+difference betrays a wrong view of the role of verification in software
+development. In this post, I will explain why this is the case.</p>
+<p>NB: I don’t work in verification, so take what I’m writing as from
+the perspective of a lay observer, not an expert!</p>
+<h2 id="verifications-are-not-proofs">Verifications are not proofs</h2>
+<p>Despite the dream of the formalists, the everyday work of
+mathematicians still consists of writing proofs that are very far
+removed from a sequence of deductions in, say, a Hilbert-style formal
+system.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> Their informality means that, as
+evidenced by the paper’s summary of erroneous independence proofs in set
+theory, it is actually quite common for proofs to be wrong.</p>
+<p>But this informality is by design, since proofs are meant to provide
+that most mystical of psychological phenomena: <em>intuition</em>. As
+the authors beautifully put it:</p>
+<blockquote>
+<p>[T]he proof of a theorem is a message. A proof is not a beautiful
+abstract object with an independent existence. No mathematician grasps a
+proof, sits back, and sighs happily at the knowledge that he can now be
+certain of the truth of his theorem. He runs out into the hall and looks
+for someone to listen to it.</p>
+</blockquote>
+<p>More than anything, mathematical proofs are inputs to a social
+process, where mathematicians read proofs; internalize and paraphase
+them in their own words; discuss them with other mathematicians; refute
+them and give counterexamples; generalize them; connect them with other
+known theorems. A proof alone does not lead to the establishment of some
+mathematical fact—rather it is the organic whole of this social process
+that leads the mathematical community to believe the fact.</p>
+<p>In contrast, compared to their mathematical counterparts,
+verifications of programs—then and now—function very poorly as vehicles
+for intuition. They are long and tedious, involving endless bits of
+shallow reasoning, as anyone who has tried to verify programs in Hoare
+logic know. Unlike mathematical proofs, no one really is chomping at the
+bit to read how some program was verified:</p>
+<blockquote>
+<p>Verifications are not messages; a person who ran out into the hall to
+communicate his latest verification would rapidly fred himself a social
+pariah. Verifications cannot really be read; a reader can flay himself
+through one of the shorter ones by dint of heroic effort, but that’s not
+reading. Being unreadable and—literally—unspeakable, verifications
+cannot be internalized, transformed, generalized, used, connected to
+other disciplines, and eventually incorporated into a community
+consciousness. They cannot acquire credibility gradually, as a
+mathematical theorem does; one either believes them blindly, as a pure
+act of faith, or not at all.</p>
+</blockquote>
+<h2 id="but-theyre-not-meant-to-be">…but they’re not meant to be</h2>
+<p>So why bother with verifying programs? Here I think is where the
+paper’s argument goes off the rails. The authors’ mistake is to notice
+that mathematical proofs and program verifications have the same
+form—that of logical reasoning—and from that conclude that they must
+have the same function—to provide intuition as part of a social process
+whereby a community establishes the correctness of a theorem or a
+program. Program verifications <em>do</em> provide reasons to believe a
+program is correct, but <em>not</em> by providing intuition for why it
+is so.</p>
+<p>An analogy might help to explain this. Say you are part of a
+construction crew building a house. The owner wants to know whether the
+house has been constructed properly, but there’s a lot of fussy details
+to ensure this: Is there enough insulation? Are the studs too far apart?
+Were the electric wiring and plumbing installed properly? To allay the
+owner’s concerns, an inspector goes through the newly constructed house
+and makes sure everything is up to code. The inspector provides a
+document outlining all the checks that he did, and signs her name to
+attest that the house was built properly.</p>
+<p>Does the owner need to read the entire document and ruminate on its
+contents to believe the house was built properly? No. It’s probably long
+and tedious. Mostly likely the owner will just make sure that the
+inspector signed the document and indeed attested its veracity. The
+function of the document is to get the owner to believe something, but
+<em>not</em> primarily by understanding why. Rather, it is a
+<em>testimony</em> to some statement, backed by the role of the
+inspector in the social process of constructing houses safely. The
+testimony of the inspector has power to persuade us because she has
+incentives to provide correct testimony in the form of professional and
+reputational harms if she doesn’t. If she she signs off on houses that
+are poorly built, she will soon lose her certification as an inspector
+when other people find out.</p>
+<p>Showing the correctness of a theorem involves deep understanding of a
+mathematical structure. It’s fun to read proofs a lot of times because
+they help make things “click” and align your vision of a structure
+properly, like a pair of mental glasses. Verifying a program is not like
+this, because <em>a program is less like a theorem and more like a
+house</em>.</p>
+<p>Showing a program meets some specification is involves checking a lot
+of boring, fussy details you need to get right—that the right variable
+is incremented by the right amount; that the right function is called
+with the right arguments; that the loop guard is right; and so on.
+Whereas the inspector might go around the house and check off a list of
+specification items the house needs to meet, we might write proofs in
+Coq to discharge a set of specification obligations the program needs to
+meet. There’s not the aesthetic pleasure of finally having the right
+mental picture of a mathematical structure in your mind’s eye that comes
+with reading a good proof but rather the tedium of bookkeeping. There is
+nothing to really “understand,” no deeper meaning to glean like in a
+proof of a theorem. But no one said verifying proofs should be like
+proving theorems!</p>
+<p>To believe the verification of a program is not to believe it
+“blindly, as a pure act of faith,” as the authors put it. To call belief
+in verification of a program “blind faith” would be as absurd as calling
+trust in the inspector “blind faith”—we have perfectly good reasons for
+holding both. Instead of just believing construction workers, which the
+owner might be loathe to do, having an inspector sign off on the house
+lowers her testimonial burden. She now only has to believe on the
+inspector’s good word, on which the inspector’s job relies, instead of
+the word of many people. Likewise, the verification of a program lowers
+the testimonial burden—or what is usually called the trusted computing
+base (TCB)—of believing the correctness of that program. It allows you
+to only believe Coq’s kernel, designed to be as simple as possible<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>, is implemented correctly to believe
+the program is correct. Otherwise, without verification, you have to
+believe the entirety of the program was written without error: a much
+riskier proposition.</p>
+<p>So, to conclude: programs are not like theorems, verifications are
+not like proofs—and it is fine that this is the case. The social process
+of establishing mathematical knowledge is not the same as the social
+process of writing correct and reliable software. Once we rid ourselves
+of this spurious analogy, we will have a clearer idea of verification’s
+role in software development.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The formalist dream might be deferred, but perhaps <a
+href="https://leanprover-community.github.io/">not forever</a>!<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>A proof assistant satisfies the “de Bruijn criterion” if
+the language its proof terms are written in is sufficiently simple that
+its type checker can be understood to be correct or even reimplemented.
+See the “Easy-to-Check Kernel Proof Language” section of the
+introduction to <a
+href="http://adam.chlipala.net/cpdt/html/Intro.html">CPDT</a>.<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>

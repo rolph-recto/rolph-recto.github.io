@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2016-12-26" />
+  <title>Rolph Recto – Implementing call/cc</title>
+  <style>
+    html {
+      line-height: 1.4;
+      font-size: 1.1em;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">Implementing call/cc</h1>
+<p>December 26, 2016</p>
+<p>I’ve been working on implementing a Lisp interpreter for my own
+amusement, and the next feature on my todo list is first-class
+continuations. <code>call/cc</code> always seemed mysterious to me, and
+since this is PL, the best way to get rid of that air of mystery is to
+actually implement it in code. Before diving in to implement this for
+Lisp, I thought it would be a good exercise to implement an interpreter
+for a toy language. The idea is that once I’ve implemented
+<code>call/cc</code> there then I can have a better idea of how to
+implement it for the Lisp interpreter.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<h2 id="continuations-recap">Continuations Recap</h2>
+<p>A quick recap on what continuations are. There’s many ways to
+describe them, but essentially they define the “context” of a
+computation. For example, let’s say you’re interpreting the
+expression:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>To interpret this expression, you need to interpret its
+subexpressions <code>(2 + 3)</code> and <code>(4 + 5)</code>. Say your
+interpreter evaluates summands left to right so you interpret
+<code>(2 + 3)</code> first. The context of this computation is</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[ ] <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>Think of it as an expression with a hole.<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> In
+other words, <code>[ ] + (4 + 5)</code> is the <em>current
+continuation</em> while interpreting <code>(2 + 3)</code>. It’s the
+“rest of the computation.”</p>
+<p>So that’s the current continuation. What then does
+<code>call/cc</code> or <code>call-with-current-continuation</code> do?
+<code>call/cc</code> is a function that basically allows the programmer
+to <em>manipulate the current continuation or context of computation
+within the language itself!</em> It takes in another function
+<code>f</code> as an argument and passes in to <code>f</code> a
+“reified” version of the current continuation. The reified continuation
+is basically a function (a lambda abstraction), except that whenever it
+is called we erase the current continuation, which allows the programmer
+to replace the current continuation with the reified one.</p>
+<p>That might be confusing so here’s an example. Consider the addition
+expression above, but with the addition of <code>call/cc</code> as a
+subexpression:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(call<span class="op">/</span>cc (\k <span class="ot">-&gt;</span> k (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>))) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>This looks weird, but actually it is equivalent to
+<code>(2 + 3) + (4 + 5)</code>. How? Notice that when we interpret the
+<code>call/cc</code> expression, the current continuation is
+<code>[ ] + (4 + 5)</code>. This continuation becomes reified as a
+function</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(\hole <span class="ot">-&gt;</span> hole <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))</span></code></pre></div>
+<p>Basically, you replace the hole with a variable and create a (special
+kind of) lambda abstraction so that this variable is bound. Recall that
+<code>call/cc</code> passes this function to its argument, and when it
+is called it replaces the current continuation with an empty context, an
+“identity continuation”. So the expression above would evaluate as
+follows:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(call<span class="op">/</span>cc (\k <span class="ot">-&gt;</span> k (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>))) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>((\k <span class="ot">-&gt;</span> k (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)) (\hole <span class="ot">-&gt;</span> hole <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>(\hole <span class="ot">-&gt;</span> hole <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)) (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>) <span class="ot">=&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- and so on...</span></span></code></pre></div>
+<p>The expression with <code>call/cc</code> is equivalent to the one
+without, as promised! This doesn’t really display the power of
+<code>call/cc</code> though. Because the continuation is reified as a
+function, <em>you can do whatever you want with it!</em> For example,
+you can “short-circuit” evaluation by not calling the reified
+continuation at all:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(call<span class="op">/</span>cc (\k <span class="ot">-&gt;</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>((\k <span class="ot">-&gt;</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>) (\hole <span class="ot">-&gt;</span> hole <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span> <span class="ot">=&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span></span></code></pre></div>
+<p>This is just a simple example. There’s a bewildering number of ways
+to use <code>call/cc</code>, from <a
+href="http://stackoverflow.com/questions/13338559/scheme-how-does-a-nested-call-cc-work-for-a-coroutine">implementing
+coroutines</a> to much more. But now let’s think about how to implement
+this. We want to keep track of the current continuation, and when we
+call <code>call/cc</code> we want to reify the current continuation into
+a function. How do we do this?</p>
+<p>Programs can usually be represented as an abstract syntax tree (AST).
+You can then think of interpreting a program as a traversal through an
+AST. What this traversal entails depends on the semantics of the
+language. In the case of arithmetic expressions, traversing the AST
+means to compute the number that the expression denotes. Continuations
+are the context of traversing the AST; they mark the position on the
+tree where interpretation is currently taking place. We want a good
+representation of this traversal, so that we can easily move the mark
+through the tree.</p>
+<p>“Representing a traversal” might ring some bells: continuations can
+be represented by <a
+href="https://en.wikibooks.org/wiki/Haskel/Zippers">zippers</a>! When we
+traverse a subexpression / subtree during interpretation, we push a new
+expression with a hole into a stack, where the hole represents the
+subexpression being traversed. This expression-with-a-hole is
+<em>part</em> of the context of computation, and can be represented as a
+function <code>Expr -&gt; Expr</code> in the metalanguage (i.e. the
+implementation language). When the interpretation “bottoms out,” meaning
+the current expression has no subexpressions left to be further
+interpreted, we compute the value of the current expression, pop the
+head of the stack, place the value into the hole of the head expression
+(i.e., we apply the value as an argument to the function), and then
+continue interpretation.</p>
+<p>Let’s do an example to make this concrete. Here’s a trace of
+interpreting an expression:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> (<span class="dv">1</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> []</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> hole)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>[(<span class="dv">1</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)] <span class="ot">=&gt;</span> (<span class="fu">traverse</span> down)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> (<span class="dv">1</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> [(\h1 <span class="ot">-&gt;</span> h1 <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))]</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> hole <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>[(<span class="dv">1</span> <span class="op">+</span> (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>))] <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span> (<span class="fu">traverse</span> down)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> [(\h2 <span class="ot">-&gt;</span> <span class="dv">1</span> <span class="op">+</span> h2), (\h1 <span class="ot">-&gt;</span> h1 <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))]</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> (<span class="dv">1</span> <span class="op">+</span> hole) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span> <span class="op">+</span> [(<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)]) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span> (<span class="fu">traverse</span> up)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">5</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> [(\h1 <span class="ot">-&gt;</span> h1 <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))]</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> (<span class="dv">1</span> <span class="op">+</span> hole) <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>[(<span class="dv">1</span> <span class="op">+</span> <span class="dv">5</span>)] <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>) <span class="ot">=&gt;</span> (<span class="fu">traverse</span> up)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> <span class="dv">6</span> <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> []</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> hole)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>[<span class="dv">6</span> <span class="op">+</span> (<span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span>)] <span class="ot">=&gt;</span> (<span class="fu">traverse</span> down)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> <span class="dv">4</span> <span class="op">+</span> <span class="dv">5</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> [(\h1 <span class="ot">-&gt;</span> <span class="dv">6</span> <span class="op">+</span> h1)]</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> <span class="dv">6</span> <span class="op">+</span> hole)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="op">+</span> [(<span class="dv">4</span><span class="op">+</span> <span class="dv">5</span>)] <span class="ot">=&gt;</span> (<span class="fu">traverse</span> up)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> <span class="dv">6</span> <span class="op">+</span> <span class="dv">9</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> []</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> hole)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> <span class="op">+</span> <span class="dv">9</span>  <span class="ot">=&gt;</span> (<span class="fu">traverse</span> up)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">EXPR</span><span class="op">:</span> <span class="dv">15</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="dt">STACK</span><span class="op">:</span> []</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="dt">CURRENT</span> <span class="dt">CONTINUATION</span><span class="op">:</span> (\hole <span class="ot">-&gt;</span> hole)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="dv">15</span></span></code></pre></div>
+<p>Each interpretation step is annotated with the current expression,
+the current stack, and the current continuation. Each transition
+<code>(=&gt;)</code> is labeled as either “traverse down,” meaning next
+we interpret a subexpression of the current expression, or “traverse
+up,” meaning we interpret the current expression directly and place its
+interpretation (value) in the context of the stack head.</p>
+<p>Does this representation of continuations allow us to implement
+<code>call/cc</code> easily? Yes! To reify the current continuation, we
+just glue the together holed expressions (functions) in the stack by
+function composition. Try it with the example above. You’ll see that you
+can compute the current continuation at any step just with the contents
+of the stack: plug the first element into the second element, plug the
+second element into the third, and so on, until you only have one
+function remaining, which should be equivalent to the current
+continuation.</p>
+<h2 id="implementing-the-toy-language">Implementing The Toy
+Language</h2>
+<p>Now that we have the idea, let’s write actual code. This toy language
+will be very simple, but to make it more interesting we’ll add commands.
+Here is the AST:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Expr</span>   <span class="ot">=</span> <span class="dt">ILit</span> <span class="dt">Int</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Var</span> <span class="dt">Int</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Plus</span> <span class="dt">Expr</span> <span class="dt">Expr</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Lam</span> <span class="dt">Int</span> <span class="dt">Expr</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">App</span> <span class="dt">Expr</span> <span class="dt">Expr</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Unit</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Print</span> <span class="dt">Expr</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Seq</span> [<span class="dt">Expr</span>]</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Cont</span> <span class="dt">Int</span> <span class="dt">Expr</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">CallCC</span> <span class="dt">Int</span> <span class="dt">Expr</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="kw">deriving</span> (<span class="dt">Show</span>)</span></code></pre></div>
+<p>Hopefully this is straightforward. The language has integer literals
+(<code>ILit</code>), variables (<code>Var</code>, indexed by integers
+instead of the usual strings), lambda abstraction (<code>Lam</code>),
+application (<code>App</code>), unit / zero-tuple (guess which
+constructor??), a print command (<code>Print</code>), a sequence of
+commands (<code>Seq</code>), continuations (<code>Cont</code>), which
+are basically lambdas with an extra side effect as we’ll see below, and
+finally <code>call/cc</code> itself. For simplicity I didn’t bother
+having separate datatypes for commands and expressions; everything is
+just an <code>Expr</code>.</p>
+<p>It is important that the interpreter we write for this toy language
+corresponds to the <em>small step</em> semantics of the language. The
+small step semantics defines exactly the order in which interpretation
+happens. The interpreter trace in the example above follows the small
+step semantics of an arithmetic language where summands are interpreted
+left to right. Contrast this with <em>large step</em> semantics, which
+defines only the value of expressions in a language. Interpreters
+written to reflect this style of semantics cannot capture the exact
+context of the ongoing computation because it leaves the order of
+interpretation up to the semantics of the implementation language. For
+example, a large step interpreter might have the following rule to
+interpret addition expressions:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>interp e</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Plus</span> e1 e2 <span class="ot">&lt;-</span> e <span class="ot">=</span> (interp e1) <span class="op">+</span> (interp e2)</span></code></pre></div>
+<p>Which gets interpreted first, <code>e1</code> or <code>e2</code>? It
+is left implicit, and depends on Haskell’s semantics.</p>
+<p>Let’s see some code! First off, some type declarations and
+convenience functions:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Map.Strict</span> <span class="kw">as</span> <span class="dt">M</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Env</span>         <span class="ot">=</span> <span class="dt">M.Map</span> <span class="dt">Int</span> <span class="dt">Expr</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">DCont</span>       <span class="ot">=</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">Expr</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">InterpState</span> <span class="ot">=</span> [<span class="dt">DCont</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">InterpM</span> a   <span class="ot">=</span> <span class="dt">ExceptT</span> <span class="dt">String</span> (<span class="dt">ReaderT</span> <span class="dt">Env</span> (<span class="dt">StateT</span> <span class="dt">InterpState</span> <span class="dt">IO</span>)) a</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ot">isValue ::</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>isValue expr <span class="ot">=</span> <span class="kw">case</span> expr <span class="kw">of</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ILit</span> _ <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Var</span> _ <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Lam</span> _ _ <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">App</span> _ _ <span class="ot">-&gt;</span> <span class="dt">False</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Unit</span> <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Print</span> _ <span class="ot">-&gt;</span> <span class="dt">False</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Seq</span> [] <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Seq</span> _ <span class="ot">-&gt;</span> <span class="dt">False</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Cont</span> _ _ <span class="ot">-&gt;</span> <span class="dt">True</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="dt">CallCC</span> _ _ <span class="ot">-&gt;</span> <span class="dt">False</span></span></code></pre></div>
+<p>Notice that continuations (<code>DCont</code>) are functions in the
+<em>metalanguage</em> (i.e. the implementation language), not the object
+language (i.e. the toy language). They are called <code>DCont</code>s
+because they are technically <em>delimited continuations</em>, which
+represent not the entire context of a computation but only part of it.
+We reify the (undelimited) continuation used by <code>call/cc</code> by
+composing these together. Reifying a continuation is the process of
+turning this metalanguage function into an object language function
+represented by the constructor <code>Cont</code>. The control stack
+(<code>InterpState</code>) consists of a stack of
+<code>DCont</code>s.</p>
+<p>We’ll be running the interpreter in the <code>InterpM</code> monad,
+which has <code>StateT</code> for keeping track of the stack / current
+continuation, a <code>ReaderT</code> component for keeping track of
+bound variables, and an <code>ExceptT</code> for handling errors.</p>
+<p>Lastly, we define an <code>isValue</code> function to define certain
+expression forms as values. We’ll use this information to determine
+whether to “traverse up” during interpretation.</p>
+<p>Now to the interpreter proper.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">ret ::</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">InterpM</span> <span class="dt">Expr</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ret expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  st <span class="ot">&lt;-</span> get</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> st <span class="kw">of</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    [] <span class="ot">-&gt;</span> <span class="fu">return</span> expr</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    (c<span class="op">:</span>cs) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      put cs</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      eval (c expr)</span></code></pre></div>
+<p>The <code>ret</code> function corresponds to the (initial part of
+the) “traverse up” transition in the example trace above. During
+interpretation, once we have a value expression (i.e., an expression
+that cannot be interpreted further) we pass this to <code>ret</code>,
+which will either place it in the head expression of the stack and
+continue interpretation (“traverse down”), or, if the stack is empty,
+return the expression. Note that if the stack is empty then the current
+continuation is the “identity continuation,”
+<code>(\hole -&gt; hole)</code>.</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">pushToStack ::</span> <span class="dt">DCont</span> <span class="ot">-&gt;</span> <span class="dt">InterpM</span> ()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pushToStack cont <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  st <span class="ot">&lt;-</span> get</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  put (cont<span class="op">:</span>st)</span></code></pre></div>
+<p><code>pushToStack</code> is an aptly named helper function that
+pushes a new delimited continuation on top of the stack. Alternatively,
+if you’re fine with applicative notation or want to play some Haskell
+code golf, you can write it like this:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">pushToStack ::</span> <span class="dt">Cont</span> <span class="ot">-&gt;</span> <span class="dt">InterpM</span> ()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>pushToStack cont <span class="ot">=</span> (cont<span class="op">:</span>) <span class="op">&lt;$&gt;</span> get <span class="op">&gt;&gt;=</span> put</span></code></pre></div>
+<p>Here part the <code>eval</code> function:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">eval ::</span> <span class="dt">Expr</span> <span class="ot">-&gt;</span> <span class="dt">InterpM</span> <span class="dt">Expr</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>eval expr</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">ILit</span> n <span class="ot">&lt;-</span> expr <span class="ot">=</span> ret expr</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Var</span> v <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    env <span class="ot">&lt;-</span> ask</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> M.lookup v env <span class="kw">of</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="op">$</span> <span class="st">&quot;unexpected free variable: v&quot;</span> <span class="op">++</span> (<span class="fu">show</span> v)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> val <span class="ot">-&gt;</span> ret val</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Lam</span> _ _ <span class="ot">&lt;-</span> expr <span class="ot">=</span> ret expr</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Cont</span> _ _ <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    ret expr</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Unit</span> <span class="ot">&lt;-</span> expr <span class="ot">=</span> ret expr</span></code></pre></div>
+<p>This is the boring part, since we’re just matching on value
+expressions and immediately calling <code>ret</code>. Note that
+<code>eval</code> and <code>ret</code> are mutually recursive.</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- eval continued...</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">App</span> (<span class="dt">Lam</span> var body) arg <span class="ot">&lt;-</span> expr, isValue arg <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    local (M.insert var arg) (eval body)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">App</span> (<span class="dt">Lam</span> var body) arg <span class="ot">&lt;-</span> expr, <span class="fu">not</span> (isValue arg) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    pushToStack <span class="op">$</span> <span class="dt">App</span> (<span class="dt">Lam</span> var body)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    eval arg</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">App</span> func arg <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    env <span class="ot">&lt;-</span> ask</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> cont f <span class="ot">=</span> <span class="dt">App</span> f arg</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    pushToStack cont</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    eval func</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Plus</span> (<span class="dt">ILit</span> x) (<span class="dt">ILit</span> y) <span class="ot">&lt;-</span> expr <span class="ot">=</span> ret (<span class="dt">ILit</span> <span class="op">$</span> x <span class="op">+</span> y)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Plus</span> (<span class="dt">Var</span> x) (<span class="dt">ILit</span> y) <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    env <span class="ot">&lt;-</span> ask</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> M.lookup x env <span class="kw">of</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="op">$</span> <span class="st">&quot;unexpected free variable: v&quot;</span> <span class="op">++</span> (<span class="fu">show</span> x)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> (<span class="dt">ILit</span> xval) <span class="ot">-&gt;</span> ret (<span class="dt">ILit</span> <span class="op">$</span> xval <span class="op">+</span> y)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">otherwise</span> <span class="ot">-&gt;</span> throwError <span class="st">&quot;expected integer argument to Plus&quot;</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Plus</span> (<span class="dt">ILit</span> x) (<span class="dt">Var</span> y) <span class="ot">&lt;-</span> expr <span class="ot">=</span> eval (<span class="dt">Plus</span> (<span class="dt">Var</span> y) (<span class="dt">ILit</span> x))</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Plus</span> (<span class="dt">Var</span> x) (<span class="dt">Var</span> y) <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    env <span class="ot">&lt;-</span> ask</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> M.lookup x env <span class="kw">of</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> throwError <span class="op">$</span> <span class="st">&quot;unexpected free variable: v&quot;</span> <span class="op">++</span> (<span class="fu">show</span> x)</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> (<span class="dt">ILit</span> xval) <span class="ot">-&gt;</span> eval (<span class="dt">Plus</span> (<span class="dt">ILit</span> xval) (<span class="dt">Var</span> y))</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>      <span class="fu">otherwise</span> <span class="ot">-&gt;</span> throwError <span class="st">&quot;expected integer argument to Plus&quot;</span></span></code></pre></div>
+<p>Now it gets a bit interesting. Notice that when we are “traversing
+down” during interpretation and need to interpret a subexpression, we
+push a new delimited continuation to the stack and continue interpreting
+that subexpression. This happens, for example, when addition expressions
+have variables as summands, or when a function’s argument needs to be
+interpreted further.<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> When no subexpressions need to be
+further interpreted, such as when we are adding two literals together,
+we call <code>ret</code> instead of <code>eval</code> and “traverse
+up.”</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- eval continued ...</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Print</span> pexpr <span class="ot">&lt;-</span> expr, isValue pexpr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>      liftIO <span class="op">$</span> <span class="fu">print</span> pexpr</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      ret <span class="dt">Unit</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Print</span> pexpr <span class="ot">&lt;-</span> expr, <span class="fu">not</span> (isValue pexpr) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>      pushToStack <span class="dt">Print</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>      eval pexpr</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Seq</span> (cmd<span class="op">:</span>tlcmds) <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      pushToStack <span class="op">$</span> <span class="fu">const</span> (<span class="dt">Seq</span> tlcmds)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>      eval cmd</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Seq</span> [] <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      ret <span class="dt">Unit</span></span></code></pre></div>
+<p>Here are the commands. They are interpreted similarly to the
+expressions above, except of course they have side effects, as seen in
+the first pattern match on <code>Print</code>. The only interesting
+thing to notice is that when interpreting sequences, the delimited
+continuation for interpreting the next command of the sequence just
+discards its argument. This makes sense since the context for
+interpreting (executing) a command is just the rest of the commands to
+be executed; no information from the current command is needed. Hence
+the unused argument.</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- eval continued ...</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">App</span> (<span class="dt">Cont</span> var body) arg <span class="ot">&lt;-</span> expr, isValue arg <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    put []</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    local (M.insert var arg) (eval body)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">App</span> (<span class="dt">Cont</span> var body) arg <span class="ot">&lt;-</span> expr, <span class="fu">not</span> (isValue arg) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    pushToStack <span class="op">$</span> <span class="dt">App</span> (<span class="dt">Cont</span> var body)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    eval arg</span></code></pre></div>
+<p>As promised, reified continuations are exactly like lambdas, except
+that when calling them we erase the current context of computation by
+erasing the stack. This essentially allows the reified continuation to
+replace the current continuation whenever it is called.</p>
+<p>Finally, <code>call/cc</code>:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- eval continued ...</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">CallCC</span> k body <span class="ot">&lt;-</span> expr <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- reify the current continuation into a function</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    st <span class="ot">&lt;-</span> get </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> contf <span class="ot">=</span> <span class="fu">foldr</span> (<span class="op">.</span>) <span class="fu">id</span> <span class="op">$</span> <span class="fu">reverse</span> st</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> cont <span class="ot">=</span> <span class="dt">Cont</span> (<span class="op">-</span><span class="dv">1</span>) (contf (<span class="dt">Var</span> (<span class="op">-</span><span class="dv">1</span>)))</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- evaluate the body</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    local (M.insert k cont) (eval body)</span></code></pre></div>
+<p>Again, we create the current continuation by composing the delimited
+continuations in the stack together (<code>contf</code>). We then reify
+this continuation, which is a function in the metalanguage /
+implementation language, into an object language continuation by
+applying a variable expression to the function, so that it returns an
+expression with a free variable <code>Var (-1)</code>. By <em>free</em>
+I mean free in the object language; also, we’re going to punt on issues
+with capture for now. We then wrap this expression into a
+<code>Cont</code> to bind the variable, and we’re done!<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>We can now evaluate the body, in whose environment the variable
+<code>k</code> will be mapped to the reified continuation. Note that
+syntactically <code>call/cc</code> takes in two arguments: the name of
+the variable and the body expression to be evaluated whose environment
+contains the variable so named mapped to the reified continuation. This
+is equivalent to having <code>call/cc</code> take a function as a single
+argument.</p>
+<p>That’s the interpreter. Let’s test it out!</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> <span class="kw">let</span> subexpr <span class="ot">=</span> <span class="dt">Seq</span> [<span class="dt">ILit</span> <span class="dv">98</span>, <span class="dt">App</span> (<span class="dt">Var</span> <span class="dv">0</span>) <span class="dt">Unit</span>]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> <span class="kw">let</span> expr <span class="ot">=</span> <span class="dt">Seq</span> [<span class="dt">CallCC</span> <span class="dv">0</span> subexpr, <span class="dt">Print</span> (<span class="dt">ILit</span> <span class="dv">99</span>)]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> res <span class="ot">&lt;-</span> evalStateT (runReaderT (runExceptT (eval expr)) M.empty) initState</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> <span class="fu">putStrLn</span> <span class="op">$</span> <span class="fu">either</span> <span class="fu">id</span> <span class="fu">show</span> res</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="dt">ILit</span> <span class="dv">98</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="dt">ILit</span> <span class="dv">99</span></span></code></pre></div>
+<p>We have a sequence of commands where <code>call/cc</code> is executed
+first. So the current continuation when <code>call/cc</code> is executed
+is the rest of the sequence,
+<code>\hole -&gt; Seq [Print (ILit 99)]</code>. <code>call/cc</code>
+then passes this continuation to a function whose body is also a
+sequence. <code>98</code> gets printed out first, and then we call the
+continuation, which prints <code>99</code>.</p>
+<p>This use of <code>call/cc</code> is a bit pointless, since
+<code>99</code> would’ve been printed after <code>98</code> anyway.
+Here’s a slightly less pointless use of <code>call/cc</code>:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> <span class="kw">let</span> subexpr <span class="ot">=</span> <span class="dt">Seq</span> [<span class="dt">App</span> (<span class="dt">Var</span> <span class="dv">0</span>) <span class="dt">Unit</span>, <span class="dt">Print</span> (<span class="dt">ILit</span> <span class="dv">98</span>)]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> <span class="kw">let</span> expr <span class="ot">=</span> <span class="dt">Seq</span> [<span class="dt">CallCC</span> <span class="dv">0</span> subexpr, <span class="dt">Print</span> (<span class="dt">ILit</span> <span class="dv">99</span>)]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> res <span class="ot">&lt;-</span> evalStateT (runReaderT (runExceptT (eval expr)) M.empty) initState</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span> <span class="fu">putStrLn</span> <span class="op">$</span> <span class="fu">either</span> <span class="fu">id</span> <span class="fu">show</span> res</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="dt">ILit</span> <span class="dv">99</span></span></code></pre></div>
+<p>So instead of printing <code>98</code>, we skip that command and
+instead print <code>99</code> right away. This happens because calling
+the reified continuation erases the stack, which destroys the current
+continuation that would’ve printed <code>98</code> next. As you can see,
+we can use <code>call/cc</code> to implement jumps!</p>
+<p>That’s it for now. In retrospect it was a good call to implement
+<code>call/cc</code> for a toy language first, since now I have a pretty
+clear idea of how to do it. It certainly was more productive than my
+futile initial attempts at implementing first-class continuations in my
+Lisp interpreter, where I was bogged down with trying to fit the
+implementation with the rest of the interpreter, which made the endeavor
+a lot more complicated.</p>
+<p>You can find the full source for the interpreter <a
+href="https://github.com/rolph-recto/lambda-type-systems/blob/master/Cont.hs">here</a>.
+For further reading, Matt Might has a <a
+href="http://matt.might.net/articles/writing-an-interpreter-substitution-denotational-big-step-small-step/">good
+blog post</a> that describes the relationship between small step
+interpreters and continuations. He mentions the zipper approach that I
+followed here but he instead uses class methods to manipulate contexts
+of a computation.</p>
+<p><em>Edit: Fixed some typos and added some clarifications.</em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>While I’ve got a decent idea of how to implement this
+feature now, the interpreter is still a bit of a mess. It turns out
+first-class continuations are a big feature that touches pretty much
+every part of an interpreter!<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>You could also think of this expression-with-a-hole as a
+function from expressions to expressions: this fact will be important
+later.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Notice that this language is eagerly evaluated.<a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>You might think, as I originally did, that the
+interpreter should clear the stack when <code>call/cc</code> is called.
+A quick test in Racket disabused me of that misconception:
+<code>(+ 2 (call/cc (lambda (k) 2)))</code> evaluates to 4, not 2.
+Explanation for why this answers our question is left as an exercise for
+the reader!<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
