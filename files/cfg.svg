@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="0 0 282.33902 463.65118"
+   width="282.33902"
+   height="463.65118"
+   id="svg196"
+   sodipodi:docname="cfg.svg"
+   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview198"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.49166667"
+     inkscape:cx="333.55932"
+     inkscape:cy="232.88136"
+     inkscape:window-width="1470"
+     inkscape:window-height="891"
+     inkscape:window-x="0"
+     inkscape:window-y="37"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg196" />
+  <!-- svg-source:excalidraw -->
+  <defs
+     id="defs20">
+    <style
+       class="style-fonts"
+       id="style18">
+      @font-face {
+        font-family: Nunito;
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAIsAA4AAAAABLQAAAHYAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGx4cLgZgP1NUQVREAAQRCAoAKgsEAAE2AiQDBAQgBYQkByAb5wPIrgp4Mt6IIcJZFNCfWmZY6KzqazTt6AiVHCFawzJ7V0CQBKoSQQEpFKrCVxiSFbqqqsaTevKs/q7s6uBYmujMyA9wxb6a7XnEOcNnDLgG4nW8PoPzHzYpS2uqp51pL3eB/xZoxIllCQc80B9o4j/4xMbxQB+j+SC3hsm6JmI8RMaHj+aJApW6ZbkXlg4vXSE5FECg0og6LzxP9pOarug4tF1RLpbHeZqLX0pIt2mfy3pNG6eyGaRIjrnrr/gv2c//yGdjpJ/7DuJLin5eIZRLaObBMM/NpYpuXJ8z3SE088mEFANcCARESfwChCioAwESsVxBgeyxp6+vZ3Xzv8uz7Ae8tRk+p6RUTPOR7BmlEgh+STsAimNuKibilyluhBNe5/wCACSBKrcykVfgyb+RYcK/TGq9yMyCt3bOskSnR1FqTLMSVBsMGLQVltDKKw2IYA+wcGxHJCINY9mDOCaN4IZEo1ChY4xNg8DaB0RxDqnbMNjXJJRzF9iInqahtm67M8dOHFvXaYbn+wrGxKG3YZI+2V4CW58ovdfV1tFHXFJJiPH7T1FAJxEgYo5BKkA5iDIVQluOqZYWhQapGF6TAFhaFAAoTBIZsCFHi/0oV3gpVKwbAA==);
+          }
+@font-face {
+        font-family: Nunito;
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAI0AA4AAAAABLQAAAHeAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGx4cLgZgP1NUQVREAAQRCAoAKgsEAAE2AiQDBAQgBYQkByAb5wPIrgpsY9TYDjGuJ1F+MUed8Q+Do8lDKF1uhErOw/f7/X7tcy+iEk0SUSWRLDGExBCqZYuETCJVS3jlW/rvPv/y4Fra6szKjvjBubd/Nui7lGEMuAbidbw+g/MfFilLa6qnnWkvd4H/FmjEiWUJBzzQH2jiP/jExvFAH6P5ILeGybomYjxExoeP5okC5TpFmecWVieTSw4FIFBuSJ4Vngd7SlWTd4eom7xMLI/zNBO/FJHO0i6T1Zo29kTTT5Ecc9Nf4b9kP/+RT8dQL/MVxGuKXlYhlEpoZMEgy8mRiGYc/001h9DIJhNS9DEhEBBF8QsQokANCJCI5QoKZLddfb/er5n9XZpln/DYYniZkJR+fpjdo1gCwS/pEkByzEzFRPwywYywwWaOVQCAJFDhTCbyMtz5NzKM+ZdJtQeZmfPVzlkWafcoio0oVoJK/QGDNsMiWn6lPh7sAJo3ujXOJwmjmUNvVJIPNzgSgQhtMDoJAmM/EPVmRd2Cwb7gUMZdoCNqiprKqu32bGxtjOs0w8O+gFG9obdhkj7ZHgJXvyi9V1VWUUeciDjE+P07FJBxPiCij0EiQBmINBFCV4aukhKBBImYd0UfgKZEAIBAxeEBHTKU6I9yhpVChXUCAAAA);
+          }
+@font-face {
+        font-family: Nunito;
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAIsAA4AAAAABLQAAAHYAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGx4cLgZgP1NUQVREAAQRCAoAKgsEAAE2AiQDBAQgBYQkByAb5wPILgps9xRFkFEihAtyRcm3sWFhmEeo5Dz8tx/rvpmPqESTBE0lkSBySERCJxSLhLR5U7Uk2jzt3GfnB66lLWNU8Qd04uTtzX70HcgYcA3E63iUZs1n9bQz7eUu8N8CjTixwAIOeKA/0MR/8IlNNx7oYzQf5NYwWddEjIfI+PDR3FGg0bAs9+b23pkrpIJSQKDRjCovPE/2jZqu6Di0XVEulttVWotfakj36YLLQQ0bl7KZpEiOueu9/Jf8839UqzEzzv0A8SF9YJxXCPUSunkwzXN3raIbN+dMdwjdfLKQYoILgYCoiV+AEKVoAwESscqBAvl55Pju68dV2/rv+py/wJu+4f2SMlM2UqnaudRKIPgl5Qwg9QWdJuKXJW6EE163fAIAZIEm97KoGvDi38iw4F8mrV7LbNNzvWJZY9CdqDWnXgiaTQYM2gtraOOVJkRwDlg4tn0SkYaxbEMck0ZwSaJRqNABxqZBYOkVojh71KwZ7AsSyrkLbERHXV9Tu92JA4cOLMs0w5N1BWPi0Fs3SZ8sz4GNN5Tea2tq6SLOqCTE+P1HKKCTCBAxxSAVoBxEkQqhDcdYQ4NCg1QMr04ALA0KABQmiQzYkKPBfpRLvBQqrwwDAA==);
+          }
+@font-face {
+        font-family: Nunito;
+        src: url(data:font/woff2;base64,d09GMgABAAAAAAIoAA4AAAAABLQAAAHVAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGx4cLgZgP1NUQVREAAQRCAoAKgsEAAE2AiQDBAQgBYQkByAb5wMRFZQHZF8mb0PNXjkIbeHQ4UpbWDTlYMnK5cOfavAw/zzrESo5EbTf6+zdCyBIAqHiUlkJRMJHmIKskVWRFZ4Uelb50Iz7S0IKNNGB0oyDDbgkjnxA+VCvYpk1vog5la7RoxGwSoMFQHNIwf6bvMXbb7uB/zbQEScWUOABB/oDJf6DJ5YWB/oY5UFuDZN1TcR4iIwPH80dBd1mzcrh6sxZnRpoDQTd1qyp8Hzy6v/JPaP30LMHRmG53ZSD/CblWFLgqIbNBWE2y5SSY+mk9V/qr9Nr9rO2mFcC8rUMi6qITgWjClaVl+6tZxG4/ezyvYhiVKOKkiUQBNKW3wCR1gQCConGgYL6Vik5uYHBH+T6E3yc6OHLTplP/6g2k2hXQPgla1sH3lJf6DTJbxPEedV9bQIAqqDHcZWmC+/+j44tH3TR772uDr2oN6zbTDun2m3YKIReywFCxkEb6b7Skm4ghBglR9vyebxlKPLNt+27HjvxxGew/DGCDtQsGvyXTehdSPR6qVWpddg/nU/LMs3gtu7yCJFbt56xvjyH9E/ovVql2tAfnq0bv/9CILBNpk8584BQPeMxltJeuez6zONGyYS47AK4ke1Awmg5eZRnZSUd);
+          }
+@font-face {
+        font-family: Nunito;
+        src: url(data:font/woff2;base64,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);
+          }
+    </style>
+  </defs>
+  <mask
+     id="mask62" />
+  <g
+     stroke-linecap="round"
+     transform="translate(1.119616,1.8737727)"
+     id="g66">
+    <path
+       d="m 47.09,1.51 c 6.53,0.83 14.32,4.59 19.63,9.58 5.32,4.98 10.47,13.38 12.27,20.31 1.79,6.93 0.78,14.46 -1.51,21.26 -2.29,6.8 -6.55,14.98 -12.21,19.56 C 59.6,76.79 50.9,79.46 43.5,80.11 36.1,80.76 27.08,79.49 20.86,76.12 14.64,72.75 9.49,66.3 6.17,59.9 2.86,53.51 0.57,45.02 0.96,37.75 1.34,30.49 4.31,22.01 8.5,16.33 12.7,10.64 18.43,6.05 26.13,3.64 33.83,1.24 49.33,1.59 54.7,1.9 c 5.37,0.3 4,2.99 3.63,3.57 M 56.1,4.92 c 6.51,2.38 13.47,8.95 17.41,14.62 3.94,5.68 6.11,12.36 6.22,19.45 0.11,7.08 -1.53,17.09 -5.58,23.07 C 70.1,68.04 61.99,71.7 55.43,74.87 48.87,78.05 41.51,81.64 34.79,81.11 28.07,80.58 20.47,76.84 15.11,71.7 9.75,66.55 5.04,57.15 2.64,50.22 0.24,43.3 -1.09,36.85 0.72,30.15 2.53,23.45 8.16,15.16 13.49,10.03 18.81,4.9 25.63,0.57 32.68,-0.64 c 7.05,-1.21 18.97,2.76 23.11,3.42 4.13,0.66 1.7,-0.14 1.71,0.55"
+       stroke="#1e1e1e"
+       stroke-width="2"
+       fill="none"
+       id="path64" />
+  </g>
+  <g
+     transform="translate(31.863519,22.261377)"
+     id="g70">
+    <text
+       x="9.4718256"
+       y="29.4925"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="29.375px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text68">1</text>
+  </g>
+  <g
+     stroke-linecap="round"
+     transform="translate(1.119616,181.87377)"
+     id="g74">
+    <path
+       d="M 47.94,0.29 C 54.56,1.25 62.15,7.17 67.42,12.3 72.69,17.42 78,24.18 79.57,31.03 81.15,37.88 79.5,46.61 76.88,53.4 74.27,60.19 69.66,67.51 63.88,71.76 58.1,76.01 49.43,78.42 42.19,78.91 34.95,79.39 26.58,77.9 20.45,74.65 14.32,71.39 8.66,65.76 5.42,59.36 2.18,52.96 0.58,43.4 0.99,36.25 1.41,29.11 3.66,22.24 7.88,16.49 12.11,10.74 18.44,3.99 26.35,1.75 c 7.9,-2.24 23.1,0.5 28.97,1.31 5.87,0.81 6.48,3.05 6.23,3.54 M 20.66,5.41 c 5.92,-3.46 15.24,-5.7 22.33,-5.13 7.08,0.57 14.36,4.02 20.18,8.55 5.83,4.52 12.01,11.83 14.79,18.58 2.78,6.75 3.46,15.06 1.9,21.91 C 78.29,56.17 73.67,63.28 68.58,68.5 63.5,73.72 56.31,79.05 49.36,80.65 42.42,82.25 33.88,80.76 26.92,78.12 19.95,75.48 11.87,70.69 7.59,64.84 3.3,58.98 1.57,50.54 1.2,42.98 0.84,35.43 2.11,25.7 5.4,19.52 8.69,13.33 18.07,8.31 20.97,5.88 23.87,3.45 22.31,4.43 22.79,4.94"
+       stroke="#1e1e1e"
+       stroke-width="2"
+       fill="none"
+       id="path72" />
+  </g>
+  <g
+     transform="translate(32.36281,202.26137)"
+     id="g78">
+    <text
+       x="8.9725342"
+       y="29.4925"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="29.375px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text76">2</text>
+  </g>
+  <g
+     stroke-linecap="round"
+     transform="translate(201.11962,181.87377)"
+     id="g82">
+    <path
+       d="m 51.01,1.69 c 6.76,1.42 14.92,6.92 19.74,12.61 4.81,5.69 8.15,14.27 9.13,21.52 0.98,7.25 -0.2,15.52 -3.27,21.99 C 73.54,64.29 67.62,71.12 61.45,74.68 55.28,78.24 46.8,79.39 39.57,79.15 32.34,78.91 24.24,77.08 18.06,73.22 11.88,69.36 5.25,62.48 2.47,55.99 -0.3,49.5 0.19,41.26 1.41,34.27 2.64,27.29 5.15,19.52 9.83,14.06 14.5,8.6 22.06,3.4 29.47,1.53 c 7.42,-1.87 20.57,0.77 24.84,1.31 4.27,0.53 1.12,1.44 0.8,1.89 M 43.66,0.1 c 7.2,0.18 16.98,4.77 22.62,9.22 5.63,4.44 9.18,10.82 11.18,17.44 2.01,6.63 2.45,15.26 0.85,22.32 -1.61,7.05 -5.42,14.98 -10.46,20 -5.04,5.02 -12.57,8.7 -19.8,10.09 C 40.81,80.56 31.45,80 24.46,77.41 17.46,74.82 10.33,69.81 6.08,63.63 1.84,57.45 -1.07,47.87 -1.01,40.31 -0.95,32.75 2.76,24.39 6.43,18.28 10.09,12.17 14.55,6.74 20.98,3.66 27.42,0.57 41.3,0.09 45.05,-0.21 48.81,-0.5 43.5,1 43.52,1.9"
+       stroke="#1e1e1e"
+       stroke-width="2"
+       fill="none"
+       id="path80" />
+  </g>
+  <g
+     transform="translate(232.52435,202.26137)"
+     id="g86">
+    <text
+       x="8.810997"
+       y="29.4925"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="29.375px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text84">3</text>
+  </g>
+  <g
+     stroke-linecap="round"
+     transform="translate(1.119616,381.87377)"
+     id="g90">
+    <path
+       d="m 54.25,3.12 c 6.46,1.85 12.81,7.07 17.08,12.67 4.28,5.59 7.93,13.54 8.55,20.9 0.62,7.35 -1.49,16.82 -4.83,23.22 -3.34,6.41 -8.93,12.03 -15.23,15.2 -6.31,3.18 -15.21,4.37 -22.59,3.85 C 29.85,78.44 21.29,76.1 15.54,72.01 9.8,67.92 5.14,61.02 2.76,54.42 0.38,47.82 -0.14,39.54 1.26,32.41 2.66,25.29 6.21,17.02 11.16,11.7 16.1,6.37 22.65,1.33 30.93,0.44 c 8.29,-0.88 23.87,4.01 29.95,5.95 6.09,1.94 6.77,5.08 6.55,5.67 M 58.06,3.74 c 6.64,2.29 13.7,9.17 17.11,15.58 3.42,6.42 3.92,15.65 3.38,22.92 C 78,49.5 75.85,57.01 71.92,62.92 67.98,68.83 61.37,74.85 54.93,77.72 48.49,80.59 40.3,81.53 33.25,80.14 26.21,78.74 17.93,74.62 12.66,69.37 7.4,64.11 3.38,55.48 1.65,48.62 -0.07,41.75 0.24,34.68 2.3,28.18 4.36,21.67 8.47,14.37 14.01,9.58 19.54,4.79 28,0.08 35.51,-0.55 43.02,-1.18 55.34,4.81 59.06,5.79 62.79,6.77 58.4,5.17 57.85,5.33"
+       stroke="#1e1e1e"
+       stroke-width="2"
+       fill="none"
+       id="path88" />
+  </g>
+  <g
+     transform="translate(32.245329,402.26137)"
+     id="g94">
+    <text
+       x="9.0900154"
+       y="29.4925"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="29.375px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text92">4</text>
+  </g>
+  <g
+     mask="url(#mask-BPrOCOb2BdVEuEj8V7Xmm)"
+     stroke-linecap="round"
+     id="g106"
+     transform="translate(-8.880384,-8.1262273)">
+    <g
+       transform="translate(48.386282,94.971056)"
+       id="g98">
+      <path
+         d="M 0,0 C 2.25,16.9 -0.7,34.19 0,44.22 M 0,0 c 0.77,14.63 -0.11,28.94 0,44.22 m 0,0 c 1.16,1.15 -1.57,0.55 0.81,0.81 M 0,44.22 c -1.41,-1.27 -1.43,1.49 0.81,0.81 m 0,0 c 0,0 0,0 0,0 m 0,0 c 0,0 0,0 0,0 m 0,0 c 1.91,0.64 2.45,-1.53 0.8,0.81 m -0.8,-0.81 c 1.59,-0.69 -0.77,0.88 0.8,0.81 m 0,0 c -0.51,13.27 1.46,23.94 0,44.19 m 0,-44.19 C 0.73,56.01 0.9,68.3 1.61,90.03"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path96" />
+    </g>
+    <g
+       transform="translate(48.386282,94.971056)"
+       id="g104">
+      <path
+         d="M 1.07,90.73 -3.21,76.88 5.98,75.69 2.25,91.8"
+         stroke="none"
+         stroke-width="0"
+         fill="#1e1e1e"
+         fill-rule="evenodd"
+         id="path100" />
+      <path
+         d="M 1.61,90.03 C 0.5,85.17 -4.24,80.56 -5.1,76.62 M 1.61,90.03 C -0.27,85.41 -3.17,80.56 -5.1,76.62 m 0,0 C -0.73,75.83 2.97,75.55 7.57,76.26 M -5.1,76.62 c 4.33,-0.19 8.4,-0.77 12.67,-0.36 m 0,0 C 6.78,78.87 4.69,82.44 1.61,90.03 M 7.57,76.26 C 6.34,80.09 4.13,85.02 1.61,90.03 m 0,0 c 0,0 0,0 0,0 m 0,0 c 0,0 0,0 0,0"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path102" />
+    </g>
+  </g>
+  <mask
+     id="mask-BPrOCOb2BdVEuEj8V7Xmm">
+    <rect
+       x="0"
+       y="0"
+       fill="#ffffff"
+       width="150"
+       height="285"
+       id="rect108" />
+    <rect
+       x="43.863148"
+       y="126.5"
+       fill="#000000"
+       width="10.659988"
+       height="27"
+       opacity="1"
+       id="rect110" />
+  </mask>
+  <g
+     transform="translate(34.982763,118.37377)"
+     id="g115">
+    <text
+       x="5.3299942"
+       y="20.08"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="20px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text113">a</text>
+  </g>
+  <g
+     mask="url(#mask-wfSp-0EekUF0KgvFacgYr)"
+     stroke-linecap="round"
+     id="g127"
+     transform="translate(-8.880384,-8.1262273)">
+    <g
+       transform="translate(70,190)"
+       id="g119">
+      <path
+         d="m -0.72,-1.12 c 13.46,-3.09 54.88,-18.47 81.57,-18.27 26.68,0.21 65.43,16.2 78.56,19.48 M 1.11,0.91 c 13.37,-3.37 53.03,-22.19 79.23,-22.1 26.21,0.1 64.77,18.86 77.99,22.65"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path117" />
+    </g>
+    <g
+       transform="translate(70,190)"
+       id="g125">
+      <path
+         d="m 157.29,1.69 -12.22,0.33 1.06,-12.63 12.05,12.19"
+         stroke="none"
+         stroke-width="0"
+         fill="#1e1e1e"
+         fill-rule="evenodd"
+         id="path121" />
+      <path
+         d="m 158.33,1.46 c -5.99,1.35 -8.4,-0.07 -14.95,1.23 m 14.95,-1.23 c -4.08,0.66 -8.58,0.12 -14.95,1.23 m 0,0 c 1.9,-4.46 4.01,-8.52 4.4,-11.89 m -4.4,11.89 c 1.09,-3.4 1.56,-5.54 4.4,-11.89 m 0,0 c 3.12,4.17 5.48,4.27 10.55,10.66 M 147.78,-9.2 c 2.3,3.34 5.09,5.94 10.55,10.66 m 0,0 c 0,0 0,0 0,0 m 0,0 c 0,0 0,0 0,0"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path123" />
+    </g>
+  </g>
+  <mask
+     id="mask-wfSp-0EekUF0KgvFacgYr">
+    <rect
+       x="0"
+       y="0"
+       fill="#ffffff"
+       width="330"
+       height="310"
+       id="rect129" />
+    <rect
+       x="143.84"
+       y="156.5"
+       fill="#000000"
+       width="12.32"
+       height="27"
+       opacity="1"
+       id="rect131" />
+  </mask>
+  <g
+     transform="translate(134.95962,148.37377)"
+     id="g136">
+    <text
+       x="6.1599998"
+       y="20.08"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="20px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text134">b</text>
+  </g>
+  <g
+     mask="url(#mask-JZJ1jUHbEm1-Iyr2Ey0rs)"
+     stroke-linecap="round"
+     id="g148"
+     transform="translate(-8.880384,-8.1262273)">
+    <g
+       transform="translate(50,275)"
+       id="g140">
+      <path
+         d="M 0,0 C -0.69,21.58 1.77,46.15 0,110 M 0,0 c -0.56,35.35 -1.67,69.64 0,110"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path138" />
+    </g>
+    <g
+       transform="translate(50,275)"
+       id="g146">
+      <path
+         d="M -1.56,110.6 -7.64,96.5 4.46,97.99 1.36,110.1"
+         stroke="none"
+         stroke-width="0"
+         fill="#1e1e1e"
+         fill-rule="evenodd"
+         id="path142" />
+      <path
+         d="m 0,110 c -2.8,-3.14 -2.29,-4.01 -6.67,-13.44 M 0,110 c -1.74,-3.57 -4.67,-7.9 -6.67,-13.44 m 0,0 c 2.2,-0.01 5.4,0.62 12.68,-0.3 m -12.68,0.3 c 3.32,-0.49 5.35,-0.3 12.68,-0.3 m 0,0 C 4.53,101.23 2.22,102.47 0,110 M 6.01,96.26 C 4.51,99.45 3.5,101.91 0,110 m 0,0 c 0,0 0,0 0,0 m 0,0 c 0,0 0,0 0,0"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path144" />
+    </g>
+  </g>
+  <mask
+     id="mask-JZJ1jUHbEm1-Iyr2Ey0rs">
+    <rect
+       x="0"
+       y="0"
+       fill="#ffffff"
+       width="150"
+       height="485"
+       id="rect150" />
+    <rect
+       x="44.130005"
+       y="316.5"
+       fill="#000000"
+       width="11.73999"
+       height="27"
+       opacity="1"
+       id="rect152" />
+  </mask>
+  <g
+     transform="translate(35.249621,308.37377)"
+     id="g157">
+    <text
+       x="5.8699951"
+       y="20.08"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="20px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text155">d</text>
+  </g>
+  <g
+     mask="url(#mask-1TyQbtyd-cq1w-htY0axX)"
+     stroke-linecap="round"
+     id="g169"
+     transform="translate(-8.880384,-8.1262273)">
+    <g
+       transform="translate(230,270.31129)"
+       id="g161">
+      <path
+         d="m 0.65,-0.74 c -13.44,3.19 -54.95,20.09 -81.79,20.19 -26.83,0.1 -65.95,-16.35 -79.2,-19.57 M -0.47,1.49 C -13.51,4.84 -52.22,20.92 -79.02,20.86 -105.82,20.8 -147.66,4.39 -161.28,1.14"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path159" />
+    </g>
+    <g
+       transform="translate(230,270.31129)"
+       id="g167">
+      <path
+         d="m -159.76,3.04 13.21,-4.47 -4.71,13.69 -10.56,-10.55"
+         stroke="none"
+         stroke-width="0"
+         fill="#1e1e1e"
+         fill-rule="evenodd"
+         id="path163" />
+      <path
+         d="m -161.28,1.14 c 2.92,-2.05 7.38,-1.6 14.85,-2.11 m -14.85,2.11 c 4.95,-0.89 8.01,-1.78 14.85,-2.11 m 0,0 c -1.01,3.96 -3.26,7.81 -3.68,12.13 m 3.68,-12.13 c -1.02,3.4 -2.14,6.82 -3.68,12.13 m 0,0 c -2.82,-1.76 -3.96,-5.83 -11.17,-10.02 m 11.17,10.02 c -4.22,-2.66 -6.81,-6.58 -11.17,-10.02 m 0,0 c 0,0 0,0 0,0 m 0,0 c 0,0 0,0 0,0"
+         stroke="#1e1e1e"
+         stroke-width="2"
+         fill="none"
+         id="path165" />
+    </g>
+  </g>
+  <mask
+     id="mask-1TyQbtyd-cq1w-htY0axX">
+    <rect
+       x="0"
+       y="0"
+       fill="#ffffff"
+       width="490"
+       height="390"
+       id="rect171" />
+    <rect
+       x="145.09"
+       y="276.5"
+       fill="#000000"
+       width="9.8199997"
+       height="27"
+       opacity="1"
+       id="rect173" />
+  </mask>
+  <g
+     transform="translate(136.20962,268.37377)"
+     id="g178">
+    <text
+       x="4.9099998"
+       y="20.08"
+       font-family="Nunito, 'Segoe UI Emoji'"
+       font-size="20px"
+       fill="#1e1e1e"
+       text-anchor="middle"
+       style="white-space:pre"
+       direction="ltr"
+       dominant-baseline="alphabetic"
+       id="text176">c</text>
+  </g>
+  <mask
+     id="mask186" />
+  <mask
+     id="mask194" />
+</svg>

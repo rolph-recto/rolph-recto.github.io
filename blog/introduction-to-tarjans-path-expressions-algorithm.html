@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2024-10-06" />
+  <title>Rolph
+Recto – An Introduction to Tarjan’s Path Expressions Algorithm</title>
+  <style>
+    html {
+      line-height: 1.4;
+      font-size: 1.1em;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">An Introduction to Tarjan’s Path Expressions
+Algorithm</h1>
+<p>October 06, 2024</p>
+<p><em>Path expressions</em> are a compact way of representing the set
+of paths between two nodes in a graph. They are regular expressions over
+an alphabet of edges. Unlike a regular expression that you might use for
+string matching, which determines the possible sequence of characters
+that match a given pattern, a path expression determines the possible
+sequence of edges that create a path from one node to another.</p>
+<p>There are a variety of applications of path expressions, including <a
+href="https://www.cs.princeton.edu/~zkincaid/apa.html"><em>algebraic
+program analysis</em></a>, a method of program analysis that serves as
+an alternative to the usual iterative methods that you might be familiar
+with. The idea is to compute path expressions for nodes in a control
+flow graph and then interpret these expressions in some algebra that can
+represent useful information about the program.</p>
+<p>I’ll cover algebraic program analysis in another post, but in this
+one I will focus on how to actually compute path expressions. In
+particular, I will focus on computing path expressions for paths between
+the entry node and other nodes of a control flow graph.</p>
+<p>Let’s take the following CFG as an example, which represents a
+program with a while loop.</p>
+<figure>
+<img src="../files/cfg.svg" alt="A control flow graph" />
+<figcaption aria-hidden="true">A control flow graph</figcaption>
+</figure>
+<p>Say we are interested in computing for the path expression for node
+4. The set of paths from node 1, the entry node, to node 4 is infinite:
+one path traverses edges <span class="math inline">\(a, d\)</span>;
+another traverses edges <span class="math inline">\(a, b, c, d\)</span>;
+another traverses edges <span class="math inline">\(a, b, c, b, c,
+d\)</span>; and so on. We can’t actually enumerate the set of course,
+but the path expression for node 4 succinctly represents the whole set:
+<span class="math inline">\(a (bc)^{*} d\)</span>. The path expressions
+for the other nodes are what you might expect:</p>
+<ul>
+<li>node 1: <span class="math inline">\(\epsilon\)</span> (also written
+as <span class="math inline">\(1\)</span>)</li>
+<li>node 2: <span class="math inline">\(a (bc)^{*}\)</span></li>
+<li>node 3: <span class="math inline">\(a (bc)^{*} b\)</span></li>
+</ul>
+<p>How might we compute these path expressions? Recall that path
+expressions are regular expressions, and, thanks to Kleene, we know that
+regular expressions are equivalent to finite automata. In turn, a finite
+automaton at its essence is a set of states with transitions between
+them, with distinguished starting states and accepting states. Sounds
+awfully close to a control flow graph! For a given node for which we
+want to compute a path expression, we can view a CFG as a finite
+automaton where:</p>
+<ul>
+<li>the nodes are states</li>
+<li>the edges define transitions between states (where the input symbol
+for a transition is a unique identifier for its corresponding edge)</li>
+<li>the starting state is the entry node</li>
+<li>the accepting state is the node we want to compute a path expression
+for</li>
+</ul>
+<p>The path expression for the node will then recognize the same regular
+language that this automaton recognizes.</p>
+<p>So to compute path expressions, we just need an algorithm to convert
+finite automata into regular expressions. Such an algorithm already
+exists: Kleene’s algorithm. Not only does it do the job, it is also
+pretty simple. However, Kleene’s algorithm is inefficient. There are two
+main reasons:</p>
+<ul>
+<li><p>The algorithm does too much: it computes a regular expression
+that represents all possible paths between all pairs of the control flow
+graph. We only care about the path from the entry block to other blocks
+in the program. It would be akin to using the Floyd-Warshall algorithm
+to compute the shortest path from one point to all other points, when
+you could have just used Dijkstra’s algorithm.</p></li>
+<li><p>The algorithm has cubic asymptotic complexity. To put it in
+perspective, to compute path expressions for a control flow graph with
+100 nodes (not unrealistic for large functions), Kleene’s algorithm must
+compute a million regular expressions!</p></li>
+</ul>
+<p>Robert Tarjan developed a more efficient algorithm for computing path
+expressions in his paper <a
+href="https://dl.acm.org/doi/pdf/10.1145/322261.322273">“Fast Algorithms
+for Solving Path Problems”</a>. It’s not a direct algorithm for
+computing path expressions, but rather an algorithm that can speed up
+existing algorithms for computing path expressions by breaking the
+problem down into smaller pieces. Unfortunately, I found the paper hard
+to understand so it took a while to see how it works. Here’s my attempt
+at giving an easier explanation.</p>
+<p>A heads up if you do try to read the paper: I don’t try that hard to
+stick close to Tarjan’s exposition, and I take liberties with using some
+new terminology that was not in the paper whenever I think it clarifies
+the presentation. Also, Tarjan actually gives several algorithms for
+computing path expressions in the paper. This post is covers the last
+and most general algorithm, “decompose and sequence,” which works for an
+arbitrary control flow graphs. The other algorithms in the paper are
+basically variations of this one.</p>
+<h1 id="the-key-idea-decompose-with-dominators">The Key Idea: Decompose
+with Dominators</h1>
+<p>The key idea in Tarjan’s algorithm is to decompose path expressions
+using <em>dominators</em>. If you’ve taken a compilers class, you have
+probably encountered the concept—specifically, the standard algorithm
+for transforming into minimal SSA form uses the <em>iterated dominance
+frontier</em>—but we’ll do a quick recap here.</p>
+<p>Node <span class="math inline">\(N_1\)</span> <em>dominates</em> node
+<span class="math inline">\(N_2\)</span> if every path from the entry of
+the CFG to <span class="math inline">\(N_2\)</span> contains <span
+class="math inline">\(N_1\)</span>. Note that the domination relation is
+reflexive: every node dominates itself. A node <span
+class="math inline">\(N_1\)</span> <em>strictly dominates</em> (or
+<em>properly dominates</em>) node <span
+class="math inline">\(N_2\)</span> if <span
+class="math inline">\(N_1\)</span> dominates <span
+class="math inline">\(N_2\)</span> and <span class="math inline">\(N_1
+\neq N_2\)</span>. We say that <span class="math inline">\(N_1\)</span>
+is the <em>immediate</em> dominator of <span
+class="math inline">\(N_2\)</span> if <span
+class="math inline">\(N_1\)</span> strictly dominates <span
+class="math inline">\(N_2\)</span> and does not strictly dominate a
+strict dominator of <span class="math inline">\(N_2\)</span>. The
+immediate dominator for any node is unique, so we can define a function
+<span class="math inline">\(\textup{idom}(N)\)</span> that returns the
+immediate dominator for a node <span class="math inline">\(N\)</span>.
+Using the immediate domination relation, we can define a <em>dominator
+tree</em> for a control flow graph, where a node’s parent is its
+immediate dominator. It should be obvious that the root of the dominator
+tree is always the entry node.</p>
+<figure>
+<img src="../files/cfg-and-domtree.svg"
+alt="A control flow graph (black) and its corresponding dominator tree (red)" />
+<figcaption aria-hidden="true">A control flow graph (black) and its
+corresponding dominator tree (red)</figcaption>
+</figure>
+<p>Given a path to some node <span class="math inline">\(N\)</span>, the
+following lemma gives an important property about the path in relation
+to the proper dominators of <span class="math inline">\(N\)</span>.</p>
+<p><strong>Lemma 1</strong>: <em>Let <span class="math inline">\(N_1,
+..., N_m\)</span> be the sequence of nodes of a path <span
+class="math inline">\(P\)</span> that ends in node <span
+class="math inline">\(N_m\)</span>. If <span
+class="math inline">\(D\)</span> is some proper dominator of <span
+class="math inline">\(N_m\)</span>, we know <span
+class="math inline">\(D\)</span> must occur along <span
+class="math inline">\(P\)</span>; let <span
+class="math inline">\(N_k\)</span> be the last occurrence of <span
+class="math inline">\(D\)</span> for some <span class="math inline">\(1
+\leq k &lt; m\)</span>. Then for all <span
+class="math inline">\(N_i\)</span> where <span class="math inline">\(k
+&lt; i \leq m\)</span>, <span class="math inline">\(N_i\)</span> is
+properly dominated by <span class="math inline">\(D\)</span>.</em></p>
+<p><strong>Proof</strong>. Assume this is false. Then there is some
+<span class="math inline">\(N_i\)</span> where <span
+class="math inline">\(k &lt; i &lt; m\)</span> that is not properly
+dominated by <span class="math inline">\(D\)</span>. (We know that <span
+class="math inline">\(i \neq m\)</span> since <span
+class="math inline">\(N_k = \textup{idom}(N_m)\)</span>). Thus there
+must be some path <span class="math inline">\(P^\prime\)</span> from the
+entry to <span class="math inline">\(N_i\)</span> that does not go
+through <span class="math inline">\(D\)</span>. But then we can extend
+<span class="math inline">\(P^\prime\)</span> to <span
+class="math inline">\(N_{i+1}\)</span> since we know in the path <span
+class="math inline">\(P\)</span> there is an edge from <span
+class="math inline">\(N_i\)</span> to <span
+class="math inline">\(N_{i+1}\)</span>. Now there is a path from the
+entry to <span class="math inline">\(N_{i+1}\)</span> that does not go
+through <span class="math inline">\(D\)</span>, and thus we can conclude
+<span class="math inline">\(D\)</span> does not properly dominate <span
+class="math inline">\(N_{i+1}\)</span>. We can use similar reasoning to
+conclude that <span class="math inline">\(D\)</span> does not properly
+dominate <span class="math inline">\(N_{i+2}\)</span> either, and so on
+until we conclude that <span class="math inline">\(D\)</span> does not
+properly dominate <span class="math inline">\(N_m\)</span>, which is
+impossible. □</p>
+<p>Lemma 1 says that for any path to some node <span
+class="math inline">\(N\)</span>, every node in the path after the last
+occurrence of some proper dominator <span
+class="math inline">\(D\)</span> of <span
+class="math inline">\(N\)</span> must be properly dominated by <span
+class="math inline">\(D\)</span> as well. Intuitively, this means that
+after the last occurrence of <span class="math inline">\(D\)</span> in
+the path, the rest of the nodes in the path must reside in the dominator
+subtree rooted at <span class="math inline">\(D\)</span>. Later in the
+path, after the last occurrence of another proper dominator <span
+class="math inline">\(D^\prime\)</span> of <span
+class="math inline">\(N\)</span>, the rest of the nodes in the path must
+reside in the dominator subtree rooted at <span
+class="math inline">\(D^\prime\)</span>. Since <span
+class="math inline">\(D^\prime\)</span> must be properly dominated by
+<span class="math inline">\(D\)</span>, this subtree must be contained
+in the subtree rooted at <span class="math inline">\(D\)</span>. So any
+path to <span class="math inline">\(N\)</span> goes through transitions
+where it moves down some subtree of the dominator tree (i.e., a subtree
+that contains <span class="math inline">\(N\)</span>) and never visits
+nodes outside of that subtree again.</p>
+<figure>
+<img src="../files/path-transitions.svg"
+alt="Any path to N “goes down” the dominator tree towards N" />
+<figcaption aria-hidden="true">Any path to <span
+class="math inline">\(N\)</span> “goes down” the dominator tree towards
+<span class="math inline">\(N\)</span></figcaption>
+</figure>
+<p>We can use this observation that any path to <span
+class="math inline">\(N\)</span> “goes down” the dominator tree towards
+<span class="math inline">\(N\)</span> to give a decomposition of the
+path expression for <span class="math inline">\(N\)</span> in terms of
+its proper dominators. Recall that we are interested in computing a map
+<span class="math inline">\(\textup{path}(N)\)</span>, which returns a
+path expression that represents the set of all paths from the entry node
+to node N. Given Lemma 1, we know that for any path from the entry node
+to <span class="math inline">\(N\)</span>, we can break the path up into
+two pieces: a path from the entry node to <span
+class="math inline">\(\textup{idom}(N)\)</span>, and a path from <span
+class="math inline">\(\textup{idom}(N)\)</span> to <span
+class="math inline">\(N\)</span> that only visits nodes that are
+properly dominated by <span
+class="math inline">\(\textup{idom}(N)\)</span>. From this we can
+conclude that <span class="math inline">\(\textup{path}(N)\)</span> can
+be decomposed into <span class="math inline">\(\textup{path}(idom(N))
+\times \textup{dpath}(N)\)</span>, where <span
+class="math inline">\(\textup{dpath}(N)\)</span> maps a node <span
+class="math inline">\(N\)</span> to a path expression that represents
+the set of all paths from <span
+class="math inline">\(\textup{idom}(N\)</span>) to <span
+class="math inline">\(N\)</span> that only goes through nodes that are
+all properly dominated by <span
+class="math inline">\(\textup{idom}(N)\)</span>. By similar reasoning,
+we can decompose <span
+class="math inline">\(\textup{path}(\textup{idom}(N))\)</span> into
+<span
+class="math inline">\(\textup{path}(\textup{idom}(\textup{idom}(N)))
+\times \textup{dpath}(\textup{idom}(N))\)</span>.</p>
+<p>You can see where this is going. Let <span class="math inline">\(D_1,
+..., D_k\)</span> be a path in the dominator tree, where <span
+class="math inline">\(D_1\)</span> is the entry node and <span
+class="math inline">\(D_k\)</span> is <span
+class="math inline">\(N\)</span>. We know that for any <span
+class="math inline">\(1 \leq i &lt; k\)</span>, <span
+class="math inline">\(\textup{idom}(D_{i+1}) = D_i\)</span>. Then we
+know <span class="math display">\[
+\textup{path}(N) = \textup{path}(D_1) \times \textup{dpath}(D_2) \times
+\ldots \times \textup{dpath}(D_k).
+\]</span> So we can compute <span
+class="math inline">\(\textup{path}\)</span> in terms of <span
+class="math inline">\(\textup{dpath}\)</span>. Note, however, that we
+cannot decompose <span class="math inline">\(\textup{path}(D_1)\)</span>
+in terms of <span class="math inline">\(\textup{dpath}(D_1)\)</span>,
+because the entry node has no immediate dominator. It is a special case,
+and we will leave discussion of it later.</p>
+<h2 id="computing-textupdpath">Computing <span
+class="math inline">\(\textup{dpath}\)</span></h2>
+<p>Tarjan’s algorithm computes values of <span
+class="math inline">\(\textup{dpath}\)</span> by performing a post-order
+traversal of the dominator tree. When a node <span
+class="math inline">\(N\)</span> is processed, the algorithm computes
+<span class="math inline">\(\textup{dpath}(C)\)</span> for all of the
+children <span class="math inline">\(C\)</span> of <span
+class="math inline">\(N\)</span>. The traversal is post-order because
+computing <span class="math inline">\(\textup{dpath}\)</span> for a node
+requires the values of <span
+class="math inline">\(\textup{dpath}\)</span> for the nodes that it
+properly dominates.</p>
+<p>To compute <span class="math inline">\(\textup{dpath}(C)\)</span>,
+the algorithm splits the incoming edges of <span
+class="math inline">\(C\)</span> into two sets: <span
+class="math inline">\(\textup{tree}(C)\)</span>, which are incoming
+edges from <span class="math inline">\(N\)</span> (i.e., the immediate
+dominator of <span class="math inline">\(C\)</span>), and <span
+class="math inline">\(\textup{nontree}(C)\)</span>, which are the rest
+of the incoming edges of <span class="math inline">\(C\)</span> that are
+not in <span class="math inline">\(\textup{tree}(C)\)</span>. We first
+compute a path expression from <span
+class="math inline">\(\textup{tree}(C)\)</span>, which we call <span
+class="math inline">\(\textup{dpathTree}(C)\)</span>, and then we
+process <span class="math inline">\(\textup{nontree}(C)\)</span> to
+compute <span class="math inline">\(\textup{dpath}\)</span> in terms of
+<span class="math inline">\(\textup{dpathTree}\)</span>.</p>
+<p>Computing <span class="math inline">\(\textup{dpathTree}(C)\)</span>
+is the easy “base” case. Each tree edge is already a path from <span
+class="math inline">\(N\)</span> to <span
+class="math inline">\(C\)</span>, so we just need to add all of them up.
+Thus, given <span class="math inline">\(\textup{tree}(C) = \{ e_1,
+\ldots, e_n \}\)</span>, we know <span
+class="math inline">\(\textup{dpathTree}(C) = e_1 + \ldots +
+e_n\)</span>.</p>
+<p>Processing edges in <span
+class="math inline">\(\textup{nontree}(C)\)</span> is not as
+straightforward. While a non-tree edge <span
+class="math inline">\(e\)</span> does not form a direct path from <span
+class="math inline">\(N\)</span> to <span
+class="math inline">\(C\)</span>, we can use <span
+class="math inline">\(e\)</span> to form a path expression from some
+other child of <span class="math inline">\(N\)</span> to <span
+class="math inline">\(C\)</span>, which we can easily extend to a path
+expression from <span class="math inline">\(N\)</span> to <span
+class="math inline">\(C\)</span>. To see how this can be the case, we
+need the following lemma:</p>
+<p><strong>Lemma 2</strong>: <em>The node <span
+class="math inline">\(\textup{source}(e)\)</span> must be dominated by
+node <span
+class="math inline">\(\textup{idom}(\textup{target}(e))\)</span></em>.</p>
+<p><strong>Proof</strong>. Assume the statement is false. Then since
+<span class="math inline">\(\textup{source}(e)\)</span> is not dominated
+by <span
+class="math inline">\(\textup{idom}(\textup{target}(e))\)</span>, there
+is a path from the entry to <span
+class="math inline">\(\textup{source}(e)\)</span> that does not pass
+through <span
+class="math inline">\(\textup{idom}(\textup{target}(e))\)</span>. But
+adding the <span class="math inline">\(e\)</span> to this path creates a
+path from the entry to <span
+class="math inline">\(\textup{target}(e)\)</span> without passing
+through <span
+class="math inline">\(\textup{idom}(\textup{target}(e))\)</span>, which
+is impossible. □</p>
+<p>Applied to this case, Lemma 2 lets us conclude that the source node
+of <span class="math inline">\(e\)</span> is dominated by <span
+class="math inline">\(N\)</span>. But since we already know that the
+source node of <span class="math inline">\(e\)</span> is not <span
+class="math inline">\(N\)</span>, it must be the case that <span
+class="math inline">\(\textup{source}(e)\)</span> must be dominated by
+one of the children of <span class="math inline">\(N\)</span> in the
+dominator tree; let this node be <span
+class="math inline">\(C^\prime\)</span>. Then we know that there is a
+set of direct paths from <span class="math inline">\(N\)</span> to <span
+class="math inline">\(C^\prime\)</span>, as given by <span
+class="math inline">\(\textup{dpathTree}(C^\prime)\)</span>, and there
+is a set of paths from <span class="math inline">\(C^\prime\)</span> to
+<span class="math inline">\(\textup{source}(e)\)</span>, and then
+finally a path from <span
+class="math inline">\(\textup{source}(e)\)</span> to <span
+class="math inline">\(C\)</span> by way of <span
+class="math inline">\(e\)</span>. We can compose all of these together
+to form a set of paths from <span class="math inline">\(N\)</span> to
+<span class="math inline">\(C\)</span>.</p>
+<figure>
+<img src="../files/child-paths.svg"
+alt="A path from node N to node C by way of node C^\prime" />
+<figcaption aria-hidden="true">A path from node <span
+class="math inline">\(N\)</span> to node <span
+class="math inline">\(C\)</span> by way of node <span
+class="math inline">\(C^\prime\)</span></figcaption>
+</figure>
+<p>However, this is not the full story, because paths between the
+children of <span class="math inline">\(N\)</span> can <em>compose</em>
+together. For example, say there is a set of paths from child node <span
+class="math inline">\(C_1\)</span> to child node <span
+class="math inline">\(C_2\)</span> ending in edge <span
+class="math inline">\(e_1\)</span>, and another set of path from <span
+class="math inline">\(C_2\)</span> to a child node <span
+class="math inline">\(C_3\)</span> ending in edge <span
+class="math inline">\(e_2\)</span>. Then we can compose the paths from
+the two sets to create new paths from <span
+class="math inline">\(C_1\)</span> to <span
+class="math inline">\(C_3\)</span>. We can then compose paths from <span
+class="math inline">\(\textup{dpathTree}(C_1)\)</span> with these new
+paths to create paths from <span class="math inline">\(N\)</span> to
+<span class="math inline">\(C_3\)</span>.</p>
+<figure>
+<img src="../files/child-paths-compose.svg"
+alt="Composing paths between children of N" />
+<figcaption aria-hidden="true">Composing paths between children of
+N</figcaption>
+</figure>
+<p>So from this we can see that to calculate <span
+class="math inline">\(\textup{dpath}\)</span>, we need to consider not
+just the incoming edges of a child node, but the also the incoming edges
+of its <em>siblings</em>, because paths between child nodes can be
+composed together. How do we compute all of these possible
+compositions?</p>
+<p>Tarjan defines a <em>derived graph</em> to help reason about these
+possible path compositions in a compact way. This derived graph has the
+same nodes as the CFG; we compute its edges as follows. For each edge
+<span class="math inline">\(e\)</span> that is in <span
+class="math inline">\(\textup{nontree}(C)\)</span> for some node <span
+class="math inline">\(C\)</span> in the dominator tree, find the sibling
+node <span class="math inline">\(C^\prime\)</span> of <span
+class="math inline">\(C\)</span> that dominates <span
+class="math inline">\(\textup{source}(e)\)</span>—the sibling has to
+exist by Lemma 2—and then add a new edge <span
+class="math inline">\(e^\prime\)</span> in the derived graph where <span
+class="math inline">\(\textup{source}(e^\prime) = S\)</span> and <span
+class="math inline">\(\textup{target}(e^\prime) = C\)</span>. Note that
+<span class="math inline">\(C^\prime\)</span> can possibly be <span
+class="math inline">\(C\)</span> itself.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<figure>
+<img src="../files/derived-graph-image.svg"
+alt="A control flow graph (black) and its derived graph (blue)" />
+<figcaption aria-hidden="true">A control flow graph (black) and its
+derived graph (blue)</figcaption>
+</figure>
+<p>Intuitively, an edge in the derived graph represents the set of paths
+from <span class="math inline">\(C^\prime\)</span> to <span
+class="math inline">\(C\)</span> in the control flow graph that end in
+edge <span class="math inline">\(e\)</span>. We can compute a path
+expression—let’s call it the <em>image</em> of <span
+class="math inline">\(e^\prime\)</span>—that represents these paths:
+given a path <span class="math inline">\(D_1, ..., D_k,
+\textup{source}(e)\)</span> in the dominator tree, where <span
+class="math inline">\(C^\prime = D_1\)</span>, then the set of paths is
+given by <span class="math display">\[
+\textup{dpath}(D_2) \times \ldots \times \textup{dpath}(D_k) \times
+\textup{dpath}(\textup{source}(e)) \times e.
+\]</span> If an edge in the derived graph represents a set of paths in
+the CFG, a path in the derived graph, then, represents <em>one</em>
+possible composition of a set of paths between siblings. Thus to compute
+all the different ways paths between siblings can be composed, we can
+just compute the set of paths in the derived graph from one sibling to
+another. Happily, we already have a way of computing a set of paths from
+one node to another: all we need to do is to <em>compute path
+expressions between siblings in the derived graph</em>. The algorithm
+dispatches the computation of these path expressions to some other path
+expression algorithm; in the paper, Tarjan uses an “eliminate” algorithm
+that is similar in spirit to Kleene’s algorithm.</p>
+<p>Once we have computed path expressions in the derived graph between
+sibling nodes, we can then map these path expressions into path
+expressions in the control flow graph by replacing instances of edges in
+the derived graph with their images, at which point we will have path
+expressions that represent sets of paths from one sibling node to
+another.</p>
+<p>We are now in a position to compute <span
+class="math inline">\(\textup{dpath}\)</span>. Let <span
+class="math inline">\(\textup{derivedPath}(C_1,C_2)\)</span> be a
+function that returns a path expression representing paths from node
+<span class="math inline">\(C_1\)</span> to <span
+class="math inline">\(C_2\)</span> in the derived graph, and let <span
+class="math inline">\(\textup{img}(e)\)</span> be a function that maps a
+path expression in the derived graph to a path expression in the control
+flow graph by replacing edges in the derived graph with their images.
+Additionally, let <span
+class="math inline">\(\textup{siblings}(C)\)</span> define the set of
+siblings of node <span class="math inline">\(C\)</span> in the dominator
+tree. Then we know</p>
+<p><span class="math display">\[
+\textup{dpath}(C) = \sum_{C^\prime \in \textup{siblings}(C)}
+\textup{dpathTree}(C^\prime) \times
+\textup{img}(\textup{derivedPath}(C^\prime, C)).
+\]</span> You might be worried that the images of path expressions in
+<span class="math inline">\(\textup{derivedPath}\)</span> are not
+computable: the images of edges in the derived graph are given using
+values of <span class="math inline">\(\textup{dpath}\)</span>, and we’re
+computing <span class="math inline">\(\textup{dpath}\)</span> partly in
+terms of the images of edges in the derived graph, so it might be
+possible that the definitions are circular. But consider an edge <span
+class="math inline">\(e^\prime\)</span> from sibling nodes <span
+class="math inline">\(C^\prime\)</span> to <span
+class="math inline">\(C\)</span> in the derived graph. We compute its
+image above using the <span
+class="math inline">\(\textup{dpath}\)</span> values of nodes in the
+path from <span class="math inline">\(C^\prime\)</span> to <span
+class="math inline">\(\textup{source}(e)\)</span> in the dominator tree,
+excluding <span class="math inline">\(C^\prime\)</span> itself. All of
+these nodes are contained in the dominator subtree rooted at <span
+class="math inline">\(C^\prime\)</span>, and since the algorithm
+processes nodes in post-traversal order according to the dominator tree,
+these <span class="math inline">\(\textup{dpath}\)</span> values have
+already been computed by the time we compute <span
+class="math inline">\(\textup{dpath}(C)\)</span>. So even though <span
+class="math inline">\(\textup{dpath}\)</span> and the images of edges in
+the derived graph are defined in terms of each other, the order in which
+their values are computed makes their definitions non-circular.</p>
+<h2 id="computing-textuppathtextupentry">Computing <span
+class="math inline">\(\textup{path}(\textup{entry})\)</span></h2>
+<p>Finally, now that we know how to compute <span
+class="math inline">\(\textup{dpath}\)</span> there is one last order of
+business: computing the value of <span
+class="math inline">\(\textup{path}\)</span> for the entry node. We know
+that <span class="math inline">\(\textup{tree}(\textup{entry})\)</span>
+is empty since the entry node has no immediate dominator, so we only
+need to worry about <span
+class="math inline">\(\textup{nontree}(\textup{entry})\)</span>. For
+every incoming edge <span class="math inline">\(e\)</span> in <span
+class="math inline">\(\textup{nontree}(\textup{entry})\)</span>, we know
+that the entry node dominates <span
+class="math inline">\(\textup{source}(e)\)</span>. Thus there is a path
+<span class="math inline">\(D_1, ..., D_k, \textup{source}(e)\)</span>
+in the dominator tree where <span class="math inline">\(D_1 =
+\textup{entry}\)</span>, and the following path expression defines the
+set of paths from the entry node to itself that (1) end in <span
+class="math inline">\(e\)</span> and (2) don’t have the entry as an
+intermediate node: <span class="math display">\[
+\textup{dpath}(D_2) \times \ldots \times \textup{dpath}(D_k) \times e.
+\]</span> We can compute such a path expression for every edge <span
+class="math inline">\(e\)</span> in <span
+class="math inline">\(\textup{nontree}(\textup{entry})\)</span>; call it
+<span class="math inline">\(P_e\)</span>. Because we are computing paths
+from the entry to itself, we can stay at the entry and not traverse any
+edges, or go from the entry to itself once by way of a path described by
+one of these <span class="math inline">\(P_e\)</span> expressions, and
+then repeat this process over and over. The expression for <span
+class="math inline">\(\textup{path}(\textup{entry})\)</span> captures
+this: <span class="math display">\[
+\textup{path}(\textup{entry}) = \left ( \sum_{e \in
+\textup{nontree}(\textup{entry})} P_e \right )^{*}.
+\]</span></p>
+<h2 id="putting-it-all-together">Putting It All Together</h2>
+<p>We can now put it all these pieces together to arrive at an
+implementation of Tarjan’s algorithm. The code assumes the following
+functions are implemented:</p>
+<ul>
+<li><code>computeDerivedGraph(cfg, domtree)</code> - returns a tuple
+containing: (1) edges of the derived graph and (2) a map from edges in
+<code>cfg</code> to edges in derived graph</li>
+<li><code>computePathExpressions(nodes, edges)</code> - returns path
+expressions in terms of <code>edges</code> between pairs in
+<code>nodes</code></li>
+<li><code>edgePaths(edge, start, dpath, domtree)</code> - compute path
+expression using <code>dpath</code> that represents paths from
+<code>start</code> to <code>edge.dst</code> that end in
+<code>edge</code></li>
+<li><code>pathImg(imgMap, pathExpr)</code> - map path expression
+<code>pathExpr</code> in derived graph to path expression in CFG using
+<code>imgMap</code>, which maps edges in derived graph to their
+images</li>
+</ul>
+<p>Note that <code>RegexZero</code> and <code>RegexOne</code> represent
+regular expressions 0 and 1 respectively. You can interpret 0 as the
+empty set, and 1 as the singleton set containing the empty sequence.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tarjan(cfg, domtree):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># derivedEdges are the edges of the derived graph</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># edgeMap maps edges in CFG to edges in derived graph</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    derivedEdges, edgeMap <span class="op">=</span> computeDerivedGraph(cfg, domtree)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="bu">dict</span>()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    dpath <span class="op">=</span> <span class="bu">dict</span>()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    dpathTree <span class="op">=</span> <span class="bu">dict</span>(RegexZero() <span class="cf">for</span> node <span class="kw">in</span> cfg.nodes)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    dpathNontree <span class="op">=</span> <span class="bu">dict</span>(RegexZero() <span class="cf">for</span> node <span class="kw">in</span> cfg.nodes)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compute dpath in post-order traversal of domtree</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    postorderNodes <span class="op">=</span> traversePostorder(domtree)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node <span class="kw">in</span> postorderNodes:</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        children <span class="op">=</span> domtree.children(node)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        imageMap <span class="op">=</span> <span class="bu">dict</span>()</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># compute dpathTree and image of edges in derived graph</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> child <span class="kw">in</span> children:</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            dpathTree[child] <span class="op">=</span> RegexZero()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> edge <span class="kw">in</span> tree(child):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                dpathTree[child] <span class="op">=</span> dpathTree[child] <span class="op">+</span> edge</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> edge <span class="kw">in</span> nontree(child):</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                siblingDom <span class="op">=</span> edgeMap[edge].src</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                imageMap[edgeMap[edge]] <span class="op">=</span> edgePaths(edge, siblingDom, dpath, domtree)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># compute path expressions in derivedGraph between sibling nodes</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        derivedPath <span class="op">=</span> computePathExpressions(children, derivedEdges)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># compute dpath</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> child <span class="kw">in</span> children:</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>            dpath[child] <span class="op">=</span> RegexZero()</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> sibling <span class="kw">in</span> children:</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                <span class="co"># compute image of path expr in derived graph</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>                pathImage <span class="op">=</span> pathImg(imageMap, derivedPath[(sibling,child)])</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                siblingPaths <span class="op">=</span> dpathTree[sibling] <span class="op">*</span> pathImage</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>                dpath[child] <span class="op">=</span> dpath[child] <span class="op">+</span> siblingPaths</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compute path in reverse post-order traversal of domtree</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node <span class="kw">in</span> <span class="bu">reversed</span>(postorderNodes):</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># special case for computing path[entry]</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> node <span class="op">==</span> cfg.entry:</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>            path[cfg.entry] <span class="op">=</span> RegexZero()</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> edge <span class="kw">in</span> nontree(cfg.entry):</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                edgePaths <span class="op">=</span> edgePaths(edge, cfg.entry, dpath, domtree)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>                path[cfg.entry] <span class="op">=</span> path[cfg.entry] <span class="op">+</span> edgePaths</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>            path[cfg.entry] <span class="op">=</span> RegexStar(path[cfg.entry])</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># for non-entry nodes, compute path by appending dpath[node] to path[idom]</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>            idom <span class="op">=</span> domtree.immediateDominator(node)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>            path[node] <span class="op">=</span> path[idom] <span class="op">*</span> dpath[node]</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> path</span></code></pre></div>
+<p>You can see a complete working implementation of the algorithm in
+Python <a
+href="https://gist.github.com/rolph-recto/0e1ffb042f690fd09387920d24677ba4">here</a>.</p>
+<h2 id="a-concrete-example">A Concrete Example</h2>
+<p>Let’s go back to the control flow graph at the beginning of this
+post, and let’s use Tarjan’s algorithm to compute the path expressions
+for its nodes. The derived graph for the CFG is below; it contains only
+an edge <span class="math inline">\(c^\prime\)</span> from node 2 to
+itself, which represents the back edge <span
+class="math inline">\(c\)</span> from node 3 to node 2 in the CFG.</p>
+<figure>
+<img src="../files/derived-graph.svg" alt="Derived graph" />
+<figcaption aria-hidden="true">Derived graph</figcaption>
+</figure>
+<p>The post-order traversal of the dominator tree starts with nodes 3
+and 4. Neither of these nodes have children, so we don’t compute
+anything.</p>
+<p>Next, we process node 2, which has nodes 3 and 4 as children in the
+dominator tree. Neither child node have non-tree edges, so we only have
+to compute <span class="math inline">\(\textup{dpathTree}\)</span> for
+both. We arrive at <span class="math inline">\(\textup{dpath}(3) =
+b\)</span> and <span class="math inline">\(\textup{dpath}(4) =
+d\)</span> .</p>
+<p>Next, we process node 1, which has node 2 as a child in the dominator
+tree. We know <span class="math inline">\(\textup{dpathTree}(2) =
+a\)</span>. For <span class="math inline">\(\textup{dpath}(2)\)</span>,
+we compute <span class="math inline">\(\left (c^\prime
+\right)^*\)</span> as a path expression from node 2 to itself in the
+derived graph. The image of edge <span
+class="math inline">\(c^\prime\)</span> is given by <span
+class="math inline">\(\textup{dpath}(3) \times c\)</span>, so the image
+of the path expression is <span class="math inline">\(\left (bc \right
+)^*\)</span>. Thus, <span class="math inline">\(\textup{dpath}(2) = a
+\left (bc \right)^*\)</span>.</p>
+<p>Finally, we compute <span
+class="math inline">\(\textup{path}(1)\)</span>. There are no non-tree
+edges to node 1, so <span class="math inline">\(\textup{path}(1) =
+1\)</span>.</p>
+<p>Thus the path expressions for the CFG are:</p>
+<ul>
+<li><span class="math inline">\(\textup{path}(1) = 1\)</span></li>
+<li><span class="math inline">\(\textup{path}(2) = \textup{path}(1)
+\times \textup{dpath}(2)= a \left (bc \right )^*\)</span></li>
+<li><span class="math inline">\(\textup{path}(3) = \textup{path}(2)
+\times \textup{dpath}(3) = a \left (bc \right )^* b\)</span></li>
+<li><span class="math inline">\(\textup{path}(4) = \textup{path}(2)
+\times \textup{dpath}(4) = a \left (bc \right )^* d\)</span></li>
+</ul>
+<p>which is exactly what we expected.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>In the paper, Tarjan defines the derived graph so that
+it also includes edges in <span
+class="math inline">\(\textup{tree}(C)\)</span>. However, the algorithm
+only really uses the derived graph to process edges from <span
+class="math inline">\(\textup{nontree}(C)\)</span>, so we don’t bother
+to include edges from <span
+class="math inline">\(\textup{tree}(C)\)</span> here.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
