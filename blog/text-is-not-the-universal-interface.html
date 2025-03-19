@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="dcterms.date" content="2025-03-18" />
+  <title>Rolph Recto – Text is Not the Universal Interface</title>
+  <style>
+    html {
+      line-height: 1.4;
+      font-size: 1.1em;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 800px;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    figure {
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      text-align: left;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<b>Rolph Recto</b> - <a href="/">Home</a>
+<hr />
+<h1 class="title">Text is Not the Universal Interface</h1>
+<p>March 18, 2025</p>
+<p>I read <a
+href="https://scale.com/blog/text-universal-interface">“Text is the
+Universal Interface”</a> by roon in the early stages of the current
+language model boom (it was published a month or so before the release
+of ChatGPT) and I thought it was an interesting way of describing why
+LLMs are so useful: they are an evolution of the Unix philosophy of
+developing tools with text-based interfaces. Reading it again now,
+however, I realized that it conflates between two different notions of
+what “text” is, and this conflation obscures a fundamental difference
+between Unix tools and language models.</p>
+<p>So what might we mean when we say that a tool has a “text-based
+interface”?</p>
+<p>A lot of times “text-based” really means text as a <em>data
+format</em>, where a tool can process its input and output as a sequence
+of tokens, and, importantly, this sequence is readable by humans. The
+output of classic Unix tools is text-based in this way: run
+<code>ls</code> in your terminal, and you can read its output as a list
+of file and directory names. You can compose Unix tools through
+<em>pipes</em>, where you feed the output of one tool to the input of
+another. Tools don’t need to agree on a specific binary format; it’s
+just text! You can read it, other tools can process it. Everything’s
+easy. In <a
+href="https://archive.org/details/bstj57-6-1899/mode/2up">“UNIX
+Time-Sharing System: Foreword”</a>, Douglas McIlroy puts the philosophy
+of composable text tools in this way:</p>
+<blockquote>
+<p>Expect the output of every program to become the input to another, as
+yet unknown, program. Don’t clutter output with extraneous information.
+Avoid stringently columnar or binary input formats. Don’t insist on
+interactive input.</p>
+</blockquote>
+<p>Besides composability, in <a
+href="https://graydon2.dreamwidth.org/193447.html">“always bet on
+text”</a> Graydon Hoare outlines more advantages of text as a data
+format:</p>
+<blockquote>
+<p>Text is the most <em>socially useful</em> communication technology.
+It works <em>well</em> in 1:1, 1:N, and M:N modes. It can be
+<em>indexed</em> and <em>searched</em> efficiently, even by hand. It can
+be <em>translated</em>. It can be produced and consumed at variable
+speeds. It is asynchronous. It can be compared, diffed, clustered,
+corrected, summarized and filtered algorithmically. It permits
+multiparty editing. It permits branching conversations, lurking,
+annotation, quoting, reviewing, summarizing, structured responses,
+exegesis, even fan fic.</p>
+</blockquote>
+<p>So if the claim that “text is the universal interface” is strictly
+about text as a data format, I have no quarrel. Non-text formats have
+their place, but for consuming, transforming, and storing information,
+text is king.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<p>But there’s a second notion of “text” at work in roon’s original
+article, where “text” really means <em>free-form natural language</em>.
+It is this notion of text that makes language models “text-based” in an
+interesting way. A tool having a natural language interface implies that
+its input and output is in text format, so language models enjoy the
+same benefits that other tools based on text formats enjoy:
+composability, searchability, indexability, and so on. But language
+models have natural language interfaces and Unix tools don’t.</p>
+<p>In fact, almost nothing in computing has a natural language
+interface. Of course there have been chatbots before LLMs, like Apple’s
+Siri and Amazon’s Alexa, but they’ve been limited in scope. LLMs are not
+like this. In roon’s telling, LLMs are a kind of Swiss army knife, where
+you can solve any business or engineering task so long as you can
+formulate the problem and its solution in natural language:</p>
+<blockquote>
+<p>Slowly but surely, we can see a new extension to the UNIX credo being
+born. Those who truly understand the promise of large language models,
+prompt engineering, and text as a universal interface are retraining
+themselves to think in a new way. They start with the question of how
+any new business process or engineering problem can be represented as a
+text stream. What is the input? What is the output? Which series of
+prompts do we have to run to get there?</p>
+</blockquote>
+<p>This is the reading of “text is the universal interface” that is
+interesting, and indeed it has captured the minds (and money) of a lot
+of people. The idea that you can automate most white-collar (read:
+computer-facing) work away is as amazing as it is terrifying. Not only
+that, a natural language interface makes it much easier to hook up LLMs
+to the world outside the computer. Just think about the enormous amounts
+of Slack messages, email, internal wikis, Word documents that constitute
+institutional memory in your work. There are other ways of communicating
+information, of course—there’s Zoom meetings, afterwork chats in the
+bar—but I don’t think it’s too much of a stretch to say that “text is
+the universal interface” within organizations.</p>
+<p>The example of LLMs for coding is instructive. Here we have a task
+that is at its core text-based (regardless of whatever fancy IDE you
+use, you are still editing text), where the tool of choice—a programming
+language—has a sophisticated yet precise interface that requires some
+amount of expertise to use. The idea is tantalizing: instead of getting
+bogged down in the minute details of writing code, you can just describe
+what the program is supposed to do, and the model writes the code for
+you. LLMs for coding promise to democratize software development,
+allowing anyone to be “vibe coders” without much trouble. And even
+though there’s some rough edges—large projects don’t fit in context
+windows, the model hallucinates APIs, the generated code contains subtle
+bugs and security vulnerabilities—they’re already pretty useful.
+Besides, “this is the worst the models will be,” as people say, because
+they’ll only get better. It’s not hard to imagine a future where
+software engineers will be a distant memory from a bygone era, like
+switchboard operators or lamplighters.</p>
+<p>Perhaps, perhaps.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> But we’re not there yet, and it
+behooves us to take stock of the pitfalls of using LLMs as they
+currently exist. To that I turn to, of all people, Edsger Dijkstra. In
+an <a
+href="https://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD898.html">address</a>
+to the ACM in 1984, he describes two “alchemical myths” of programming
+that purport to relieve us of the burdens of programming.</p>
+<p>The first myth is the idea that we just need a programming language
+with the right kind of features to solve all our programming problems.
+Dijkstra analogizes this to the Philosopher’s Stone, a mythical
+substance that transformed base metals like lead into precious metals
+like gold. The promise of the “Programmer’s Stone” is that it would
+transform the “base metals” of our current practice of software
+development into the “precious metals” of an enlightened practice that
+allows us to develop programs with complex requirements on time, on
+budget, and without bugs.</p>
+<p>The second myth Dijkstra describes is the idea that instead of
+programming languages, in the future we would use “no-code” tools that
+did not require expertise. He analogizes this to the Elixir of Life, a
+substance that supposedly conferred immortality. The promise of the
+programmer’s Elixir of Life is not to transform programming but rather
+to eliminate it altogether, much like how the alchemists’ Elixir
+eliminated death.</p>
+<p>You can imagine what Dijkstra thinks of these two alchemical myths of
+programming. I cannot find a better description of the pitfalls of LLMs
+than his criticism of programming elixirs:</p>
+<blockquote>
+<p>The major attraction of the modern elixirs is that they relieve their
+consumers from the obligation of being precise by presenting an
+interface too fuzzy to be precise in: by suppressing the symptoms of
+impotence they create an illusion of power.</p>
+</blockquote>
+<p>This is essentially Andrej Karpathy’s notion of <a
+href="https://x.com/karpathy/status/1816531576228053133">“jagged
+intelligence”</a> <em>avant la lettre</em>. The reason language models
+are so compelling is that their natural language interface creates “an
+illusion of power”: you can formulate a dizzying array of problems in
+natural language, and because LLMs can take these problem descriptions
+as input you expect that they can provide solutions. But they can’t
+solve all of these problems—and worse, it’s not even clear when they
+can’t, since LLMs will happily hallucinate a wrong solution.</p>
+<p>To really understand why Dijkstra is pessimistic about these
+alchemical myths, we need to pull back a bit. In his address, Dijkstra
+sums up the promise and the challenge of computing in this beautiful
+passage:</p>
+<blockquote>
+<p>[T]he general purpose computer is no more than a handy device for
+implementing any thinkable mechanism without changing a single wire.
+That being so, the key question is what mechanisms we can think of
+without getting lost in the complexities of our own making…</p>
+</blockquote>
+<p>Computers hold the promise that they can implement “any thinkable
+mechanism,” without any physical modification. That’s a big
+promise—anything we can think of, we can implement! But, of course, the
+rub is in the implementing. We can make the computer do anything, so
+long as we can write a program to make the computer do what we intend it
+to do. Because we can make the computer do anything, however, these
+programs can be arbitrarily complicated. Nothing is stopping is from
+making our programs a mess.</p>
+<p>The fundamental challenge of programming, then, is to <em>manage
+complexity</em>. Almost like a physical law, software complexity
+inevitably increases over time. To resist the rising tide of complexity,
+we must have the “austere intellectual discipline,” as Dijkstra puts it,
+of “keeping things sufficiently simple.” This discipline requires from
+us careful thought about the way we design and implement software. There
+is no easy way out.</p>
+<p>LLMs undoubtedly have a place in helping us manage the complexity of
+software. Ask it questions about some library documentation or gnarly
+code that someone else wrote; ask it about particulars about the
+semantics of a programming language you’re not quite used to; have it
+write boring scripts you don’t really want to write. But they are no
+programming elixirs.</p>
+<p>You can probably generalize Dijkstra’s criticism to any domain we
+might want to use LLMs. The world is a very complicated place, and to
+navigate it requires careful thought. We do not have to do this thinking
+unaided by tools, but the tools will not replace the thinking. I mean,
+let’s be clear here: people are going to try to replace the thinking,
+but it’s not <a
+href="https://www.insidehighered.com/news/global/2024/06/21/academics-dismayed-flood-chatgpt-written-student-essays">going
+to go well</a>.</p>
+<p>To end, let us go back to roon’s original point, that LLMs are
+evolution of the classic text-based Unix tools. Not only does this
+conflate between text as a data format and text as natural language, the
+jaggedness of LLM intelligence also renders this comparison rather
+unfortunate. A language model is a monolithic tool that can seemingly do
+anything, yet can really only do some of those things well. This
+violates perhaps the most important maxim of Unix philosophy. Again,
+from Douglas McIlroy:</p>
+<blockquote>
+<p>Make each program do one thing well. To do a new job, build afresh
+rather than complicate old programs by adding new features.</p>
+</blockquote>
+<p>Of course, not everything in computing needs to accord with Unix
+philosophy, however much we look up to it as a guiding light for
+designing and implementing software. But I think that framing LLMs as an
+evolution of Unix tools give them an air of time-tested design that they
+perhaps do not deserve. We still use <code>grep</code> and
+<code>diff</code>, more than fifty years since the development of Unix.
+LLMs, amazing and full of potential as they are, have yet to prove out
+their longevity.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Since Graydon Hoare is most famous for developing Rust,
+I tend to interpret his post as a commentary about the futility of
+“visual” programming languages. I don’t disagree with his general
+prescription, but visual PLs has filled a niche in areas like <a
+href="https://scratch.mit.edu/">education</a> and <a
+href="https://cycling74.com/products/max">music</a>.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I am personally skeptical of claims that we can ride
+“scaling laws” all the way up to AGI. In the <a
+href="http://www.gotw.ca/publications/concurrency-ddj.htm">“free
+lunch”</a> era of computing, before the breakdown of Dennard scaling,
+you could just wait for new hardware and your programs will run faster.
+Now you have to make your programs concurrent to squeeze as much
+performance as you can from modern hardware. It seems like we’re still
+in the “free lunch” era of AI—you can just wait for better models and
+their outputs on the same prompts would be better. So it seems that
+scaling laws still hold, most recently thanks to “test-time compute.”
+But perhaps there’s an AI version of the breakdown of Dennard scaling in
+the offing. Don’t ask me when we’re going to hit “the wall” though.<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+</html>
